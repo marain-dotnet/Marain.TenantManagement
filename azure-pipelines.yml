@@ -1,0 +1,32 @@
+trigger:
+  branches:
+    include:
+    - master
+  tags:
+    include:
+    - '*'
+
+resources:
+  repositories:
+    - repository: recommended_practices
+      type: github
+      name: endjin/Endjin.RecommendedPractices.AzureDevopsPipelines.GitHub
+      endpoint: marain-github
+
+jobs:
+- template: templates/build.and.release.yml@recommended_practices
+  parameters:
+    vmImage: 'ubuntu-latest'
+    service_connection_nuget_org: $(Endjin_Service_Connection_NuGet_Org)
+    service_connection_github: $(Endjin_Service_Connection_GitHub)
+    solution_to_build: $(Endjin_Solution_To_Build)
+    postCustomEnvironmentVariables:
+      - powershell: |
+          Write-Host "##vso[task.setvariable variable=AzureServicesAuthConnectionString]$Env:ENDJIN_AZURESERVICESAUTHCONNECTIONSTRING"
+          Write-Host "##vso[task.setvariable variable=TenancyClient__TenancyServiceBaseUri]$Env:ENDJIN_TENANCYSERVICEBASEURI"
+          Write-Host "##vso[task.setvariable variable=TenancyClient__ResourceIdForMsiAuthentication]$Env:ENDJIN_TENANCYSERVICERESOUCEIDFORMSIAUTHENTICATION"
+        displayName: 'Set Custom Environment Variables'
+        env:
+          ENDJIN_AZURESERVICESAUTHCONNECTIONSTRING: $(Endjin_AzureServicesAuthConnectionString)
+          ENDJIN_TENANCYSERVICEBASEURI: $(Endjin_TenancyServiceBaseUri)
+          ENDJIN_TENANCYSERVICERESOUCEIDFORMSIAUTHENTICATION: $(Endjin_TenancyServiceResourceIdForMsiAuthentication)
