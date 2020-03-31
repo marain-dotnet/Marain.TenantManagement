@@ -20,7 +20,9 @@ namespace Marain.TenantManagement.Specs.Bindings
             {
                 collection.AddRootTenant();
                 collection.AddJsonSerializerSettings();
-                collection.AddSingleton<ITenantProvider, InMemoryTenantProvider>();
+
+                collection.AddSingleton<InMemoryTenantProvider>();
+                collection.AddSingleton<ITenantProvider>(sp => sp.GetRequiredService<InMemoryTenantProvider>());
 
                 collection.AddMarainTenantManagement();
             });

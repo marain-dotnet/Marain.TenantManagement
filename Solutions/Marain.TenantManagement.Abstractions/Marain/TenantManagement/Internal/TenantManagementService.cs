@@ -9,6 +9,7 @@ namespace Marain.TenantManagement.Internal
     using System.Linq;
     using System.Threading.Tasks;
     using Corvus.Tenancy;
+    using Corvus.Tenancy.Exceptions;
 
     /// <summary>
     /// Implementation of <see cref="ITenantManagementService"/> over the Corvus <see cref="ITenantProvider"/>.
@@ -27,9 +28,16 @@ namespace Marain.TenantManagement.Internal
         }
 
         /// <inheritdoc/>
-        public Task<ITenant> CreateClientTenantAsync(string clientName)
+        public async Task<ITenant> CreateClientTenantAsync(string clientName)
         {
-            throw new System.NotImplementedException();
+            ITenant? parent = await this.GetClientTenantParentAsync().ConfigureAwait(false);
+
+            if (parent == null)
+            {
+                this.ThrowNotInitialisedException();
+            }
+
+            return await this.tenantProvider.CreateChildTenantAsync(parent!.Id, clientName).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -47,13 +55,11 @@ namespace Marain.TenantManagement.Internal
         /// <inheritdoc/>
         public async Task InitialiseTenancyProviderAsync(bool force = false)
         {
-            IList<string> existingTopLevelTenantIds = await this.tenantProvider.GetAllChildrenAsync(this.tenantProvider.Root.Id).ConfigureAwait(false);
-            IEnumerable<Task<ITenant>> tenantRequests = existingTopLevelTenantIds.Select(x => this.tenantProvider.GetTenantAsync(x));
+            TenantCollectionResult existingTopLevelTenantIds = await this.tenantProvider.GetChildrenAsync(
+                this.tenantProvider.Root.Id).ConfigureAwait(false);
 
-            ITenant[] existingTopLevelTenants = await Task.WhenAll(tenantRequests).ConfigureAwait(false);
-
-            ITenant existingClientTenantParent = Array.Find(existingTopLevelTenants, x => x.Name == TenantNames.ClientTenantParent);
-            ITenant existingServiceTenantParent = Array.Find(existingTopLevelTenants, x => x.Name == TenantNames.ServiceTenantParent);
+            ITenant? existingClientTenantParent = await this.GetClientTenantParentAsync();
+            ITenant? existingServiceTenantParent = await this.GetServiceTenantParentAsync();
 
             if (existingClientTenantParent != null && existingServiceTenantParent != null)
             {
@@ -63,9 +69,9 @@ namespace Marain.TenantManagement.Internal
 
             // The parent tenants don't exist. If there are other tenants, we're being asked to initialise into a non-empty
             // tenant provider, which we shouldn't do by default.
-            if (existingTopLevelTenants.Length != 0 && !force)
+            if (existingTopLevelTenantIds.Tenants.Count != 0 && !force)
             {
-                throw new InvalidOperationException($"Cannot initialise the tenancy provider for use with Marain because it already contains {existingTopLevelTenants.Length} non-Marain tenants at the root level. If you wish to initialise anyway, re-invoke the method with the 'force' parameter set to true.");
+                throw new InvalidOperationException($"Cannot initialise the tenancy provider for use with Marain because it already contains non-Marain tenants at the root level. If you wish to initialise anyway, re-invoke the method with the 'force' parameter set to true.");
             }
 
             // Create the tenants
@@ -82,6 +88,47 @@ namespace Marain.TenantManagement.Internal
                     this.tenantProvider.Root.Id,
                     TenantNames.ServiceTenantParent).ConfigureAwait(false);
             }
+        }
+
+        private Task<ITenant?> GetClientTenantParentAsync() =>
+            this.GetTenantByNameAsync(this.tenantProvider.Root.Id, TenantNames.ClientTenantParent);
+
+        private Task<ITenant?> GetServiceTenantParentAsync() =>
+            this.GetTenantByNameAsync(this.tenantProvider.Root.Id, TenantNames.ServiceTenantParent);
+
+        private async Task<ITenant?> GetTenantByNameAsync(string parentTenantId, string name)
+        {
+            string? continuationToken = null;
+
+            while (true)
+            {
+                TenantCollectionResult page = await this.tenantProvider.GetChildrenAsync(
+                    parentTenantId,
+                    20,
+                    continuationToken).ConfigureAwait(false);
+
+                IEnumerable<Task<ITenant>> tenantRequests = page.Tenants.Select(x => this.tenantProvider.GetTenantAsync(x));
+                ITenant[] tenants = await Task.WhenAll(tenantRequests).ConfigureAwait(false);
+
+                ITenant? matchingTenant = Array.Find(tenants, x => x.Name == name);
+
+                if (matchingTenant != null)
+                {
+                    return matchingTenant;
+                }
+
+                if (string.IsNullOrEmpty(page.ContinuationToken))
+                {
+                    return null;
+                }
+
+                continuationToken = page.ContinuationToken;
+            }
+        }
+
+        private void ThrowNotInitialisedException()
+        {
+            throw new InvalidOperationException("The underlying tenant provider has not been initialised for use with Marain. Please call the ITenantManagementService.InitialiseTenancyProviderAsync before attempting to create tenants.");
         }
     }
 }

@@ -68,7 +68,7 @@ namespace Marain.TenantManagement.Specs.Steps
             }
         }
 
-        [Given("the tenancy provider has already been initialised for use with Marain")]
+        [Given("the tenancy provider has been initialised for use with Marain")]
         public Task GivenTheTenancyProviderHasAlreadyBeenInitialisedForUseWithMarain()
         {
             ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();

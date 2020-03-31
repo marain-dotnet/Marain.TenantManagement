@@ -14,7 +14,7 @@ Scenario: Initialise an empty tenancy provider
 	And there is a tenant called 'Service Tenants' as a child of the root tenant
 
 Scenario: Initialise a tenancy provider that's already been initialised
-	Given the tenancy provider has already been initialised for use with Marain
+	Given the tenancy provider has been initialised for use with Marain
 	When I use the tenant management service to initialise the tenancy provider
 	Then the tenancy provider contains 2 tenants as children of the root tenant
 

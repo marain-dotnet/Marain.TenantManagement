@@ -88,7 +88,12 @@ namespace Marain.TenantManagement.Specs.Mocks
             throw new System.NotImplementedException();
         }
 
-        private List<ITenant> GetChildren(ITenant parent)
+        public ITenant? GetTenantByName(string name)
+        {
+            return this.allTenants.Find(x => x != this.Root && x.Name == name);
+        }
+
+        public List<ITenant> GetChildren(ITenant parent)
         {
             if (!this.tenantsByParent.TryGetValue(parent, out List<ITenant>? children))
             {
