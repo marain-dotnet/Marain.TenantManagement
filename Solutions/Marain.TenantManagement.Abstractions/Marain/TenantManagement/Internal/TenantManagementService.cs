@@ -41,15 +41,45 @@ namespace Marain.TenantManagement.Internal
         }
 
         /// <inheritdoc/>
-        public Task<ITenant> CreateServiceTenantAsync(string serviceName)
+        public async Task<ITenant> CreateServiceTenantAsync(ServiceManifest manifest)
         {
-            throw new System.NotImplementedException();
+            if (manifest == null)
+            {
+                throw new ArgumentNullException(nameof(manifest));
+            }
+
+            await manifest.ValidateAndThrowAsync(this).ConfigureAwait(false);
+
+            ITenant? parent = await this.GetServiceTenantParentAsync().ConfigureAwait(false);
+
+            if (parent == null)
+            {
+                this.ThrowNotInitialisedException();
+            }
+
+            // TODO: Make sure there isn't already a tenant with the same name.
+            ITenant newTenant = await this.tenantProvider.CreateChildTenantAsync(
+                parent!.Id,
+                manifest.ServiceName).ConfigureAwait(false);
+
+            newTenant.SetServiceManifest(manifest);
+
+            await this.tenantProvider.UpdateTenantAsync(newTenant).ConfigureAwait(false);
+
+            return newTenant;
         }
 
         /// <inheritdoc/>
-        public Task<ITenant> GetServiceTenantByNameAsync(string serviceName)
+        public async Task<ITenant?> GetServiceTenantByNameAsync(string serviceName)
         {
-            throw new System.NotImplementedException();
+            ITenant? serviceTenantParent = await this.GetServiceTenantParentAsync().ConfigureAwait(false);
+
+            if (serviceTenantParent == null)
+            {
+                this.ThrowNotInitialisedException();
+            }
+
+            return await this.GetTenantByNameAsync(serviceTenantParent!.Id, serviceName).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>

@@ -1,0 +1,19 @@
+{
+    "$schema": "./ServiceManifestSchema.json",
+    "serviceName": "Workflow",
+    "dependsOnServices": ["Operations"],
+    "requiredConfigurationEntries": [
+        {
+            "type": "cosmosContainerConfiguration",
+            "databaseName": "workflow",
+            "containerName": "definitions",
+            "description": "Workflow definitions"
+        },
+        {
+            "type": "cosmosContainerConfiguration",
+            "databaseName": "workflow",
+            "containerName": "instances",
+            "description": "Workflow instances"
+        }
+    ]
+}

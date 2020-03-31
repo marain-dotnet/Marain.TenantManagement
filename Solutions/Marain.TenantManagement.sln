@@ -5,7 +5,14 @@ VisualStudioVersion = 16.0.29905.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marain.TenantManagement.Abstractions", "Marain.TenantManagement.Abstractions\Marain.TenantManagement.Abstractions.csproj", "{0ABA615E-512F-4F38-863C-149708DDD1A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marain.TenantManagement.Specs", "Marain.TenantManagement.Specs\Marain.TenantManagement.Specs.csproj", "{90360BFF-F5FA-4A98-8A89-7B48E83FBE70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marain.TenantManagement.Specs", "Marain.TenantManagement.Specs\Marain.TenantManagement.Specs.csproj", "{90360BFF-F5FA-4A98-8A89-7B48E83FBE70}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceManifests", "ServiceManifests", "{6AFB6642-7013-4C22-A6B6-8D770516F733}"
+	ProjectSection(SolutionItems) = preProject
+		ServiceManifests\OperationsServiceManifest.json = ServiceManifests\OperationsServiceManifest.json
+		ServiceManifests\ServiceManifestSchema.json = ServiceManifests\ServiceManifestSchema.json
+		ServiceManifests\WorkflowServiceManifest.json = ServiceManifests\WorkflowServiceManifest.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

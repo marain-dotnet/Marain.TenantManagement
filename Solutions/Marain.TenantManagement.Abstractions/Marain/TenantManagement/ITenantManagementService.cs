@@ -38,15 +38,17 @@ namespace Marain.TenantManagement
         /// <summary>
         /// Creates a new tenant representing a Marain service that tenants can enroll to use.
         /// </summary>
-        /// <param name="serviceName">The name of the service. This must be unique across all Service tenants.</param>
+        /// <param name="manifest">
+        /// The manifest for the service. The service name in the manifest must be unique across all service tenants.
+        /// </param>
         /// <returns>The new tenant.</returns>
-        Task<ITenant> CreateServiceTenantAsync(string serviceName);
+        Task<ITenant> CreateServiceTenantAsync(ServiceManifest manifest);
 
         /// <summary>
         /// Retrieves the Service tenant with the given name.
         /// </summary>
         /// <param name="serviceName">The name of the tenant to retrieve.</param>
         /// <returns>The tenant, or null if it does not exist.</returns>
-        Task<ITenant> GetServiceTenantByNameAsync(string serviceName);
+        Task<ITenant?> GetServiceTenantByNameAsync(string serviceName);
     }
 }

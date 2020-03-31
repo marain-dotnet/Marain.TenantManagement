@@ -85,7 +85,9 @@ namespace Marain.TenantManagement.Specs.Mocks
 
         public Task<ITenant> UpdateTenantAsync(ITenant tenant)
         {
-            throw new System.NotImplementedException();
+            // No-op; if they have retrieved the tenant from the service and made changes, it's automatically updated
+            // because everything's in-memory.
+            return Task.FromResult(tenant);
         }
 
         public ITenant? GetTenantByName(string name)

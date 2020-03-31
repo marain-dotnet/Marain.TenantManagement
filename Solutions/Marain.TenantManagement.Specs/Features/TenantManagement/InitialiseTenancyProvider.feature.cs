@@ -19,12 +19,12 @@ namespace Marain.TenantManagement.Specs.Features.TenantManagement
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.1.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [NUnit.Framework.TestFixtureAttribute(TestName="Initialisation")]
+    [NUnit.Framework.TestFixtureAttribute(TestName="Tenancy provider initialisation")]
     [NUnit.Framework.DescriptionAttribute("\tWhen setting up a new Marain instance\r\n\tAs an administrator\r\n\tI want to initiali" +
         "se the tenancy provider with standard Marain entries")]
     [NUnit.Framework.CategoryAttribute("perScenarioContainer")]
     [NUnit.Framework.CategoryAttribute("useInMemoryTenantProvider")]
-    public partial class InitialisationFeature
+    public partial class TenancyProviderInitialisationFeature
     {
         
         private TechTalk.SpecFlow.ITestRunner testRunner;
@@ -40,7 +40,7 @@ namespace Marain.TenantManagement.Specs.Features.TenantManagement
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Initialisation", "\tWhen setting up a new Marain instance\r\n\tAs an administrator\r\n\tI want to initiali" +
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Tenancy provider initialisation", "\tWhen setting up a new Marain instance\r\n\tAs an administrator\r\n\tI want to initiali" +
                     "se the tenancy provider with standard Marain entries", ProgrammingLanguage.CSharp, new string[] {
                         "perScenarioContainer",
                         "useInMemoryTenantProvider"});

@@ -1,0 +1,47 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/root.json",
+    "type": "object",
+    "title": "Root Schema",
+    "description": "Foo",
+    "required": [],
+    "properties": {
+        "serviceName": {
+            "type": "string"
+        },
+        "dependsOnServices": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "requiredConfigurationEntries": {
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    { "$ref": "#/definitions/azureBlobContainerConfiguration" },
+                    { "$ref": "#/definitions/cosmosContainerConfiguration" }
+                ]
+            }
+        }
+    },
+    "definitions": {
+        "azureBlobContainerConfiguration" : {
+            "type": "object",
+            "properties": {
+                "type": { "enum": ["azureBlobContainerConfiguration"] },
+                "containerName": { "type": "string" },
+                "description": { "type": "string" }
+            }
+        },
+        "cosmosContainerConfiguration" : {
+            "type": "object",
+            "properties": {
+                "type": { "enum": ["cosmosContainerConfiguration"] },
+                "databaseName": {"type": "string" },
+                "containerName": {"type": "string" },
+                "description": {"type": "string" }
+            }
+        }
+    }
+}

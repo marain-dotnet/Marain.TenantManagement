@@ -9,5 +9,9 @@ namespace Marain.TenantManagement.Internal
     /// </summary>
     public static class TenantPropertyKeys
     {
+        /// <summary>
+        /// Key for storing the Service Manifest on a Service Tenant.
+        /// </summary>
+        public const string ServiceManifest = "Marain:ServiceManifest";
     }
 }

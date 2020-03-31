@@ -40,6 +40,44 @@ namespace Marain.TenantManagement.Specs.Steps
             }
         }
 
+        [Given("I have used the tenant management service to create a service tenant with manifest '(.*)'")]
+        public Task GivenIHaveUsedTheTenantManagementServiceToCreateAServiceTenantWithManifest(string manifestName)
+        {
+            ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>(manifestName);
+
+            ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
+
+            return service.CreateServiceTenantAsync(manifest);
+        }
+
+        [When("I use the tenant management service to create a new service tenant with manifest '(.*)'")]
+        public Task WhenIUseTheTenantManagementServiceToCreateANewServiceTenantWithManifest(string manifestName)
+        {
+            ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>(manifestName);
+
+            return this.CreateServiceTenantWithExceptionHandlingAsync(manifest);
+        }
+
+        [When("I use the tenant management service to create a new service tenant without supplying a manifest")]
+        public Task WhenIUseTheTenantManagementServiceToCreateANewServiceTenantWithoutSupplyingAManifest()
+        {
+            return this.CreateServiceTenantWithExceptionHandlingAsync(null!);
+        }
+
+        public async Task CreateServiceTenantWithExceptionHandlingAsync(ServiceManifest manifest)
+        {
+            ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
+
+            try
+            {
+                await service.CreateServiceTenantAsync(manifest).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                this.scenarioContext.Set(ex);
+            }
+        }
+
         [Then("the tenancy provider contains (.*) tenants as children of the root tenant")]
         public async Task ThenTheTenancyProviderContainsTenantsAsChildrenOfTheRootTenant(int expectedTenantCount)
         {

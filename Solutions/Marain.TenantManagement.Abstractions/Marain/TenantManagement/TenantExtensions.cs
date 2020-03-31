@@ -6,6 +6,7 @@ namespace Marain.TenantManagement
 {
     using System;
     using Corvus.Tenancy;
+    using Marain.TenantManagement.Internal;
 
     /// <summary>
     /// Extension methods for <see cref="ITenant"/>s.
@@ -30,6 +31,16 @@ namespace Marain.TenantManagement
         public static bool IsClientTenant(this ITenant tenant)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Adds the given <see cref="ServiceManifest"/> to the tenant's property bag.
+        /// </summary>
+        /// <param name="tenant">The tenant to add to.</param>
+        /// <param name="manifest">The manifest to add.</param>
+        public static void SetServiceManifest(this ITenant tenant, ServiceManifest manifest)
+        {
+            tenant.Properties.Set(TenantPropertyKeys.ServiceManifest, manifest);
         }
     }
 }

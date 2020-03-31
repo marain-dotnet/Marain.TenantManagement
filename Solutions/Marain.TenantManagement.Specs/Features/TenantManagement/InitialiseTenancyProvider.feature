@@ -1,7 +1,7 @@
 ﻿@perScenarioContainer
 @useInMemoryTenantProvider
 
-Feature: Initialisation
+Feature: Tenancy provider initialisation
 	When setting up a new Marain instance
 	As an administrator
 	I want to initialise the tenancy provider with standard Marain entries
