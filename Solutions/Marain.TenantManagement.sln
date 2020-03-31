@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29905.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marain.TenantManagement.Abstractions", "Marain.TenantManagement.Abstractions\Marain.TenantManagement.Abstractions.csproj", "{0ABA615E-512F-4F38-863C-149708DDD1A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marain.TenantManagement.Abstractions", "Marain.TenantManagement.Abstractions\Marain.TenantManagement.Abstractions.csproj", "{0ABA615E-512F-4F38-863C-149708DDD1A5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marain.TenantManagement.Specs", "Marain.TenantManagement.Specs\Marain.TenantManagement.Specs.csproj", "{90360BFF-F5FA-4A98-8A89-7B48E83FBE70}"
 EndProject
