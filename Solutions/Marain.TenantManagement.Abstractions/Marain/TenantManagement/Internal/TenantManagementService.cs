@@ -122,11 +122,42 @@ namespace Marain.TenantManagement.Internal
         }
 
         /// <inheritdoc/>
-        public Task EnrollInServiceAsync(ITenant enrollingTenant, ITenant serviceTenant)
+        public async Task EnrollInServiceAsync(ITenant enrollingTenant, string serviceTenantName)
+        {
+            ITenant serviceTenant = await this.GetServiceTenantByNameAsync(serviceTenantName).ConfigureAwait(false)
+                ?? throw new TenantNotFoundException($"Could not find a service tenant with the name '{serviceTenantName}'");
+
+            await this.EnrollInServiceAsync(enrollingTenant, serviceTenant);
+        }
+
+        /// <inheritdoc/>
+        public async Task EnrollInServiceAsync(ITenant enrollingTenant, ITenant serviceTenant)
         {
             enrollingTenant.AddServiceEnrollment(serviceTenant.Id);
 
-            return this.tenantProvider.UpdateTenantAsync(enrollingTenant);
+            ServiceManifest manifest = serviceTenant.GetServiceManifest();
+
+            // If this service has dependencies, we need to create a new delegated tenant for the service to use when
+            // accessing those dependencies.
+            if (manifest.DependsOnServiceNames.Count > 0)
+            {
+                ITenant delegatedTenant = await this.CreateDelegatedTenant(enrollingTenant, serviceTenant).ConfigureAwait(false);
+
+                // Now enroll the new delegated tenant for all of the dependent services.
+                await Task.WhenAll(manifest.DependsOnServiceNames.Select(
+                    dependsOnServiceName => this.EnrollInServiceAsync(delegatedTenant, dependsOnServiceName))).ConfigureAwait(false);
+
+                // Add the delegated tenant Id to the enrolling tenant
+                enrollingTenant.SetDelegatedTenantIdForService(serviceTenant.Id, delegatedTenant.Id);
+            }
+
+            await this.tenantProvider.UpdateTenantAsync(enrollingTenant).ConfigureAwait(false);
+        }
+
+        private Task<ITenant> CreateDelegatedTenant(ITenant accessingTenant, ITenant serviceTenant)
+        {
+            string delegatedTenantName = TenantNames.DelegatedTenant(serviceTenant.Name, accessingTenant.Name);
+            return this.tenantProvider.CreateChildTenantAsync(serviceTenant.Id, delegatedTenantName);
         }
 
         private Task<ITenant?> GetClientTenantParentAsync() =>

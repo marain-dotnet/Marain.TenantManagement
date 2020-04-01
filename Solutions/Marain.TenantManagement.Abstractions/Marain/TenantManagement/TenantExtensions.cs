@@ -69,6 +69,25 @@ namespace Marain.TenantManagement
         }
 
         /// <summary>
+        /// Gets the Id of the delegated tenant that has been created for a service to use when accessing a dependent service
+        /// on the tenant's behalf.
+        /// </summary>
+        /// <param name="tenant">
+        /// The tenant who is able to make calls to the service represented by the specified Service Tenant.
+        /// </param>
+        /// <param name="serviceTenantId">The Id of the Service Tenant which will uses the Delegated Tenant.</param>
+        /// <returns>The Id of the delegated tenant.</returns>
+        public static string GetDelegatedTenantIdForService(this ITenant tenant, string serviceTenantId)
+        {
+            if (tenant.Properties.TryGet(TenantPropertyKeys.DelegatedTenantId(serviceTenantId), out string delegatedTenantId))
+            {
+                return delegatedTenantId;
+            }
+
+            throw new ArgumentException($"Tenant '{tenant.Name}' with Id '{tenant.Id}' does not contain a delegated tenant Id for service tenant Id {serviceTenantId}");
+        }
+
+        /// <summary>
         /// Adds the given <see cref="ServiceManifest"/> to the tenant's property bag.
         /// </summary>
         /// <param name="tenant">The tenant to add to.</param>
@@ -100,6 +119,23 @@ namespace Marain.TenantManagement
             enrollments.Add(serviceTenantId);
 
             tenant.Properties.Set(TenantPropertyKeys.Enrollments, enrollments);
+        }
+
+        /// <summary>
+        /// Stores the Id of a delegated tenant that has been created for a service to use when accessing a dependent service
+        /// on the tenant's behalf.
+        /// </summary>
+        /// <param name="tenant">
+        /// The tenant who is able to make calls to the service represented by the specified Service Tenant.
+        /// </param>
+        /// <param name="serviceTenantId">The Id of the Service Tenant which will be using the Delegated Tenant.</param>
+        /// <param name="delegatedTenantId">The Id of the tenant that has been created for the service to use.</param>
+        internal static void SetDelegatedTenantIdForService(
+            this ITenant tenant,
+            string serviceTenantId,
+            string delegatedTenantId)
+        {
+            tenant.Properties.Set(TenantPropertyKeys.DelegatedTenantId(serviceTenantId), delegatedTenantId);
         }
     }
 }

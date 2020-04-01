@@ -10,6 +10,7 @@ namespace Marain.TenantManagement.Specs.Steps
     using System.Threading.Tasks;
     using Corvus.SpecFlow.Extensions;
     using Corvus.Tenancy;
+    using Marain.TenantManagement.Internal;
     using Marain.TenantManagement.ServiceManifests;
     using Marain.TenantManagement.Specs.Mocks;
     using Microsoft.Extensions.DependencyInjection;
@@ -89,17 +90,17 @@ namespace Marain.TenantManagement.Specs.Steps
         [Then("the tenancy provider contains (.*) tenants as children of the root tenant")]
         public async Task ThenTheTenancyProviderContainsTenantsAsChildrenOfTheRootTenant(int expectedTenantCount)
         {
-            ITenantProvider service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
-            TenantCollectionResult rootTenantChildren = await service.GetChildrenAsync(service.Root.Id).ConfigureAwait(false);
+            ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
+            TenantCollectionResult rootTenantChildren = await tenantProvider.GetChildrenAsync(tenantProvider.Root.Id).ConfigureAwait(false);
             Assert.AreEqual(expectedTenantCount, rootTenantChildren.Tenants.Count);
         }
 
         [Then("there is a tenant called '(.*)' as a child of the root tenant")]
         public async Task ThenANewTenantCalledIsCreatedAsAChildOfTheRootTenant(string tenantName)
         {
-            ITenantProvider service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
-            TenantCollectionResult rootTenantChildren = await service.GetChildrenAsync(service.Root.Id).ConfigureAwait(false);
-            ITenant[] tenants = await Task.WhenAll(rootTenantChildren.Tenants.Select(x => service.GetTenantAsync(x))).ConfigureAwait(false);
+            ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
+            TenantCollectionResult rootTenantChildren = await tenantProvider.GetChildrenAsync(tenantProvider.Root.Id).ConfigureAwait(false);
+            ITenant[] tenants = await Task.WhenAll(rootTenantChildren.Tenants.Select(x => tenantProvider.GetTenantAsync(x))).ConfigureAwait(false);
             ITenant? matchingTenant = Array.Find(tenants, x => x.Name == tenantName);
 
             Assert.IsNotNull(matchingTenant, $"Could not find a child of the root tenant with the name '{tenantName}'");
@@ -108,9 +109,9 @@ namespace Marain.TenantManagement.Specs.Steps
         [Then("there is no tenant called '(.*)' as a child of the root tenant")]
         public async Task ThenThereIsNoTenantCalledAsAChildOfTheRootTenant(string tenantName)
         {
-            ITenantProvider service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
-            TenantCollectionResult rootTenantChildren = await service.GetChildrenAsync(service.Root.Id).ConfigureAwait(false);
-            ITenant[] tenants = await Task.WhenAll(rootTenantChildren.Tenants.Select(x => service.GetTenantAsync(x))).ConfigureAwait(false);
+            ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
+            TenantCollectionResult rootTenantChildren = await tenantProvider.GetChildrenAsync(tenantProvider.Root.Id).ConfigureAwait(false);
+            ITenant[] tenants = await Task.WhenAll(rootTenantChildren.Tenants.Select(x => tenantProvider.GetTenantAsync(x))).ConfigureAwait(false);
             ITenant? matchingTenant = Array.Find(tenants, x => x.Name == tenantName);
 
             Assert.IsNull(matchingTenant, $"Could not find a child of the root tenant with the name '{tenantName}'");
@@ -129,6 +130,22 @@ namespace Marain.TenantManagement.Specs.Steps
 
             List<ITenant> allChildren = tenantProvider.GetChildren(parent!);
             Assert.Contains(child, allChildren, $"The tenant called '{targetTenantName}' exists but is not a child of the tenant called '{parentTenantName}'");
+        }
+
+        [Then("a new child tenant called '(.*)' of the service tenant called '(.*)' has been created")]
+        public async Task ThenANewChildTenantCalledOfTheServiceTenantCalledHasBeenCreated(string childTenantName, string serviceTenantName)
+        {
+            ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
+
+            ITenant serviceTenant = this.scenarioContext.Get<ITenant>(serviceTenantName);
+
+            // Normally would have to care about pagination, but under test we only expect a small number of items.
+            TenantCollectionResult getChildrenResult = await tenantProvider.GetChildrenAsync(serviceTenant.Id).ConfigureAwait(false);
+            ITenant[] children = await tenantProvider.GetTenantsAsync(getChildrenResult.Tenants).ConfigureAwait(false);
+
+            ITenant? matchingChild = Array.Find(children, x => x.Name == childTenantName);
+
+            Assert.IsNotNull(matchingChild, $"The service tenant '{serviceTenantName}' does not contain a child tenant called '{childTenantName}'");
         }
     }
 }

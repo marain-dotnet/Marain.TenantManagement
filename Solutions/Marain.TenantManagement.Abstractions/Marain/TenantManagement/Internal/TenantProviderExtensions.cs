@@ -5,6 +5,7 @@
 namespace Marain.TenantManagement.Internal
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Corvus.Tenancy;
 
@@ -46,6 +47,19 @@ namespace Marain.TenantManagement.Internal
             while (!string.IsNullOrEmpty(continuationToken));
 
             return tenants;
+        }
+
+        /// <summary>
+        /// Gets the tenants for a given set of tenant IDs.
+        /// </summary>
+        /// <param name="tenantProvider">The underlying tenant provider to use.</param>
+        /// <param name="tenantIds">The ids of the tenants to retrieve.</param>
+        /// <returns>A task that produces the specified tenants.</returns>
+        public static async Task<ITenant[]> GetTenantsAsync(this ITenantProvider tenantProvider, IEnumerable<string> tenantIds)
+        {
+            IEnumerable<Task<ITenant>> getTenantTasks = tenantIds.Select(tenantId => tenantProvider.GetTenantAsync(tenantId));
+
+            return await Task.WhenAll(getTenantTasks).ConfigureAwait(false);
         }
     }
 }
