@@ -10,6 +10,7 @@ namespace Marain.TenantManagement.Specs.Steps
     using System.Threading.Tasks;
     using Corvus.SpecFlow.Extensions;
     using Corvus.Tenancy;
+    using Marain.TenantManagement.ServiceManifests;
     using Marain.TenantManagement.Specs.Mocks;
     using Microsoft.Extensions.DependencyInjection;
     using NUnit.Framework;
@@ -26,28 +27,36 @@ namespace Marain.TenantManagement.Specs.Steps
         }
 
         [When("I use the tenant management service to create a new client tenant called '(.*)'")]
-        public async Task WhenIUseTheTenantManagementServiceToCreateANewClientTenantCalled(string clientName)
+        public Task WhenIUseTheTenantManagementServiceToCreateANewClientTenantCalled(string clientName)
         {
             ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
 
-            try
-            {
-                await service.CreateClientTenantAsync(clientName).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                this.scenarioContext.Set(ex);
-            }
+            return CatchException.AndStoreInScenarioContextAsync(
+                this.scenarioContext,
+                async () =>
+                {
+                    ITenant newTenant = await service.CreateClientTenantAsync(clientName).ConfigureAwait(false);
+                    this.scenarioContext.Set(newTenant, clientName);
+                });
+        }
+
+        [Given(@"I have used the tenant management service to create a new client tenant called '(.*)'")]
+        public async Task GivenIHaveUsedTheTenantManagementServiceToCreateANewClientTenantCalled(string clientName)
+        {
+            ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
+            ITenant newTenant = await service.CreateClientTenantAsync(clientName).ConfigureAwait(false);
+            this.scenarioContext.Set(newTenant, clientName);
         }
 
         [Given("I have used the tenant management service to create a service tenant with manifest '(.*)'")]
-        public Task GivenIHaveUsedTheTenantManagementServiceToCreateAServiceTenantWithManifest(string manifestName)
+        public async Task GivenIHaveUsedTheTenantManagementServiceToCreateAServiceTenantWithManifest(string manifestName)
         {
             ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>(manifestName);
 
             ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
 
-            return service.CreateServiceTenantAsync(manifest);
+            ITenant newTenant = await service.CreateServiceTenantAsync(manifest).ConfigureAwait(false);
+            this.scenarioContext.Set(newTenant, manifest.ServiceName);
         }
 
         [When("I use the tenant management service to create a new service tenant with manifest '(.*)'")]
@@ -64,18 +73,17 @@ namespace Marain.TenantManagement.Specs.Steps
             return this.CreateServiceTenantWithExceptionHandlingAsync(null!);
         }
 
-        public async Task CreateServiceTenantWithExceptionHandlingAsync(ServiceManifest manifest)
+        public Task CreateServiceTenantWithExceptionHandlingAsync(ServiceManifest manifest)
         {
             ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
 
-            try
-            {
-                await service.CreateServiceTenantAsync(manifest).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                this.scenarioContext.Set(ex);
-            }
+            return CatchException.AndStoreInScenarioContextAsync(
+                this.scenarioContext,
+                async () =>
+                {
+                    ITenant newTenant = await service.CreateServiceTenantAsync(manifest).ConfigureAwait(false);
+                    this.scenarioContext.Set(newTenant, manifest.ServiceName);
+                });
         }
 
         [Then("the tenancy provider contains (.*) tenants as children of the root tenant")]

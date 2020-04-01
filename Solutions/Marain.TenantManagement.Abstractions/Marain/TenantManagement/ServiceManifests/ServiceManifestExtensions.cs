@@ -2,7 +2,7 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-namespace Marain.TenantManagement
+namespace Marain.TenantManagement.ServiceManifests
 {
     using System.Collections.Concurrent;
     using System.Collections.Generic;

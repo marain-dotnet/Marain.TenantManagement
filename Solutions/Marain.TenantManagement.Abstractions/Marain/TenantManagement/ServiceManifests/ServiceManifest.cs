@@ -2,7 +2,7 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-namespace Marain.TenantManagement
+namespace Marain.TenantManagement.ServiceManifests
 {
     using System;
     using System.Collections.Generic;
@@ -19,6 +19,16 @@ namespace Marain.TenantManagement
         /// <param name="serviceName">The <see cref="ServiceName"/>.</param>
         public ServiceManifest(string serviceName)
         {
+            if (serviceName == null)
+            {
+                throw new ArgumentNullException(nameof(serviceName), "You must provide a service name when creating a ServiceManifest");
+            }
+
+            if (string.IsNullOrWhiteSpace(serviceName))
+            {
+                throw new ArgumentException(nameof(serviceName), "Service name cannot be empty or whitespace only");
+            }
+
             this.ServiceName = serviceName;
         }
 

@@ -8,6 +8,7 @@ namespace Marain.TenantManagement.Exceptions
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.Serialization;
+    using Marain.TenantManagement.ServiceManifests;
 
     /// <summary>
     /// Exception that will be thrown when an invalid <see cref="ServiceManifest"/> is used.

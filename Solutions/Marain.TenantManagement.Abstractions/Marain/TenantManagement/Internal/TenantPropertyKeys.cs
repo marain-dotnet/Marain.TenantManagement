@@ -13,5 +13,10 @@ namespace Marain.TenantManagement.Internal
         /// Key for storing the Service Manifest on a Service Tenant.
         /// </summary>
         public const string ServiceManifest = "Marain:ServiceManifest";
+
+        /// <summary>
+        /// Key for storing a tenant's enrollments.
+        /// </summary>
+        public const string Enrollments = "Marain:Enrollments";
     }
 }

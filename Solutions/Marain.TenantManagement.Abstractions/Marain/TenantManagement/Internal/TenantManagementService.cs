@@ -10,6 +10,7 @@ namespace Marain.TenantManagement.Internal
     using System.Threading.Tasks;
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
+    using Marain.TenantManagement.ServiceManifests;
 
     /// <summary>
     /// Implementation of <see cref="ITenantManagementService"/> over the Corvus <see cref="ITenantProvider"/>.
@@ -118,6 +119,14 @@ namespace Marain.TenantManagement.Internal
                     this.tenantProvider.Root.Id,
                     TenantNames.ServiceTenantParent).ConfigureAwait(false);
             }
+        }
+
+        /// <inheritdoc/>
+        public Task EnrollInServiceAsync(ITenant enrollingTenant, ITenant serviceTenant)
+        {
+            enrollingTenant.AddServiceEnrollment(serviceTenant.Id);
+
+            return this.tenantProvider.UpdateTenantAsync(enrollingTenant);
         }
 
         private Task<ITenant?> GetClientTenantParentAsync() =>

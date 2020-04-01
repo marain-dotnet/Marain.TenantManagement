@@ -7,6 +7,7 @@ namespace Marain.TenantManagement
     using System;
     using System.Threading.Tasks;
     using Corvus.Tenancy;
+    using Marain.TenantManagement.ServiceManifests;
 
     /// <summary>
     /// Provides standard methods for managing Marain tenants.
@@ -50,5 +51,13 @@ namespace Marain.TenantManagement
         /// <param name="serviceName">The name of the tenant to retrieve.</param>
         /// <returns>The tenant, or null if it does not exist.</returns>
         Task<ITenant?> GetServiceTenantByNameAsync(string serviceName);
+
+        /// <summary>
+        /// Enrolls the specified tenant in the service.
+        /// </summary>
+        /// <param name="enrollingTenant">The tenant to enroll.</param>
+        /// <param name="serviceTenant">The service to enroll in.</param>
+        /// <returns>A task which completes when the enrollment has finished.</returns>
+        Task EnrollInServiceAsync(ITenant enrollingTenant, ITenant serviceTenant);
     }
 }

@@ -39,33 +39,23 @@ namespace Marain.TenantManagement.Specs.Steps
         }
 
         [When("I use the tenant management service to initialise the tenancy provider")]
-        public async Task WhenIUseTheTenantManagementServiceToInitialiseTheTenancyProvider()
+        public Task WhenIUseTheTenantManagementServiceToInitialiseTheTenancyProvider()
         {
             ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
 
-            try
-            {
-                await service.InitialiseTenancyProviderAsync().ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                this.scenarioContext.Set(ex);
-            }
+            return CatchException.AndStoreInScenarioContextAsync(
+                this.scenarioContext,
+                () => service.InitialiseTenancyProviderAsync());
         }
 
         [When("I use the tenant management service to initialise the tenancy provider using the force option")]
-        public async Task WhenIUseTheTenantManagementServiceToInitialiseTheTenancyProviderUsingTheForceOption()
+        public Task WhenIUseTheTenantManagementServiceToInitialiseTheTenancyProviderUsingTheForceOption()
         {
             ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
 
-            try
-            {
-                await service.InitialiseTenancyProviderAsync(true).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                this.scenarioContext.Set(ex);
-            }
+            return CatchException.AndStoreInScenarioContextAsync(
+                this.scenarioContext,
+                () => service.InitialiseTenancyProviderAsync(true));
         }
 
         [Given("the tenancy provider has been initialised for use with Marain")]
