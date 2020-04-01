@@ -14,6 +14,26 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceManifests", "Service
 		ServiceManifests\WorkflowServiceManifest.json = ServiceManifests\WorkflowServiceManifest.json
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marain.TenantManagement.Cli", "Marain.TenantManagement.Cli\Marain.TenantManagement.Cli.csproj", "{4101AE1C-2ABB-4E1B-AC92-456EE4A0C0B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevOps", "DevOps", "{D7C56021-2BF5-4A76-ACD2-28994C6F993C}"
+	ProjectSection(SolutionItems) = preProject
+		..\azure-pipelines.release.yml = ..\azure-pipelines.release.yml
+		..\azure-pipelines.yml = ..\azure-pipelines.yml
+		..\GitVersion.yml = ..\GitVersion.yml
+		..\imm.yaml = ..\imm.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SupportingFiles", "SupportingFiles", "{2CBA1258-9C3F-4294-A5CA-C9131F590E11}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		..\.gitignore = ..\.gitignore
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+		stylecop.json = stylecop.json
+		StyleCop.ruleset = StyleCop.ruleset
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +48,10 @@ Global
 		{90360BFF-F5FA-4A98-8A89-7B48E83FBE70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90360BFF-F5FA-4A98-8A89-7B48E83FBE70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90360BFF-F5FA-4A98-8A89-7B48E83FBE70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4101AE1C-2ABB-4E1B-AC92-456EE4A0C0B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4101AE1C-2ABB-4E1B-AC92-456EE4A0C0B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4101AE1C-2ABB-4E1B-AC92-456EE4A0C0B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4101AE1C-2ABB-4E1B-AC92-456EE4A0C0B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
