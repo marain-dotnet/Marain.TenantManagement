@@ -24,17 +24,18 @@ namespace Marain.TenantManagement.Specs.Steps
         }
 
         [When("I use the tenant enrollment service to enroll the tenant called '(.*)' in the service called '(.*)'")]
-        public Task WhenIUseTheTenantEnrollmentServiceToEnrollTheClientTenantCalledInTheServiceCalled(
+        public async Task WhenIUseTheTenantEnrollmentServiceToEnrollTheClientTenantCalledInTheServiceCalled(
             string enrollingTenantName,
             string serviceTenantName)
         {
             ITenantManagementService managementService =
                 ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
+            ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
 
-            ITenant enrollingTenant = this.scenarioContext.Get<ITenant>(enrollingTenantName);
-            ITenant serviceTenant = this.scenarioContext.Get<ITenant>(serviceTenantName);
+            ITenant enrollingTenant = await tenantProvider.GetTenantAsync(this.scenarioContext.Get<string>(enrollingTenantName)).ConfigureAwait(false);
+            ITenant serviceTenant = await tenantProvider.GetTenantAsync(this.scenarioContext.Get<string>(serviceTenantName)).ConfigureAwait(false);
 
-            return managementService.EnrollInServiceAsync(enrollingTenant, serviceTenant);
+            await managementService.EnrollInServiceAsync(enrollingTenant, serviceTenant).ConfigureAwait(false);
         }
 
         [Then("the tenant called '(.*)' should have the id of the tenant called '(.*)' added to its enrollments")]

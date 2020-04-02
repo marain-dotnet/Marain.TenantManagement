@@ -37,7 +37,7 @@ namespace Marain.TenantManagement.Specs.Steps
                 async () =>
                 {
                     ITenant newTenant = await service.CreateClientTenantAsync(clientName).ConfigureAwait(false);
-                    this.scenarioContext.Set(newTenant, clientName);
+                    this.scenarioContext.Set(newTenant.Id, clientName);
                 });
         }
 
@@ -46,7 +46,7 @@ namespace Marain.TenantManagement.Specs.Steps
         {
             ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
             ITenant newTenant = await service.CreateClientTenantAsync(clientName).ConfigureAwait(false);
-            this.scenarioContext.Set(newTenant, clientName);
+            this.scenarioContext.Set(newTenant.Id, clientName);
         }
 
         [Given("I have used the tenant management service to create a service tenant with manifest '(.*)'")]
@@ -57,7 +57,7 @@ namespace Marain.TenantManagement.Specs.Steps
             ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
 
             ITenant newTenant = await service.CreateServiceTenantAsync(manifest).ConfigureAwait(false);
-            this.scenarioContext.Set(newTenant, manifest.ServiceName);
+            this.scenarioContext.Set(newTenant.Id, manifest.ServiceName);
         }
 
         [When("I use the tenant management service to create a new service tenant with manifest '(.*)'")]
@@ -83,7 +83,7 @@ namespace Marain.TenantManagement.Specs.Steps
                 async () =>
                 {
                     ITenant newTenant = await service.CreateServiceTenantAsync(manifest).ConfigureAwait(false);
-                    this.scenarioContext.Set(newTenant, manifest.ServiceName);
+                    this.scenarioContext.Set(newTenant.Id, manifest.ServiceName);
                 });
         }
 
@@ -128,8 +128,8 @@ namespace Marain.TenantManagement.Specs.Steps
             ITenant? child = tenantProvider.GetTenantByName(targetTenantName);
             Assert.IsNotNull(child, $"Could not find a tenant with the name '{targetTenantName}'");
 
-            List<ITenant> allChildren = tenantProvider.GetChildren(parent!);
-            Assert.Contains(child, allChildren, $"The tenant called '{targetTenantName}' exists but is not a child of the tenant called '{parentTenantName}'");
+            List<string> allChildren = tenantProvider.GetChildren(parent!.Id);
+            Assert.Contains(child!.Id, allChildren, $"The tenant called '{targetTenantName}' exists but is not a child of the tenant called '{parentTenantName}'");
         }
 
         [Then("a new child tenant called '(.*)' of the service tenant called '(.*)' has been created")]
@@ -137,7 +137,7 @@ namespace Marain.TenantManagement.Specs.Steps
         {
             ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
 
-            ITenant serviceTenant = this.scenarioContext.Get<ITenant>(serviceTenantName);
+            ITenant serviceTenant = await tenantProvider.GetTenantAsync(this.scenarioContext.Get<string>(serviceTenantName)).ConfigureAwait(false);
 
             // Normally would have to care about pagination, but under test we only expect a small number of items.
             TenantCollectionResult getChildrenResult = await tenantProvider.GetChildrenAsync(serviceTenant.Id).ConfigureAwait(false);

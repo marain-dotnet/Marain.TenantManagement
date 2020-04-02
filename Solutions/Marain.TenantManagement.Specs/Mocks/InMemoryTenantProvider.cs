@@ -11,6 +11,7 @@ namespace Marain.TenantManagement.Specs.Mocks
     using Corvus.Extensions.Json;
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// In-memory implementation of ITenantProvider.
@@ -18,13 +19,12 @@ namespace Marain.TenantManagement.Specs.Mocks
     public class InMemoryTenantProvider : ITenantProvider
     {
         private readonly IJsonSerializerSettingsProvider jsonSerializerSettingsProvider;
-        private readonly List<ITenant> allTenants = new List<ITenant>();
-        private readonly Dictionary<ITenant, List<ITenant>> tenantsByParent = new Dictionary<ITenant, List<ITenant>>();
+        private readonly List<StoredTenant> allTenants = new List<StoredTenant>();
+        private readonly Dictionary<string, List<string>> tenantsByParent = new Dictionary<string, List<string>>();
 
         public InMemoryTenantProvider(RootTenant rootTenant, IJsonSerializerSettingsProvider jsonSerializerSettingsProvider)
         {
             this.Root = rootTenant;
-            this.allTenants.Add(this.Root);
             this.jsonSerializerSettingsProvider = jsonSerializerSettingsProvider;
         }
 
@@ -33,15 +33,16 @@ namespace Marain.TenantManagement.Specs.Mocks
         public async Task<ITenant> CreateChildTenantAsync(string parentTenantId, string name)
         {
             ITenant parent = await this.GetTenantAsync(parentTenantId).ConfigureAwait(false);
+
             var newTenant = new Tenant(this.jsonSerializerSettingsProvider)
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = name,
             };
 
-            List<ITenant> childrenList = this.GetChildren(parent);
-            childrenList.Add(newTenant);
-            this.allTenants.Add(newTenant);
+            List<string> childrenList = this.GetChildren(parent.Id);
+            childrenList.Add(newTenant.Id);
+            this.allTenants.Add(new StoredTenant(newTenant, this.jsonSerializerSettingsProvider.Instance));
 
             return newTenant;
         }
@@ -55,7 +56,7 @@ namespace Marain.TenantManagement.Specs.Mocks
         {
             ITenant parent = await this.GetTenantAsync(tenantId);
 
-            List<ITenant> children = this.GetChildren(parent);
+            List<string> children = this.GetChildren(parent.Id);
 
             int skip = 0;
 
@@ -64,7 +65,7 @@ namespace Marain.TenantManagement.Specs.Mocks
                 skip = int.Parse(continuationToken);
             }
 
-            IEnumerable<string> tenants = children.Skip(skip).Take(limit).Select(x => x.Id);
+            IEnumerable<string> tenants = children.Skip(skip).Take(limit);
 
             continuationToken = tenants.Count() == limit ? (skip + limit).ToString() : null;
 
@@ -73,7 +74,9 @@ namespace Marain.TenantManagement.Specs.Mocks
 
         public Task<ITenant> GetTenantAsync(string tenantId, string? eTag = null)
         {
-            ITenant? tenant = this.allTenants.Find(x => x.Id == tenantId);
+            ITenant? tenant = tenantId == this.Root.Id
+                ? this.Root
+                : this.allTenants.Find(x => x.Id == tenantId)?.Tenant;
 
             if (tenant == null)
             {
@@ -85,25 +88,56 @@ namespace Marain.TenantManagement.Specs.Mocks
 
         public Task<ITenant> UpdateTenantAsync(ITenant tenant)
         {
-            // No-op; if they have retrieved the tenant from the service and made changes, it's automatically updated
-            // because everything's in-memory.
+            StoredTenant? currentStoredTenant = this.allTenants.Find(x => x.Id == tenant.Id);
+
+            if (currentStoredTenant == null)
+            {
+                throw new TenantNotFoundException($"Cannot update tenant '{tenant.Name}' with Id '{tenant.Id}' because it has not previously been saved.");
+            }
+
+            currentStoredTenant.Tenant = tenant;
+
             return Task.FromResult(tenant);
         }
 
         public ITenant? GetTenantByName(string name)
         {
-            return this.allTenants.Find(x => x != this.Root && x.Name == name);
+            return this.allTenants.Find(x => x.Name == name)?.Tenant;
         }
 
-        public List<ITenant> GetChildren(ITenant parent)
+        public List<string> GetChildren(string parentId)
         {
-            if (!this.tenantsByParent.TryGetValue(parent, out List<ITenant>? children))
+            if (!this.tenantsByParent.TryGetValue(parentId, out List<string>? children))
             {
-                children = new List<ITenant>();
-                this.tenantsByParent.Add(parent, children);
+                children = new List<string>();
+                this.tenantsByParent.Add(parentId, children);
             }
 
             return children;
+        }
+
+        private class StoredTenant
+        {
+            private readonly JsonSerializerSettings settings;
+            private string tenant = string.Empty;
+
+            public StoredTenant(ITenant tenant, JsonSerializerSettings settings)
+            {
+                this.settings = settings;
+                this.Id = tenant.Id;
+                this.Name = tenant.Name;
+                this.Tenant = tenant;
+            }
+
+            public string Id { get; }
+
+            public string Name { get; }
+
+            public ITenant Tenant
+            {
+                get => JsonConvert.DeserializeObject<Tenant>(this.tenant, this.settings);
+                set => this.tenant = JsonConvert.SerializeObject(value, this.settings);
+            }
         }
     }
 }

@@ -202,23 +202,23 @@ this.ScenarioInitialize(scenarioInfo);
 #line 9
 this.FeatureBackground();
 #line hidden
-#line 42
+#line 61
  testRunner.When("I use the tenant enrollment service to enroll the tenant called \'Litware\' in the " +
                         "service called \'Operations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 43
+#line 62
  testRunner.Then("the tenant called \'Litware\' should have the id of the tenant called \'Operations v" +
                         "1\' added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 44
+#line 63
  testRunner.And("a new child tenant called \'Operations v1\\Litware\' of the service tenant called \'O" +
                         "perations v1\' has been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 45
+#line 64
  testRunner.And("the tenant called \'Operations v1\\Litware\' should have the id of the tenant called" +
                         " \'FooBar v1\' added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 46
+#line 65
  testRunner.And("the tenant called \'Litware\' should have the id of the tenant called \'Operations v" +
                         "1\\Litware\' set as the delegated tenant for the service called \'Operations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
@@ -232,7 +232,7 @@ this.FeatureBackground();
         {
             string[] tagsOfScenario = ((string[])(null));
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Enrollment with multiple levels of dependency", null, ((string[])(null)));
-#line 48
+#line 67
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -255,35 +255,35 @@ this.ScenarioInitialize(scenarioInfo);
 #line 9
 this.FeatureBackground();
 #line hidden
-#line 68
+#line 110
  testRunner.When("I use the tenant enrollment service to enroll the tenant called \'Litware\' in the " +
                         "service called \'Workflow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 69
+#line 111
  testRunner.Then("the tenant called \'Litware\' should have the id of the tenant called \'Workflow v1\'" +
                         " added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 70
+#line 112
  testRunner.And("a new child tenant called \'Workflow v1\\Litware\' of the service tenant called \'Wor" +
                         "kflow v1\' has been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 71
+#line 113
  testRunner.And("the tenant called \'Workflow v1\\Litware\' should have the id of the tenant called \'" +
                         "Operations v1\' added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 72
+#line 114
  testRunner.And("the tenant called \'Litware\' should have the id of the tenant called \'Workflow v1\\" +
                         "Litware\' set as the delegated tenant for the service called \'Workflow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 73
+#line 115
  testRunner.And("a new child tenant called \'Operations v1\\Workflow v1\\Litware\' of the service tena" +
                         "nt called \'Operations v1\' has been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 74
+#line 116
  testRunner.And("the tenant called \'Operations v1\\Workflow v1\\Litware\' should have the id of the t" +
                         "enant called \'FooBar v1\' added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 75
+#line 117
  testRunner.And("the tenant called \'Workflow v1\\Litware\' should have the id of the tenant called \'" +
                         "Operations v1\\Workflow v1\\Litware\' set as the delegated tenant for the service c" +
                         "alled \'Operations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -301,7 +301,7 @@ this.FeatureBackground();
             string[] tagsOfScenario = ((string[])(null));
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Enrollment with multiple levels of dependency and with the client tenant directly" +
                     " enrolled in one of the dependent services", null, ((string[])(null)));
-#line 77
+#line 119
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -324,56 +324,56 @@ this.ScenarioInitialize(scenarioInfo);
 #line 9
 this.FeatureBackground();
 #line hidden
-#line 97
+#line 164
  testRunner.When("I use the tenant enrollment service to enroll the tenant called \'Litware\' in the " +
                         "service called \'Workflow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 98
+#line 165
  testRunner.And("I use the tenant enrollment service to enroll the tenant called \'Litware\' in the " +
                         "service called \'Operations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 99
+#line 166
  testRunner.Then("the tenant called \'Litware\' should have the id of the tenant called \'Workflow v1\'" +
                         " added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 100
+#line 167
  testRunner.And("the tenant called \'Litware\' should have the id of the tenant called \'Operations v" +
                         "1\' added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 101
+#line 168
  testRunner.And("a new child tenant called \'Workflow v1\\Litware\' of the service tenant called \'Wor" +
                         "kflow v1\' has been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 102
+#line 169
  testRunner.And("the tenant called \'Workflow v1\\Litware\' should have the id of the tenant called \'" +
                         "Operations v1\' added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 103
+#line 170
  testRunner.And("the tenant called \'Litware\' should have the id of the tenant called \'Workflow v1\\" +
                         "Litware\' set as the delegated tenant for the service called \'Workflow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 104
+#line 171
  testRunner.And("a new child tenant called \'Operations v1\\Workflow v1\\Litware\' of the service tena" +
                         "nt called \'Operations v1\' has been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 105
+#line 172
  testRunner.And("the tenant called \'Operations v1\\Workflow v1\\Litware\' should have the id of the t" +
                         "enant called \'FooBar v1\' added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 106
+#line 173
  testRunner.And("the tenant called \'Workflow v1\\Litware\' should have the id of the tenant called \'" +
                         "Operations v1\\Workflow v1\\Litware\' set as the delegated tenant for the service c" +
                         "alled \'Operations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 107
+#line 174
  testRunner.And("a new child tenant called \'Operations v1\\Litware\' of the service tenant called \'O" +
                         "perations v1\' has been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 108
+#line 175
  testRunner.And("the tenant called \'Operations v1\\Litware\' should have the id of the tenant called" +
                         " \'FooBar v1\' added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 109
+#line 176
  testRunner.And("the tenant called \'Litware\' should have the id of the tenant called \'Operations v" +
                         "1\\Litware\' set as the delegated tenant for the service called \'Operations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
