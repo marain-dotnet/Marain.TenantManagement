@@ -61,7 +61,7 @@ namespace Marain.TenantManagement.Internal
             // TODO: Make sure there isn't already a tenant with the same name.
             ITenant newTenant = await this.tenantProvider.CreateChildTenantAsync(
                 parent!.Id,
-                manifest.ServiceName).ConfigureAwait(false);
+                manifest.ServiceName!).ConfigureAwait(false);
 
             newTenant.SetServiceManifest(manifest);
 

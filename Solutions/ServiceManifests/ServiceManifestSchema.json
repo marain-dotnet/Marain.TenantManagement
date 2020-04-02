@@ -9,7 +9,7 @@
         "serviceName": {
             "type": "string"
         },
-        "dependsOnServices": {
+        "dependsOnServiceNames": {
             "type": "array",
             "items": {
                 "type": "string"

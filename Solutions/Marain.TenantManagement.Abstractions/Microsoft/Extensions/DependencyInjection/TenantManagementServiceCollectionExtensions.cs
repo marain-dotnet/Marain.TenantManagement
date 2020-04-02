@@ -4,8 +4,10 @@
 
 namespace Microsoft.Extensions.DependencyInjection
 {
+    using Corvus.ContentHandling;
     using Marain.TenantManagement;
     using Marain.TenantManagement.Internal;
+    using Marain.TenantManagement.ServiceManifests;
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
@@ -24,8 +26,18 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </remarks>
         public static IServiceCollection AddMarainTenantManagement(this IServiceCollection serviceCollection)
         {
+            serviceCollection.AddContentSerialization();
+            serviceCollection.AddContent(AddTenantManagementContentTypes);
+            serviceCollection.AddJsonSerializerSettings();
             serviceCollection.AddSingleton<ITenantManagementService, TenantManagementService>();
             return serviceCollection;
+        }
+
+        private static void AddTenantManagementContentTypes(ContentFactory factory)
+        {
+            factory.RegisterTransientContent<ServiceManifest>();
+            factory.RegisterTransientContent<ServiceManifestBlobStorageConfigurationEntry>();
+            factory.RegisterTransientContent<ServiceManifestCosmosDbConfigurationEntry>();
         }
     }
 }

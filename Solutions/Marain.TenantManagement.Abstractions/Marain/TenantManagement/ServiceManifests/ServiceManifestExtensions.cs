@@ -35,6 +35,11 @@ namespace Marain.TenantManagement.ServiceManifests
 
             var errors = new ConcurrentBag<string>();
 
+            if (string.IsNullOrWhiteSpace(manifest.ServiceName))
+            {
+                errors.Add("The ServiceName on the manifest is not set or is invalid. ServiceName must be at least one non-whitespace character.");
+            }
+
             await Task.WhenAll(
                 manifest.ValidateServiceNameAsync(tenantManagementService, errors),
                 manifest.ValidateDependenciesExistAsync(tenantManagementService, errors)).ConfigureAwait(false);
@@ -51,7 +56,7 @@ namespace Marain.TenantManagement.ServiceManifests
             ConcurrentBag<string> errors)
         {
             ITenant? existingTenantWithSameName =
-                await tenantManagementService.GetServiceTenantByNameAsync(manifest.ServiceName).ConfigureAwait(false);
+                await tenantManagementService.GetServiceTenantByNameAsync(manifest.ServiceName!).ConfigureAwait(false);
 
             if (existingTenantWithSameName != null)
             {

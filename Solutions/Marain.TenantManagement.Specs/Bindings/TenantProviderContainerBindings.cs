@@ -13,18 +13,24 @@ namespace Marain.TenantManagement.Specs.Bindings
     [Binding]
     public static class TenantProviderContainerBindings
     {
+        [BeforeScenario("perScenarioContainer", Order = ContainerBeforeScenarioOrder.PopulateServiceCollection)]
+        public static void StandardContainerConfiguration(ScenarioContext scenarioContext)
+        {
+            ContainerBindings.ConfigureServices(scenarioContext, collection =>
+            {
+                collection.AddJsonSerializerSettings();
+                collection.AddRootTenant();
+                collection.AddMarainTenantManagement();
+            });
+        }
+
         [BeforeScenario("useInMemoryTenantProvider", Order = ContainerBeforeScenarioOrder.PopulateServiceCollection)]
         public static void UseInMemoryTenantProvider(ScenarioContext scenarioContext)
         {
             ContainerBindings.ConfigureServices(scenarioContext, collection =>
             {
-                collection.AddRootTenant();
-                collection.AddJsonSerializerSettings();
-
                 collection.AddSingleton<InMemoryTenantProvider>();
                 collection.AddSingleton<ITenantProvider>(sp => sp.GetRequiredService<InMemoryTenantProvider>());
-
-                collection.AddMarainTenantManagement();
             });
         }
     }

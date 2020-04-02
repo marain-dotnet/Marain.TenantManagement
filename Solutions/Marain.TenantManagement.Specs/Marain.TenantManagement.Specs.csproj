@@ -17,6 +17,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Data\ServiceManifests\ManifestWithConfiguration.json" />
+    <None Remove="Data\ServiceManifests\ManifestWithDependencies.json" />
+    <None Remove="Data\ServiceManifests\ManifestWithMultipleConfigurationItems.json" />
+    <None Remove="Data\ServiceManifests\SimpleManifestWithNoDependenciesOrConfiguration.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Data\ServiceManifests\ManifestWithMultipleConfigurationItems.json" />
+    <EmbeddedResource Include="Data\ServiceManifests\ManifestWithConfiguration.json" />
+    <EmbeddedResource Include="Data\ServiceManifests\ManifestWithDependencies.json" />
+    <EmbeddedResource Include="Data\ServiceManifests\SimpleManifestWithNoDependenciesOrConfiguration.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Corvus.SpecFlow.Extensions" Version="0.7.0-preview.6" />
     <PackageReference Include="coverlet.msbuild" Version="2.8.0">
       <PrivateAssets>all</PrivateAssets>

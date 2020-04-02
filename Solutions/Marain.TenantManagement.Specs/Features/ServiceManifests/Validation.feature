@@ -9,6 +9,21 @@ Feature: Service manifest validation
 Background: 
 	Given the tenancy provider has been initialised for use with Marain
 
+Scenario: Manifest name not set
+	Given I have a service manifest called 'Manifest' with no service name
+	When I validate the service manifest called 'Manifest'
+	Then an 'InvalidServiceManifestException' is thrown
+	
+Scenario Outline: Creating a manifest with invalid service names
+	Given I have a service manifest called 'Manifest' for a service called '<Service Name>'
+	When I validate the service manifest called 'Manifest'
+	Then an 'InvalidServiceManifestException' is thrown
+
+	Examples:
+		| Scenario Description | Service Name |
+		| Empty string         | ""           |
+		| Spaces only          | "  "         |
+		| Tabs only            | "	"         |
 
 Scenario: Manifest name already in use
 	Given I have a service manifest called 'Operations Manifest' for a service called 'Operations v1'

@@ -33,7 +33,7 @@ namespace Marain.TenantManagement.Specs.Features.ServiceManifests
                 "perScenarioContainer",
                 "useInMemoryTenantProvider"};
         
-#line 1 "ServiceManifestValidation.feature"
+#line 1 "Validation.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]
@@ -90,13 +90,13 @@ namespace Marain.TenantManagement.Specs.Features.ServiceManifests
 #line hidden
         }
         
-        [NUnit.Framework.TestCaseAttribute(TestName="Manifest name already in use")]
-        [NUnit.Framework.DescriptionAttribute("Manifest name already in use")]
-        public virtual void ManifestNameAlreadyInUse()
+        [NUnit.Framework.TestCaseAttribute(TestName="Manifest name not set")]
+        [NUnit.Framework.DescriptionAttribute("Manifest name not set")]
+        public virtual void ManifestNameNotSet()
         {
             string[] tagsOfScenario = ((string[])(null));
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Manifest name already in use", null, ((string[])(null)));
-#line 13
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Manifest name not set", null, ((string[])(null)));
+#line 12
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -119,18 +119,104 @@ this.ScenarioInitialize(scenarioInfo);
 #line 9
 this.FeatureBackground();
 #line hidden
+#line 13
+ testRunner.Given("I have a service manifest called \'Manifest\' with no service name", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
 #line 14
+ testRunner.When("I validate the service manifest called \'Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 15
+ testRunner.Then("an \'InvalidServiceManifestException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.DescriptionAttribute("Creating a manifest with invalid service names")]
+        [NUnit.Framework.TestCaseAttribute("Empty string", "\"\"", null, TestName="Creating a manifest with invalid service names(Empty string,\"\")")]
+        [NUnit.Framework.TestCaseAttribute("Spaces only", "\"  \"", null, TestName="Creating a manifest with invalid service names(Spaces only,\"  \")")]
+        [NUnit.Framework.TestCaseAttribute("Tabs only", "\"\t\"", null, TestName="Creating a manifest with invalid service names(Tabs only,\"\t\")")]
+        public virtual void CreatingAManifestWithInvalidServiceNames(string scenarioDescription, string serviceName, string[] exampleTags)
+        {
+            string[] tagsOfScenario = exampleTags;
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Creating a manifest with invalid service names", null, exampleTags);
+#line 17
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 9
+this.FeatureBackground();
+#line hidden
+#line 18
+ testRunner.Given(string.Format("I have a service manifest called \'Manifest\' for a service called \'{0}\'", serviceName), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 19
+ testRunner.When("I validate the service manifest called \'Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 20
+ testRunner.Then("an \'InvalidServiceManifestException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestCaseAttribute(TestName="Manifest name already in use")]
+        [NUnit.Framework.DescriptionAttribute("Manifest name already in use")]
+        public virtual void ManifestNameAlreadyInUse()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Manifest name already in use", null, ((string[])(null)));
+#line 28
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 9
+this.FeatureBackground();
+#line hidden
+#line 29
  testRunner.Given("I have a service manifest called \'Operations Manifest\' for a service called \'Oper" +
                         "ations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 15
+#line 30
  testRunner.And("I have used the tenant management service to create a service tenant with manifes" +
                         "t \'Operations Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 16
+#line 31
  testRunner.When("I validate the service manifest called \'Operations Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 17
+#line 32
  testRunner.Then("an \'InvalidServiceManifestException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -143,7 +229,7 @@ this.FeatureBackground();
         {
             string[] tagsOfScenario = ((string[])(null));
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Dependent service does not exist", null, ((string[])(null)));
-#line 19
+#line 34
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -166,7 +252,7 @@ this.ScenarioInitialize(scenarioInfo);
 #line 9
 this.FeatureBackground();
 #line hidden
-#line 20
+#line 35
  testRunner.Given("I have a service manifest called \'Workflow Manifest\' for a service called \'Workfl" +
                         "ow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
@@ -174,13 +260,13 @@ this.FeatureBackground();
                             "Service Name"});
                 table1.AddRow(new string[] {
                             "Operations v1"});
-#line 21
+#line 36
  testRunner.And("the service manifest called \'Workflow Manifest\' has the following dependencies", ((string)(null)), table1, "And ");
 #line hidden
-#line 24
+#line 39
  testRunner.When("I validate the service manifest called \'Workflow Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 25
+#line 40
  testRunner.Then("an \'InvalidServiceManifestException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }

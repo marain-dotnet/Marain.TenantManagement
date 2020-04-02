@@ -1,7 +1,7 @@
 {
     "$schema": "./ServiceManifestSchema.json",
     "serviceName": "Workflow",
-    "dependsOnServices": ["Operations"],
+    "dependsOnServiceNames": ["Operations"],
     "requiredConfigurationEntries": [
         {
             "type": "cosmosContainerConfiguration",
