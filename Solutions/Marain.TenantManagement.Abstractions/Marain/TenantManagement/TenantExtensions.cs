@@ -88,6 +88,21 @@ namespace Marain.TenantManagement
         }
 
         /// <summary>
+        /// Gets the list of enrollments for the tenant.
+        /// </summary>
+        /// <param name="tenant">The tenant to get enrollments for.</param>
+        /// <returns>The list of enrollments for the tenant.</returns>
+        public static IEnumerable<string> GetEnrollments(this ITenant tenant)
+        {
+            if (tenant.Properties.TryGet(TenantPropertyKeys.Enrollments, out IList<string> enrollments))
+            {
+                return enrollments;
+            }
+
+            return new string[0];
+        }
+
+        /// <summary>
         /// Adds the given <see cref="ServiceManifest"/> to the tenant's property bag.
         /// </summary>
         /// <param name="tenant">The tenant to add to.</param>

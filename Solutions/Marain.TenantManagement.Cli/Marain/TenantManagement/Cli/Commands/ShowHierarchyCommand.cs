@@ -8,6 +8,7 @@ namespace Marain.TenantManagement.Cli.Commands
     using System.Collections.Generic;
     using System.CommandLine;
     using System.CommandLine.Invocation;
+    using System.Linq;
     using System.Threading.Tasks;
     using Corvus.Tenancy;
 
@@ -51,16 +52,31 @@ namespace Marain.TenantManagement.Cli.Commands
             }
         }
 
-        private void WriteTenantHierarchy(TenantWithChildren root)
+        private IList<ITenant> FlattenHierarchy(TenantWithChildren root)
         {
+            var result = new List<ITenant>();
+            result.Add(root.Tenant);
+
+            foreach (TenantWithChildren child in root.Children)
+            {
+                result.AddRange(this.FlattenHierarchy(child));
+            }
+
+            return result;
+        }
+
+        private void WriteTenantHierarchy(TenantWithChildren root, IList<ITenant>? allTenants = null)
+        {
+            allTenants ??= this.FlattenHierarchy(root);
+
+            string spacing = " |";
+            for (int i = 1; i < root.Depth; i++)
+            {
+                spacing += "     |";
+            }
+
             if (root.Depth > 0)
             {
-                string spacing = " |";
-                for (int i = 1; i < root.Depth; i++)
-                {
-                    spacing += "     |";
-                }
-
                 Console.WriteLine(spacing);
                 Console.Write(spacing);
                 Console.Write("-> ");
@@ -68,9 +84,27 @@ namespace Marain.TenantManagement.Cli.Commands
 
             Console.WriteLine($"{root.Tenant.Name} - ({root.Tenant.Id})");
 
+            var enrollments = root.Tenant.GetEnrollments().ToList();
+            foreach (string enrollment in enrollments)
+            {
+                ITenant? serviceTenant = allTenants.FirstOrDefault(x => x.Id == enrollment);
+                Console.Write(spacing);
+
+                if (serviceTenant != null && serviceTenant.GetServiceManifest().DependsOnServiceNames.Count > 0)
+                {
+                    string delegatedTenantId = root.Tenant.GetDelegatedTenantIdForService(enrollment);
+                    ITenant? delegatedTenant = allTenants.FirstOrDefault(x => x.Id == delegatedTenantId);
+                    Console.WriteLine($"     [Enrollment: '{serviceTenant.Name}', with delegated tenant '{delegatedTenant?.Name ?? delegatedTenantId}']");
+                }
+                else
+                {
+                    Console.WriteLine($"     [Enrollment: {serviceTenant?.Name ?? enrollment}]");
+                }
+            }
+
             foreach (TenantWithChildren child in root.Children)
             {
-                this.WriteTenantHierarchy(child);
+                this.WriteTenantHierarchy(child, allTenants);
             }
         }
 

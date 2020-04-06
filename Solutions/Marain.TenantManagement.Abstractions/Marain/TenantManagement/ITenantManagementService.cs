@@ -55,6 +55,14 @@ namespace Marain.TenantManagement
         /// <summary>
         /// Enrolls the specified tenant in the service.
         /// </summary>
+        /// <param name="enrollingTenantId">The Id of the tenant to enroll.</param>
+        /// <param name="serviceTenantName">The name of the service to enroll in.</param>
+        /// <returns>A task which completes when the enrollment has finished.</returns>
+        Task EnrollInServiceAsync(string enrollingTenantId, string serviceTenantName);
+
+        /// <summary>
+        /// Enrolls the specified tenant in the service.
+        /// </summary>
         /// <param name="enrollingTenant">The tenant to enroll.</param>
         /// <param name="serviceTenantName">The name of the service to enroll in.</param>
         /// <returns>A task which completes when the enrollment has finished.</returns>

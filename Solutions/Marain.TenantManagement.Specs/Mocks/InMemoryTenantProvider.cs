@@ -54,7 +54,7 @@ namespace Marain.TenantManagement.Specs.Mocks
 
         public async Task<TenantCollectionResult> GetChildrenAsync(string tenantId, int limit = 20, string? continuationToken = null)
         {
-            ITenant parent = await this.GetTenantAsync(tenantId);
+            ITenant parent = await this.GetTenantAsync(tenantId).ConfigureAwait(false);
 
             List<string> children = this.GetChildren(parent.Id);
 

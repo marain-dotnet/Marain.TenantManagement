@@ -89,8 +89,8 @@ namespace Marain.TenantManagement.Internal
             TenantCollectionResult existingTopLevelTenantIds = await this.tenantProvider.GetChildrenAsync(
                 this.tenantProvider.Root.Id).ConfigureAwait(false);
 
-            ITenant? existingClientTenantParent = await this.GetClientTenantParentAsync();
-            ITenant? existingServiceTenantParent = await this.GetServiceTenantParentAsync();
+            ITenant? existingClientTenantParent = await this.GetClientTenantParentAsync().ConfigureAwait(false);
+            ITenant? existingServiceTenantParent = await this.GetServiceTenantParentAsync().ConfigureAwait(false);
 
             if (existingClientTenantParent != null && existingServiceTenantParent != null)
             {
@@ -122,12 +122,23 @@ namespace Marain.TenantManagement.Internal
         }
 
         /// <inheritdoc/>
+        public async Task EnrollInServiceAsync(string enrollingTenantId, string serviceTenantName)
+        {
+            ITenant enrollingTenant = await this.tenantProvider.GetTenantAsync(enrollingTenantId).ConfigureAwait(false);
+
+            ITenant serviceTenant = await this.GetServiceTenantByNameAsync(serviceTenantName).ConfigureAwait(false)
+                ?? throw new TenantNotFoundException($"Could not find a service tenant with the name '{serviceTenantName}'");
+
+            await this.EnrollInServiceAsync(enrollingTenant, serviceTenant).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
         public async Task EnrollInServiceAsync(ITenant enrollingTenant, string serviceTenantName)
         {
             ITenant serviceTenant = await this.GetServiceTenantByNameAsync(serviceTenantName).ConfigureAwait(false)
                 ?? throw new TenantNotFoundException($"Could not find a service tenant with the name '{serviceTenantName}'");
 
-            await this.EnrollInServiceAsync(enrollingTenant, serviceTenant);
+            await this.EnrollInServiceAsync(enrollingTenant, serviceTenant).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>

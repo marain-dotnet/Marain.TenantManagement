@@ -4,7 +4,10 @@
 
 namespace Microsoft.Extensions.DependencyInjection
 {
+    using System;
+    using System.Collections.Generic;
     using System.CommandLine;
+    using System.Linq;
     using Corvus.Identity.ManagedServiceIdentity.ClientAuthentication;
     using Marain.Tenancy.Client;
     using Marain.TenantManagement.Cli.Commands;
@@ -22,10 +25,18 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>The service collection, for chaining.</returns>
         public static IServiceCollection AddCliCommands(this IServiceCollection services)
         {
-            services.AddSingleton<Command, InitialiseCommand>();
-            services.AddSingleton<Command, ShowHierarchyCommand>();
-            services.AddSingleton<Command, CreateClientTenantCommand>();
-            services.AddSingleton<Command, CreateServiceTenantCommand>();
+            Type initialiseType = typeof(InitialiseCommand);
+            Type commandType = typeof(Command);
+
+            IEnumerable<Type> commands = initialiseType
+                .Assembly
+                .GetExportedTypes()
+                .Where(x => x.Namespace == initialiseType.Namespace && commandType.IsAssignableFrom(x));
+
+            foreach (Type command in commands)
+            {
+                services.AddSingleton(commandType, command);
+            }
 
             return services;
         }
