@@ -9,7 +9,7 @@ namespace Marain.TenantManagement.Cli.Commands
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Creates the initialisation commands.
+    /// Creates the initialisation command.
     /// </summary>
     public class InitialiseCommand : Command
     {

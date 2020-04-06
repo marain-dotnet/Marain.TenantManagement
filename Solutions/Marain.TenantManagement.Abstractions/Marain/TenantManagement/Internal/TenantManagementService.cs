@@ -165,6 +165,31 @@ namespace Marain.TenantManagement.Internal
             await this.tenantProvider.UpdateTenantAsync(enrollingTenant).ConfigureAwait(false);
         }
 
+        /// <inheritdoc/>
+        public async Task<ServiceManifestRequiredConfigurationEntry[]> GetServiceEnrollmentConfigurationRequirementsAsync(string serviceTenantName)
+        {
+            ITenant serviceTenant = await this.GetServiceTenantByNameAsync(serviceTenantName).ConfigureAwait(false)
+                ?? throw new TenantNotFoundException($"Could not find a service tenant with the name '{serviceTenantName}'");
+
+            return await this.GetServiceEnrollmentConfigurationRequirementsAsync(serviceTenant).ConfigureAwait(false);
+        }
+
+        private async Task<ServiceManifestRequiredConfigurationEntry[]> GetServiceEnrollmentConfigurationRequirementsAsync(ITenant serviceTenant)
+        {
+            var requirements = new List<ServiceManifestRequiredConfigurationEntry>();
+            ServiceManifest serviceManifest = serviceTenant.GetServiceManifest();
+            requirements.AddRange(serviceManifest.RequiredConfigurationEntries);
+
+            ServiceManifestRequiredConfigurationEntry[][] dependentServicesConfigRequirements =
+                await Task.WhenAll(
+                    serviceManifest.DependsOnServiceNames.Select(
+                        x => this.GetServiceEnrollmentConfigurationRequirementsAsync(x))).ConfigureAwait(false);
+
+            requirements.AddRange(dependentServicesConfigRequirements.SelectMany(x => x));
+
+            return requirements.ToArray();
+        }
+
         private Task<ITenant> CreateDelegatedTenant(ITenant accessingTenant, ITenant serviceTenant)
         {
             string delegatedTenantName = TenantNames.DelegatedTenant(serviceTenant.Name, accessingTenant.Name);

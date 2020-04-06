@@ -53,6 +53,16 @@ namespace Marain.TenantManagement
         Task<ITenant?> GetServiceTenantByNameAsync(string serviceName);
 
         /// <summary>
+        /// Retrieves the complete list of configuration items required in order to enroll a tenant to a service. This will
+        /// include configuration entries required by any dependent services.
+        /// </summary>
+        /// <param name="serviceName">The name of the service to gather configuration for.</param>
+        /// <returns>
+        /// A list of <see cref="ServiceManifestRequiredConfigurationEntry"/> representing the configuration requirements.
+        /// </returns>
+        Task<ServiceManifestRequiredConfigurationEntry[]> GetServiceEnrollmentConfigurationRequirementsAsync(string serviceName);
+
+        /// <summary>
         /// Enrolls the specified tenant in the service.
         /// </summary>
         /// <param name="enrollingTenantId">The Id of the tenant to enroll.</param>

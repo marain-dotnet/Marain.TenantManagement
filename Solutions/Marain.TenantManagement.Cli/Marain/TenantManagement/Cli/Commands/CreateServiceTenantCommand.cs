@@ -10,6 +10,7 @@ namespace Marain.TenantManagement.Cli.Commands
     using System.IO;
     using System.Threading.Tasks;
     using Corvus.Extensions.Json;
+    using Marain.TenantManagement.Exceptions;
     using Marain.TenantManagement.ServiceManifests;
     using Newtonsoft.Json;
 
@@ -48,7 +49,7 @@ namespace Marain.TenantManagement.Cli.Commands
             this.serializerSettingsProvider = serializerSettingsProvider;
         }
 
-        private Task HandleCommand(FileInfo manifestFile)
+        private async Task HandleCommand(FileInfo manifestFile)
         {
             if (manifestFile == null)
             {
@@ -59,7 +60,20 @@ namespace Marain.TenantManagement.Cli.Commands
             ServiceManifest manifest =
                 JsonConvert.DeserializeObject<ServiceManifest>(manifestJson, this.serializerSettingsProvider.Instance);
 
-            return this.tenantManagementService.CreateServiceTenantAsync(manifest);
+            try
+            {
+                await this.tenantManagementService.CreateServiceTenantAsync(manifest).ConfigureAwait(false);
+            }
+            catch (InvalidServiceManifestException ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                foreach (string current in ex.Errors)
+                {
+                    Console.Write("     ");
+                    Console.WriteLine(current);
+                }
+            }
         }
     }
 }
