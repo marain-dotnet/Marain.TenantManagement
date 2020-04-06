@@ -10,7 +10,7 @@ namespace Marain.TenantManagement.Specs.Steps
     using System.Threading.Tasks;
     using Corvus.SpecFlow.Extensions;
     using Corvus.Tenancy;
-    using Marain.TenantManagement.Internal;
+    using Marain.TenantManagement;
     using Marain.TenantManagement.ServiceManifests;
     using Marain.TenantManagement.Specs.Mocks;
     using Microsoft.Extensions.DependencyInjection;

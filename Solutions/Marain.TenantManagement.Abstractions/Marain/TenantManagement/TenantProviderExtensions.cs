@@ -2,7 +2,7 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-namespace Marain.TenantManagement.Internal
+namespace Marain.TenantManagement
 {
     using System.Collections.Generic;
     using System.Linq;

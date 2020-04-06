@@ -18,7 +18,7 @@ Scenario: Initialise a tenancy provider that's already been initialised
 	When I use the tenant management service to initialise the tenancy provider
 	Then the tenancy provider contains 2 tenants as children of the root tenant
 
-Scenario: Initialise a non-empty tenancy provider
+Scenario: Initialise a non-empty but uninitialised tenancy provider
 	Given the tenancy provider contains 5 tenants as children of the root tenant
 	When I use the tenant management service to initialise the tenancy provider
 	Then an 'InvalidOperationException' is thrown
@@ -26,7 +26,7 @@ Scenario: Initialise a non-empty tenancy provider
 	And there is no tenant called 'Client Tenants' as a child of the root tenant
 	And there is no tenant called 'Service Tenants' as a child of the root tenant
 
-Scenario: Initialise a non-empty tenancy provider with the force option
+Scenario: Initialise a non-empty but uninitialised tenancy provider with the force option
 	Given the tenancy provider contains 5 tenants as children of the root tenant
 	When I use the tenant management service to initialise the tenancy provider using the force option
 	Then the tenancy provider contains 7 tenants as children of the root tenant

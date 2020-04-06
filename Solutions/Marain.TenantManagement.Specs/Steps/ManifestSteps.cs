@@ -10,6 +10,7 @@ namespace Marain.TenantManagement.Specs.Steps
     using System.Threading.Tasks;
     using Corvus.Extensions.Json;
     using Corvus.SpecFlow.Extensions;
+    using Marain.TenantManagement.Exceptions;
     using Marain.TenantManagement.ServiceManifests;
     using Microsoft.Extensions.DependencyInjection;
     using Newtonsoft.Json;
@@ -25,25 +26,6 @@ namespace Marain.TenantManagement.Specs.Steps
         {
             this.scenarioContext = scenarioContext;
         }
-
-        ////[When("I create a service manifest without providing a service name")]
-        ////public void WhenICreateAServiceManifestWithoutProvidingAServiceName()
-        ////{
-        ////    this.WhenICreateAServiceManifestWithServiceName(null);
-        ////}
-
-        ////[When("I create a service manifest with service name '(.*)'")]
-        ////public void WhenICreateAServiceManifestWithServiceName(string? serviceName)
-        ////{
-        ////    if (serviceName != null)
-        ////    {
-        ////        serviceName = serviceName.TrimStart('"').TrimEnd('"');
-        ////    }
-
-        ////    CatchException.AndStoreInScenarioContext(
-        ////        this.scenarioContext,
-        ////        () => new ServiceManifest { ServiceName = serviceName! });
-        ////}
 
         [Given("I have a service manifest called '(.*)' with no service name")]
         public void GivenIHaveAServiceManifestCalled(string manifestName)
@@ -158,6 +140,18 @@ namespace Marain.TenantManagement.Specs.Steps
             ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>();
 
             Assert.IsTrue(manifest.DependsOnServiceNames.Contains(expectedDependencyName));
+        }
+
+        [Given(@"the service manifest called '(.*)' has the following Azure Blob Storage configuration entries")]
+        public void GivenTheServiceManifestCalledHasTheFollowingAzureBlobStorageConfigurationEntries(string manifestName, Table table)
+        {
+            ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>(manifestName);
+
+            manifest.RequiredConfigurationEntries.Add(new ServiceManifestBlobStorageConfigurationEntry
+            {
+                Description = table.Rows[0]["Description"],
+                ContainerName = table.Rows[0]["Container Name"],
+            });
         }
     }
 }

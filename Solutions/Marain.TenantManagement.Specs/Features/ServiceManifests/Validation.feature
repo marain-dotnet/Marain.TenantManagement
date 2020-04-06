@@ -38,3 +38,19 @@ Scenario: Dependent service does not exist
 	| Operations v1 |
 	When I validate the service manifest called 'Workflow Manifest'
 	Then an 'InvalidServiceManifestException' is thrown
+
+Scenario Outline: Invalid required configuration items - Blob storage
+	Given I have a service manifest called 'Workflow Manifest' for a service called 'Workflow v1'
+	And the service manifest called 'Workflow Manifest' has the following Azure Blob Storage configuration entries
+	| Description   | Container Name   |
+	| <Description> | <Container Name> |
+	When I validate the service manifest called 'Workflow Manifest'
+	Then an 'InvalidServiceManifestException' is thrown
+	And the list of errors attached to the InvalidServiceManifestException contains <Expected Error Count> entries
+
+	Examples:
+	| Scenario Description | Description | Container Name | Expected Error Count |
+	| Missing description  |             | container      | 1                    |
+	| Missing container    | description |                | 1                    |
+	| Missing everything   |             |                | 2                    |
+	

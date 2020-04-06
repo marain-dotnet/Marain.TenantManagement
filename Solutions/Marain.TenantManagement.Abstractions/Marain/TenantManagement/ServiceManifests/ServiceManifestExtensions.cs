@@ -28,63 +28,11 @@ namespace Marain.TenantManagement.ServiceManifests
             this ServiceManifest manifest,
             ITenantManagementService tenantManagementService)
         {
-            if (tenantManagementService == null)
-            {
-                throw new System.ArgumentNullException(nameof(tenantManagementService));
-            }
-
-            var errors = new ConcurrentBag<string>();
-
-            if (string.IsNullOrWhiteSpace(manifest.ServiceName))
-            {
-                errors.Add("The ServiceName on the manifest is not set or is invalid. ServiceName must be at least one non-whitespace character.");
-            }
-
-            await Task.WhenAll(
-                manifest.ValidateServiceNameAsync(tenantManagementService, errors),
-                manifest.ValidateDependenciesExistAsync(tenantManagementService, errors)).ConfigureAwait(false);
+            IList<string> errors = await manifest.ValidateAsync(tenantManagementService).ConfigureAwait(false);
 
             if (errors.Count > 0)
             {
                 throw new InvalidServiceManifestException(errors);
-            }
-        }
-
-        private static async Task ValidateServiceNameAsync(
-            this ServiceManifest manifest,
-            ITenantManagementService tenantManagementService,
-            ConcurrentBag<string> errors)
-        {
-            ITenant? existingTenantWithSameName =
-                await tenantManagementService.GetServiceTenantByNameAsync(manifest.ServiceName!).ConfigureAwait(false);
-
-            if (existingTenantWithSameName != null)
-            {
-                errors.Add($"A Service Tenant called '{manifest.ServiceName}' already exists.");
-            }
-        }
-
-        private static async Task ValidateDependenciesExistAsync(
-            this ServiceManifest manifest,
-            ITenantManagementService tenantManagementService,
-            ConcurrentBag<string> errors)
-        {
-            if (manifest.DependsOnServiceNames.Count == 0)
-            {
-                return;
-            }
-
-            IEnumerable<Task<ITenant?>> dependentServiceTenantRequests =
-                manifest.DependsOnServiceNames.Select(tenantManagementService.GetServiceTenantByNameAsync);
-
-            ITenant[] dependentServiceTenants = await Task.WhenAll(dependentServiceTenantRequests).ConfigureAwait(false);
-
-            for (int index = 0; index < manifest.DependsOnServiceNames.Count; index++)
-            {
-                if (dependentServiceTenants[index] == null)
-                {
-                    errors.Add($"The manifest contains a dependency called '{manifest.DependsOnServiceNames[index]}', but no Service Tenant with that name exists.");
-                }
             }
         }
     }

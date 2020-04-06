@@ -5,6 +5,7 @@
 namespace Marain.TenantManagement.ServiceManifests
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Service manifest configuration entry for CosmosDb.
@@ -22,11 +23,34 @@ namespace Marain.TenantManagement.ServiceManifests
         /// <summary>
         /// Gets or sets the name of the database that the service is expecting to use with this configuration.
         /// </summary>
-        public string? DatabaseName { get; set; }
+#nullable disable annotations
+        public string DatabaseName { get; set; }
+#nullable restore annotations
 
         /// <summary>
         /// Gets or sets the name of the container that the service is expecting to use with this configuration.
         /// </summary>
-        public string? ContainerName { get; set; }
+#nullable disable annotations
+        public string ContainerName { get; set; }
+#nullable restore annotations
+
+        /// <inheritdoc/>
+        public override IList<string> Validate(string messagePrefix)
+        {
+            var results = new List<string>();
+            results.AddRange(base.Validate(messagePrefix));
+
+            if (string.IsNullOrWhiteSpace(this.Description))
+            {
+                results.Add($"{messagePrefix}: DatabaseName must be supplied for configuration entries with content type '{RegisteredContentType}'.");
+            }
+
+            if (string.IsNullOrWhiteSpace(this.ContainerName))
+            {
+                results.Add($"{messagePrefix}: ContainerName must be supplied for configuration entries with content type '{RegisteredContentType}'.");
+            }
+
+            return results;
+        }
     }
 }
