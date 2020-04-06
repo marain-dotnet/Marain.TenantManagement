@@ -1,19 +1,22 @@
 {
-    "$schema": "./ServiceManifestSchema.json",
-    "serviceName": "Workflow",
-    "dependsOnServiceNames": ["Operations"],
-    "requiredConfigurationEntries": [
-        {
-            "type": "cosmosContainerConfiguration",
-            "databaseName": "workflow",
-            "containerName": "definitions",
-            "description": "Workflow definitions"
-        },
-        {
-            "type": "cosmosContainerConfiguration",
-            "databaseName": "workflow",
-            "containerName": "instances",
-            "description": "Workflow instances"
-        }
-    ]
+  "$schema": "./ServiceManifestSchema.json",
+  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest",
+  "serviceName": "Workflow v1",
+  "dependsOnServiceNames": [ "Operations v1" ],
+  "requiredConfigurationEntries": [
+    {
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb",
+      "type": "cosmosContainerConfiguration",
+      "databaseName": "workflow",
+      "containerName": "definitions",
+      "description": "Workflow definitions"
+    },
+    {
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb",
+      "type": "cosmosContainerConfiguration",
+      "databaseName": "workflow",
+      "containerName": "instances",
+      "description": "Workflow instances"
+    }
+  ]
 }

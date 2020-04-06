@@ -1,11 +1,13 @@
 {
-    "$schema": "./ServiceManifestSchema.json",
-    "serviceName": "Operations",
-    "requiredConfigurationEntries": [
-        {
-            "type": "azureBlobContainerConfiguration",
-            "containerName": "operations",
-            "description": "Stores the status of all current operations"
-        }
-    ]
+  "$schema": "./ServiceManifestSchema.json",
+  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest",
+  "serviceName": "Operations v1",
+  "requiredConfigurationEntries": [
+    {
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage",
+      "type": "azureBlobContainerConfiguration",
+      "containerName": "operations",
+      "description": "Stores the status of all current operations"
+    }
+  ]
 }

@@ -15,7 +15,7 @@ namespace Marain.TenantManagement.ServiceManifests
         /// <summary>
         /// The content type of the configuration entry.
         /// </summary>
-        public const string RegisteredContentType = BaseContentType + "cosmosdbconfigurationentry";
+        public const string RegisteredContentType = BaseContentType + "cosmosdb";
 
         /// <inheritdoc/>
         public override string ContentType => RegisteredContentType;

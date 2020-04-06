@@ -15,7 +15,7 @@ namespace Marain.TenantManagement.ServiceManifests
         /// <summary>
         /// The content type of the configuration entry.
         /// </summary>
-        public const string RegisteredContentType = BaseContentType + "azureblobstorageconfigurationentry";
+        public const string RegisteredContentType = BaseContentType + "azureblobstorage";
 
         /// <inheritdoc/>
         public override string ContentType => RegisteredContentType;

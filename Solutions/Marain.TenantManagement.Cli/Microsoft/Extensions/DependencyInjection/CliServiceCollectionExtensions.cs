@@ -25,6 +25,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<Command, InitialiseCommand>();
             services.AddSingleton<Command, ShowHierarchyCommand>();
             services.AddSingleton<Command, CreateClientTenantCommand>();
+            services.AddSingleton<Command, CreateServiceTenantCommand>();
 
             return services;
         }

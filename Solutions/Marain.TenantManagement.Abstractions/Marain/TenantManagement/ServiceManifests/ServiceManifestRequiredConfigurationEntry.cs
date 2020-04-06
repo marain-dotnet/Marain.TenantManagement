@@ -15,7 +15,7 @@ namespace Marain.TenantManagement.ServiceManifests
         /// <summary>
         /// Base content type for configuration entries.
         /// </summary>
-        public const string BaseContentType = "application/vnd.marain.tenancy.servicemanifests.";
+        public const string BaseContentType = "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.";
 
         /// <summary>
         /// Gets the content type for the configuration entry.

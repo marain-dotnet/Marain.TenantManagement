@@ -23,10 +23,11 @@ namespace Marain.TenantManagement.Cli.Commands
         public CreateClientTenantCommand(ITenantManagementService tenantManagementService)
             : base("create-client", "Initialises the tenancy provider for use with Marain.")
         {
-            var clientName = new Argument("name");
-            clientName.ArgumentType = typeof(string);
-            clientName.Description = "The name of the new client.";
-            clientName.Arity = ArgumentArity.ExactlyOne;
+            var clientName = new Argument<string>("name")
+            {
+                Description = "The name of the new client.",
+                Arity = ArgumentArity.ExactlyOne,
+            };
 
             this.AddArgument(clientName);
 

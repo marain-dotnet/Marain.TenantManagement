@@ -3,12 +3,12 @@
   "serviceName": "Manifest with multiple configuration items",
   "requiredConfigurationEntries": [
     {
-      "contentType": "application/vnd.marain.tenancy.servicemanifests.azureblobstorageconfigurationentry",
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage",
       "containerName": "operations",
       "description": "Stores the status of all current operations"
     },
     {
-      "contentType": "application/vnd.marain.tenancy.servicemanifests.cosmosdbconfigurationentry",
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb",
       "databaseName": "workflow",
       "containerName": "definitions",
       "description": "Workflow definitions"
