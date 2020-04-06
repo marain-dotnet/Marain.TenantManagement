@@ -4,8 +4,8 @@
 
 namespace Marain.TenantManagement.ServiceManifests
 {
-    using System;
     using System.Collections.Generic;
+    using Corvus.Azure.Cosmos.Tenancy;
 
     /// <summary>
     /// Service manifest configuration entry for CosmosDb.
@@ -24,14 +24,7 @@ namespace Marain.TenantManagement.ServiceManifests
         /// Gets or sets the name of the database that the service is expecting to use with this configuration.
         /// </summary>
 #nullable disable annotations
-        public string DatabaseName { get; set; }
-#nullable restore annotations
-
-        /// <summary>
-        /// Gets or sets the name of the container that the service is expecting to use with this configuration.
-        /// </summary>
-#nullable disable annotations
-        public string ContainerName { get; set; }
+        public CosmosContainerDefinition ContainerDefinition { get; set; }
 #nullable restore annotations
 
         /// <inheritdoc/>
@@ -40,14 +33,19 @@ namespace Marain.TenantManagement.ServiceManifests
             var results = new List<string>();
             results.AddRange(base.Validate(messagePrefix));
 
-            if (string.IsNullOrWhiteSpace(this.Description))
+            if (this.ContainerDefinition == null)
             {
-                results.Add($"{messagePrefix}: DatabaseName must be supplied for configuration entries with content type '{RegisteredContentType}'.");
+                results.Add($"{messagePrefix}: ContainerDefinition must be supplied for configuration entries with content type '{RegisteredContentType}'.");
             }
 
-            if (string.IsNullOrWhiteSpace(this.ContainerName))
+            if (string.IsNullOrWhiteSpace(this.ContainerDefinition?.DatabaseName))
             {
-                results.Add($"{messagePrefix}: ContainerName must be supplied for configuration entries with content type '{RegisteredContentType}'.");
+                results.Add($"{messagePrefix}: ContainerDefinition.DatabaseName must be supplied for configuration entries with content type '{RegisteredContentType}'.");
+            }
+
+            if (string.IsNullOrWhiteSpace(this.ContainerDefinition?.ContainerName))
+            {
+                results.Add($"{messagePrefix}: ContainerDefinition.ContainerName must be supplied for configuration entries with content type '{RegisteredContentType}'.");
             }
 
             return results;

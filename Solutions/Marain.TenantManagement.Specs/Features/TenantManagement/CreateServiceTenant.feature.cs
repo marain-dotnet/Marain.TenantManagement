@@ -92,12 +92,12 @@ namespace Marain.TenantManagement.Specs.Features.TenantManagement
  testRunner.Given("I have a service manifest called \'Workflow Manifest\' for a service called \'Workfl" +
                     "ow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
                         "Service Name"});
-            table3.AddRow(new string[] {
+            table4.AddRow(new string[] {
                         "Operations"});
 #line 12
- testRunner.And("the service manifest called \'Workflow Manifest\' has the following dependencies", ((string)(null)), table3, "And ");
+ testRunner.And("the service manifest called \'Workflow Manifest\' has the following dependencies", ((string)(null)), table4, "And ");
 #line hidden
         }
         

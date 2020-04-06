@@ -6,6 +6,7 @@ namespace Marain.TenantManagement.ServiceManifests
 {
     using System;
     using System.Collections.Generic;
+    using Corvus.Azure.Storage.Tenancy;
 
     /// <summary>
     /// Service manifest configuration entry for blob storage.
@@ -20,11 +21,11 @@ namespace Marain.TenantManagement.ServiceManifests
         /// <inheritdoc/>
         public override string ContentType => RegisteredContentType;
 
-        /// <summary>
-        /// Gets or sets the name of the container that the service is expecting to use with this configuration.
-        /// </summary>
 #nullable disable annotations
-        public string ContainerName { get; set; }
+        /// <summary>
+        /// Gets or sets the container definition that this configuration entry relates to.
+        /// </summary>
+        public BlobStorageContainerDefinition ContainerDefinition { get; set; }
 #nullable restore annotations
 
         /// <inheritdoc/>
@@ -33,9 +34,14 @@ namespace Marain.TenantManagement.ServiceManifests
             var results = new List<string>();
             results.AddRange(base.Validate(messagePrefix));
 
-            if (string.IsNullOrWhiteSpace(this.ContainerName))
+            if (this.ContainerDefinition == null)
             {
-                results.Add($"{messagePrefix}: ContainerName must be supplied for configuration entries with content type '{RegisteredContentType}'.");
+                results.Add($"{messagePrefix}: ContainerDefinition must be supplied for configuration entries with content type '{RegisteredContentType}'.");
+            }
+
+            if (string.IsNullOrWhiteSpace(this.ContainerDefinition?.ContainerName))
+            {
+                results.Add($"{messagePrefix}: ContainerDefinition.ContainerName must be supplied for configuration entries with content type '{RegisteredContentType}'.");
             }
 
             return results;

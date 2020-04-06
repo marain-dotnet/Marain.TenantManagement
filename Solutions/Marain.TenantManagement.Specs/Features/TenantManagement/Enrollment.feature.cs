@@ -99,12 +99,12 @@ namespace Marain.TenantManagement.Specs.Features.TenantManagement
  testRunner.And("I have a service manifest called \'Operations Manifest\' for a service called \'Oper" +
                     "ations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
                         "Service Name"});
-            table4.AddRow(new string[] {
+            table5.AddRow(new string[] {
                         "FooBar v1"});
 #line 14
- testRunner.And("the service manifest called \'Operations Manifest\' has the following dependencies", ((string)(null)), table4, "And ");
+ testRunner.And("the service manifest called \'Operations Manifest\' has the following dependencies", ((string)(null)), table5, "And ");
 #line hidden
 #line 17
  testRunner.And("I have used the tenant management service to create a service tenant with manifes" +
@@ -114,12 +114,12 @@ namespace Marain.TenantManagement.Specs.Features.TenantManagement
  testRunner.And("I have a service manifest called \'Workflow Manifest\' for a service called \'Workfl" +
                     "ow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
                         "Service Name"});
-            table5.AddRow(new string[] {
+            table6.AddRow(new string[] {
                         "Operations v1"});
 #line 19
- testRunner.And("the service manifest called \'Workflow Manifest\' has the following dependencies", ((string)(null)), table5, "And ");
+ testRunner.And("the service manifest called \'Workflow Manifest\' has the following dependencies", ((string)(null)), table6, "And ");
 #line hidden
 #line 22
  testRunner.And("I have used the tenant management service to create a service tenant with manifes" +

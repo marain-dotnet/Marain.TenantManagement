@@ -7,15 +7,19 @@
     {
       "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb",
       "type": "cosmosContainerConfiguration",
-      "databaseName": "workflow",
-      "containerName": "definitions",
+      "containerDefinition": {
+        "databaseName": "workflow",
+        "containerName": "definitions"
+      },
       "description": "Workflow definitions"
     },
     {
       "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb",
       "type": "cosmosContainerConfiguration",
-      "databaseName": "workflow",
-      "containerName": "instances",
+      "containerDefinition": {
+        "databaseName": "workflow",
+        "containerName": "instances"
+      },
       "description": "Workflow instances"
     }
   ]

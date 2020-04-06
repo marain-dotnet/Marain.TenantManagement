@@ -8,10 +8,13 @@ namespace Marain.TenantManagement.Specs.Steps
     using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
+    using Corvus.Azure.Cosmos.Tenancy;
+    using Corvus.Azure.Storage.Tenancy;
     using Corvus.Extensions.Json;
     using Corvus.SpecFlow.Extensions;
     using Marain.TenantManagement.Exceptions;
     using Marain.TenantManagement.ServiceManifests;
+    using Microsoft.Azure.Storage.Blob;
     using Microsoft.Extensions.DependencyInjection;
     using Newtonsoft.Json;
     using NUnit.Framework;
@@ -149,8 +152,27 @@ namespace Marain.TenantManagement.Specs.Steps
 
             manifest.RequiredConfigurationEntries.Add(new ServiceManifestBlobStorageConfigurationEntry
             {
+                Key = table.Rows[0]["Key"],
                 Description = table.Rows[0]["Description"],
-                ContainerName = table.Rows[0]["Container Name"],
+                ContainerDefinition = new BlobStorageContainerDefinition(table.Rows[0]["Container Name"]),
+            });
+        }
+
+        [Given("the service manifest called '(.*)' has the following Azure CosmosDb Storage configuration entries")]
+        public void GivenTheServiceManifestCalledHasTheFollowingAzureCosmosDbStorageConfigurationEntries(string manifestName, Table table)
+        {
+            ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>(manifestName);
+
+            manifest.RequiredConfigurationEntries.Add(new ServiceManifestCosmosDbConfigurationEntry
+            {
+                Key = table.Rows[0]["Key"],
+                Description = table.Rows[0]["Description"],
+                ContainerDefinition = new CosmosContainerDefinition(
+                    table.Rows[0]["Database Name"],
+                    table.Rows[0]["Container Name"],
+                    null,
+                    null,
+                    null),
             });
         }
     }

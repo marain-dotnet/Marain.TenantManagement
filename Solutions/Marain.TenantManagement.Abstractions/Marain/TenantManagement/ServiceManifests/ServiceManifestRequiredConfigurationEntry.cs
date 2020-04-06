@@ -23,9 +23,19 @@ namespace Marain.TenantManagement.ServiceManifests
         public abstract string ContentType { get; }
 
         /// <summary>
+        /// Gets or sets the key of the configuration entry. This is used to match configuration supplied as part of
+        /// enrollment with the configuration entry it relates to.
+        /// </summary>
+#nullable disable annotations
+        public string Key { get; set; }
+#nullable restore annotations
+
+        /// <summary>
         /// Gets or sets the description of the configuration entry.
         /// </summary>
-        public string? Description { get; set; }
+#nullable disable annotations
+        public string Description { get; set; }
+#nullable restore annotations
 
         /// <summary>
         /// Validates the configuration entry.
@@ -35,6 +45,11 @@ namespace Marain.TenantManagement.ServiceManifests
         public virtual IList<string> Validate(string messagePrefix)
         {
             var errors = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(this.Key))
+            {
+                errors.Add($"{messagePrefix}: A Key must be supplied for each configuration entry.");
+            }
 
             if (string.IsNullOrWhiteSpace(this.Description))
             {

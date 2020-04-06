@@ -6,7 +6,9 @@
     {
       "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage",
       "type": "azureBlobContainerConfiguration",
-      "containerName": "operations",
+      "containerDefinition": {
+        "containerName": "operations"
+      },
       "description": "Stores the status of all current operations"
     }
   ]

@@ -275,10 +275,11 @@ this.FeatureBackground();
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Invalid required configuration items - Blob storage")]
-        [NUnit.Framework.TestCaseAttribute("Missing description", "", "container", "1", null)]
-        [NUnit.Framework.TestCaseAttribute("Missing container", "description", "", "1", null)]
-        [NUnit.Framework.TestCaseAttribute("Missing everything", "", "", "2", null)]
-        public virtual void InvalidRequiredConfigurationItems_BlobStorage(string scenarioDescription, string description, string containerName, string expectedErrorCount, string[] exampleTags)
+        [NUnit.Framework.TestCaseAttribute("Missing key", "", "description", "container", "1", null)]
+        [NUnit.Framework.TestCaseAttribute("Missing description", "key", "", "container", "1", null)]
+        [NUnit.Framework.TestCaseAttribute("Missing container", "key", "description", "", "1", null)]
+        [NUnit.Framework.TestCaseAttribute("Missing everything", "", "", "", "3", null)]
+        public virtual void InvalidRequiredConfigurationItems_BlobStorage(string scenarioDescription, string key, string description, string containerName, string expectedErrorCount, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Invalid required configuration items - Blob storage", null, exampleTags);
@@ -310,9 +311,11 @@ this.FeatureBackground();
                         "ow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
                 TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Key",
                             "Description",
                             "Container Name"});
                 table2.AddRow(new string[] {
+                            string.Format("{0}", key),
                             string.Format("{0}", description),
                             string.Format("{0}", containerName)});
 #line 44
@@ -326,6 +329,72 @@ this.FeatureBackground();
  testRunner.Then("an \'InvalidServiceManifestException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 49
+ testRunner.And(string.Format("the list of errors attached to the InvalidServiceManifestException contains {0} e" +
+                            "ntries", expectedErrorCount), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Invalid required configuration items - CosmosDb storage")]
+        [NUnit.Framework.TestCaseAttribute("Missing key", "", "description", "database", "container", "1", null)]
+        [NUnit.Framework.TestCaseAttribute("Missing description", "key", "", "database", "container", "1", null)]
+        [NUnit.Framework.TestCaseAttribute("Missing database", "key", "description", "", "container", "1", null)]
+        [NUnit.Framework.TestCaseAttribute("Missing container", "key", "description", "database", "", "1", null)]
+        [NUnit.Framework.TestCaseAttribute("Missing everything", "", "", "", "", "4", null)]
+        public virtual void InvalidRequiredConfigurationItems_CosmosDbStorage(string scenarioDescription, string key, string description, string databaseName, string containerName, string expectedErrorCount, string[] exampleTags)
+        {
+            string[] tagsOfScenario = exampleTags;
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Invalid required configuration items - CosmosDb storage", null, exampleTags);
+#line 58
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 9
+this.FeatureBackground();
+#line hidden
+#line 59
+ testRunner.Given("I have a service manifest called \'Workflow Manifest\' for a service called \'Workfl" +
+                        "ow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+                TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Key",
+                            "Description",
+                            "Database Name",
+                            "Container Name"});
+                table3.AddRow(new string[] {
+                            string.Format("{0}", key),
+                            string.Format("{0}", description),
+                            string.Format("{0}", databaseName),
+                            string.Format("{0}", containerName)});
+#line 60
+ testRunner.And("the service manifest called \'Workflow Manifest\' has the following Azure CosmosDb " +
+                        "Storage configuration entries", ((string)(null)), table3, "And ");
+#line hidden
+#line 63
+ testRunner.When("I validate the service manifest called \'Workflow Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 64
+ testRunner.Then("an \'InvalidServiceManifestException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 65
  testRunner.And(string.Format("the list of errors attached to the InvalidServiceManifestException contains {0} e" +
                             "ntries", expectedErrorCount), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
