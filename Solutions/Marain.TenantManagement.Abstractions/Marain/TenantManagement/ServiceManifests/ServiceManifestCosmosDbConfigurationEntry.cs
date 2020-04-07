@@ -27,7 +27,7 @@ namespace Marain.TenantManagement.ServiceManifests
             EnrollmentCosmosConfigurationItem.RegisteredContentType;
 
         /// <summary>
-        /// Gets or sets the name of the database that the service is expecting to use with this configuration.
+        /// Gets or sets the container definition that the service is expecting to use with this configuration.
         /// </summary>
 #nullable disable annotations
         public CosmosContainerDefinition ContainerDefinition { get; set; }
