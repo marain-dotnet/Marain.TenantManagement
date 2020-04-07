@@ -19,10 +19,16 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class CliServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds services required by the command line application to the service collection.
+        /// Adds the CLI commands to the DI container. These are resolved when the commands are registered with the
+        /// <c>CommandLineBuilder</c>.
         /// </summary>
         /// <param name="services">The service collection to add to.</param>
         /// <returns>The service collection, for chaining.</returns>
+        /// <remarks>
+        /// We are using convention to register the commands; essentially everything in the same namespace as the
+        /// <see cref="InitialiseCommand"/> and that implements <c>Command</c> will be registered. If any commands are
+        /// added in other namespaces, this method will need to be modified/extended to deal with that.
+        /// </remarks>
         public static IServiceCollection AddCliCommands(this IServiceCollection services)
         {
             Type initialiseType = typeof(InitialiseCommand);
