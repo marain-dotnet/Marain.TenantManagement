@@ -48,8 +48,7 @@ namespace Marain.TenantManagement.ServiceManifests
             {
                 results.Add($"{messagePrefix}: ContainerDefinition must be supplied for configuration entries with content type '{RegisteredContentType}'.");
             }
-
-            if (string.IsNullOrWhiteSpace(this.ContainerDefinition?.ContainerName))
+            else if (string.IsNullOrWhiteSpace(this.ContainerDefinition.ContainerName))
             {
                 results.Add($"{messagePrefix}: ContainerDefinition.ContainerName must be supplied for configuration entries with content type '{RegisteredContentType}'.");
             }

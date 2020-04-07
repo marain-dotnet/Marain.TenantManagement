@@ -22,6 +22,7 @@ namespace Marain.TenantManagement.ServiceManifests
         /// <param name="tenantManagementService">The <see cref="ITenantManagementService"/> that will be used when
         /// validating the manifest.</param>
         /// <returns>A task representing the asynchronous operation. If it completes successfully, the manifest is valid.</returns>
+        /// <exception cref="InvalidServiceManifestException">The service manifest contains one or more errors.</exception>
         public static async Task ValidateAndThrowAsync(
             this ServiceManifest manifest,
             ITenantManagementService tenantManagementService)
