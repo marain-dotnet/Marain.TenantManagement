@@ -4,6 +4,7 @@
 
 namespace Marain.TenantManagement
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -28,6 +29,16 @@ namespace Marain.TenantManagement
         /// </remarks>
         public static async Task<IList<string>> GetAllChildrenAsync(this ITenantProvider tenantProvider, string tenantId)
         {
+            if (tenantId == null)
+            {
+                throw new ArgumentNullException(nameof(tenantId));
+            }
+
+            if (string.IsNullOrWhiteSpace(tenantId))
+            {
+                throw new ArgumentException(nameof(tenantId));
+            }
+
             string? continuationToken = null;
             const int limit = 100;
 
@@ -57,6 +68,11 @@ namespace Marain.TenantManagement
         /// <returns>A task that produces the specified tenants.</returns>
         public static async Task<ITenant[]> GetTenantsAsync(this ITenantProvider tenantProvider, IEnumerable<string> tenantIds)
         {
+            if (tenantIds == null)
+            {
+                throw new ArgumentNullException(nameof(tenantIds));
+            }
+
             IEnumerable<Task<ITenant>> getTenantTasks = tenantIds.Select(tenantId => tenantProvider.GetTenantAsync(tenantId));
 
             return await Task.WhenAll(getTenantTasks).ConfigureAwait(false);

@@ -9,8 +9,8 @@
 
   <PropertyGroup>
     <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
-    <PackageDescription></PackageDescription>
-    <PackageTags></PackageTags>
+    <PackageDescription>Management components for Marain, allowing tenants to be created and enrolled into services.</PackageDescription>
+    <PackageTags>Marain</PackageTags>
     <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 

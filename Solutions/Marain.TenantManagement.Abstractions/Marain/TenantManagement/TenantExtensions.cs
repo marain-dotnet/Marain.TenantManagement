@@ -6,7 +6,6 @@ namespace Marain.TenantManagement
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using Corvus.Tenancy;
     using Marain.TenantManagement.Internal;
     using Marain.TenantManagement.ServiceManifests;
@@ -17,33 +16,13 @@ namespace Marain.TenantManagement
     public static class TenantExtensions
     {
         /// <summary>
-        /// Returns true if the tenant is a Service tenant, otherwise returns false.
-        /// </summary>
-        /// <param name="tenant">The tenant to check.</param>
-        /// <returns>A value indicating whether or not the tenant is a Service tenant.</returns>
-        public static bool IsServiceTenant(this ITenant tenant)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Returns true if the tenant is a Client tenant, otherwise returns false.
-        /// </summary>
-        /// <param name="tenant">The tenant to check.</param>
-        /// <returns>A value indicating whether or not the tenant is a Client tenant.</returns>
-        public static bool IsClientTenant(this ITenant tenant)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Gets the <see cref="ServiceManifest"/> from the specified tenant.
         /// </summary>
         /// <param name="tenant">The tenant to get the manifest from.</param>
         /// <returns>The Service Manifest.</returns>
         public static ServiceManifest GetServiceManifest(this ITenant tenant)
         {
-            if (tenant.Properties.TryGet<ServiceManifest>(TenantPropertyKeys.ServiceManifest, out ServiceManifest manifest))
+            if (tenant.Properties.TryGet(TenantPropertyKeys.ServiceManifest, out ServiceManifest manifest))
             {
                 return manifest;
             }
@@ -59,6 +38,16 @@ namespace Marain.TenantManagement
         /// <returns>True if the tenant is enrolled for the service, false otherwise.</returns>
         public static bool IsEnrolledForService(this ITenant tenant, string serviceTenantId)
         {
+            if (serviceTenantId == null)
+            {
+                throw new ArgumentNullException(nameof(serviceTenantId));
+            }
+
+            if (string.IsNullOrWhiteSpace(serviceTenantId))
+            {
+                throw new ArgumentException(nameof(serviceTenantId));
+            }
+
             if (tenant.Properties.TryGet(TenantPropertyKeys.Enrollments, out IList<string> enrollments))
             {
                 return enrollments.Contains(serviceTenantId);
@@ -79,6 +68,16 @@ namespace Marain.TenantManagement
         /// <returns>The Id of the delegated tenant.</returns>
         public static string GetDelegatedTenantIdForService(this ITenant tenant, string serviceTenantId)
         {
+            if (serviceTenantId == null)
+            {
+                throw new ArgumentNullException(nameof(serviceTenantId));
+            }
+
+            if (string.IsNullOrWhiteSpace(serviceTenantId))
+            {
+                throw new ArgumentException(nameof(serviceTenantId));
+            }
+
             if (tenant.Properties.TryGet(TenantPropertyKeys.DelegatedTenantId(serviceTenantId), out string delegatedTenantId))
             {
                 return delegatedTenantId;
@@ -109,6 +108,11 @@ namespace Marain.TenantManagement
         /// <param name="manifest">The manifest to add.</param>
         internal static void SetServiceManifest(this ITenant tenant, ServiceManifest manifest)
         {
+            if (manifest == null)
+            {
+                throw new ArgumentNullException(nameof(manifest));
+            }
+
             tenant.Properties.Set(TenantPropertyKeys.ServiceManifest, manifest);
         }
 
@@ -119,6 +123,16 @@ namespace Marain.TenantManagement
         /// <param name="serviceTenantId">The Service Tenant Id of the service being enrolled in.</param>
         internal static void AddServiceEnrollment(this ITenant tenant, string serviceTenantId)
         {
+            if (serviceTenantId == null)
+            {
+                throw new ArgumentNullException(nameof(serviceTenantId));
+            }
+
+            if (string.IsNullOrWhiteSpace(serviceTenantId))
+            {
+                throw new ArgumentException(nameof(serviceTenantId));
+            }
+
             // TODO: We should check that the tenant is allowed to enroll (i.e they are not either the root tenant or a
             // service tenant.
             if (!tenant.Properties.TryGet(TenantPropertyKeys.Enrollments, out IList<string> enrollments))
@@ -150,6 +164,26 @@ namespace Marain.TenantManagement
             string serviceTenantId,
             string delegatedTenantId)
         {
+            if (serviceTenantId == null)
+            {
+                throw new ArgumentNullException(nameof(serviceTenantId));
+            }
+
+            if (string.IsNullOrWhiteSpace(serviceTenantId))
+            {
+                throw new ArgumentException(nameof(serviceTenantId));
+            }
+
+            if (delegatedTenantId == null)
+            {
+                throw new ArgumentNullException(nameof(delegatedTenantId));
+            }
+
+            if (string.IsNullOrWhiteSpace(delegatedTenantId))
+            {
+                throw new ArgumentException(nameof(delegatedTenantId));
+            }
+
             tenant.Properties.Set(TenantPropertyKeys.DelegatedTenantId(serviceTenantId), delegatedTenantId);
         }
     }

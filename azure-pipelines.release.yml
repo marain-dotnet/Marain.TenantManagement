@@ -11,5 +11,5 @@ resources:
 jobs:
 - template: templates/tag.for.release.yml@recommended_practices
   parameters:
-    vmImage: 'windows-latest'
+    vmImage: 'ubuntu-latest'
     service_connection_github: $(Endjin_Service_Connection_GitHub)

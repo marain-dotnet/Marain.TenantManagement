@@ -9,7 +9,6 @@ namespace Marain.TenantManagement.Exceptions
     using System.Linq;
     using System.Runtime.Serialization;
     using Marain.TenantManagement.EnrollmentConfiguration;
-    using Marain.TenantManagement.ServiceManifests;
 
     /// <summary>
     /// Exception that will be thrown when invalid <see cref="EnrollmentConfigurationItem"/> entries are supplied

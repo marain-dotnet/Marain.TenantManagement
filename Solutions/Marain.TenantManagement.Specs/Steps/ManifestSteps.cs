@@ -5,16 +5,13 @@
 namespace Marain.TenantManagement.Specs.Steps
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
     using Corvus.Azure.Cosmos.Tenancy;
     using Corvus.Azure.Storage.Tenancy;
     using Corvus.Extensions.Json;
     using Corvus.SpecFlow.Extensions;
-    using Marain.TenantManagement.Exceptions;
     using Marain.TenantManagement.ServiceManifests;
-    using Microsoft.Azure.Storage.Blob;
     using Microsoft.Extensions.DependencyInjection;
     using Newtonsoft.Json;
     using NUnit.Framework;

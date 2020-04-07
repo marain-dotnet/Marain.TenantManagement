@@ -4,9 +4,9 @@
 
 namespace Marain.TenantManagement.ServiceManifests
 {
+    using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
     using Corvus.Tenancy;
@@ -57,7 +57,7 @@ namespace Marain.TenantManagement.ServiceManifests
         {
             if (tenantManagementService == null)
             {
-                throw new System.ArgumentNullException(nameof(tenantManagementService));
+                throw new ArgumentNullException(nameof(tenantManagementService));
             }
 
             var errors = new ConcurrentBag<string>();
@@ -85,7 +85,7 @@ namespace Marain.TenantManagement.ServiceManifests
             ITenantManagementService tenantManagementService,
             ConcurrentBag<string> errors)
         {
-            if (this.ServiceName != null)
+            if (!string.IsNullOrWhiteSpace(this.ServiceName))
             {
                 ITenant? existingTenantWithSameName =
                     await tenantManagementService.GetServiceTenantByNameAsync(this.ServiceName).ConfigureAwait(false);

@@ -4,6 +4,7 @@
 
 namespace Marain.TenantManagement.ServiceManifests
 {
+    using System;
     using System.Collections.Generic;
     using Marain.TenantManagement.EnrollmentConfiguration;
 
@@ -50,6 +51,11 @@ namespace Marain.TenantManagement.ServiceManifests
         /// <returns>A list of validation errors. If the entry is valid, the list is empty.</returns>
         public virtual IList<string> Validate(string messagePrefix)
         {
+            if (string.IsNullOrEmpty(messagePrefix))
+            {
+                throw new ArgumentException(nameof(messagePrefix));
+            }
+
             var errors = new List<string>();
 
             if (string.IsNullOrWhiteSpace(this.Key))

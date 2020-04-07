@@ -4,11 +4,9 @@
 
 namespace Marain.TenantManagement.ServiceManifests
 {
-    using System.Collections.Concurrent;
+    using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
-    using Corvus.Tenancy;
     using Marain.TenantManagement.Exceptions;
 
     /// <summary>
@@ -28,6 +26,11 @@ namespace Marain.TenantManagement.ServiceManifests
             this ServiceManifest manifest,
             ITenantManagementService tenantManagementService)
         {
+            if (tenantManagementService == null)
+            {
+                throw new ArgumentNullException(nameof(tenantManagementService));
+            }
+
             IList<string> errors = await manifest.ValidateAsync(tenantManagementService).ConfigureAwait(false);
 
             if (errors.Count > 0)

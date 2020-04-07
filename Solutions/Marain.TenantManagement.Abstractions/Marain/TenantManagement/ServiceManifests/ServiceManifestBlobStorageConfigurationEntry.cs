@@ -36,6 +36,11 @@ namespace Marain.TenantManagement.ServiceManifests
         /// <inheritdoc/>
         public override IList<string> Validate(string messagePrefix)
         {
+            if (string.IsNullOrEmpty(messagePrefix))
+            {
+                throw new ArgumentException(nameof(messagePrefix));
+            }
+
             var results = new List<string>();
             results.AddRange(base.Validate(messagePrefix));
 

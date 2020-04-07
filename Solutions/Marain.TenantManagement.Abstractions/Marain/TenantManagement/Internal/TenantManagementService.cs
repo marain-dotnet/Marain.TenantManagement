@@ -33,6 +33,11 @@ namespace Marain.TenantManagement.Internal
         /// <inheritdoc/>
         public async Task<ITenant> CreateClientTenantAsync(string clientName)
         {
+            if (string.IsNullOrWhiteSpace(clientName))
+            {
+                throw new ArgumentException(nameof(clientName));
+            }
+
             ITenant? parent = await this.GetClientTenantParentAsync().ConfigureAwait(false);
 
             if (parent == null)
@@ -62,7 +67,7 @@ namespace Marain.TenantManagement.Internal
 
             ITenant newTenant = await this.tenantProvider.CreateChildTenantAsync(
                 parent!.Id,
-                manifest.ServiceName!).ConfigureAwait(false);
+                manifest.ServiceName).ConfigureAwait(false);
 
             newTenant.SetServiceManifest(manifest);
 
@@ -74,6 +79,11 @@ namespace Marain.TenantManagement.Internal
         /// <inheritdoc/>
         public async Task<ITenant?> GetServiceTenantByNameAsync(string serviceName)
         {
+            if (string.IsNullOrWhiteSpace(serviceName))
+            {
+                throw new ArgumentException(nameof(serviceName));
+            }
+
             ITenant? serviceTenantParent = await this.GetServiceTenantParentAsync().ConfigureAwait(false);
 
             if (serviceTenantParent == null)
@@ -128,6 +138,21 @@ namespace Marain.TenantManagement.Internal
             string serviceTenantName,
             EnrollmentConfigurationItem[] configurationItems)
         {
+            if (string.IsNullOrWhiteSpace(enrollingTenantId))
+            {
+                throw new ArgumentException(nameof(enrollingTenantId));
+            }
+
+            if (string.IsNullOrWhiteSpace(serviceTenantName))
+            {
+                throw new ArgumentException(nameof(serviceTenantName));
+            }
+
+            if (configurationItems == null)
+            {
+                throw new ArgumentNullException(nameof(configurationItems));
+            }
+
             ITenant enrollingTenant = await this.tenantProvider.GetTenantAsync(enrollingTenantId).ConfigureAwait(false);
 
             ITenant serviceTenant = await this.GetServiceTenantByNameAsync(serviceTenantName).ConfigureAwait(false)
@@ -142,6 +167,21 @@ namespace Marain.TenantManagement.Internal
             string serviceTenantName,
             EnrollmentConfigurationItem[] configurationItems)
         {
+            if (enrollingTenant == null)
+            {
+                throw new ArgumentNullException(nameof(enrollingTenant));
+            }
+
+            if (string.IsNullOrWhiteSpace(serviceTenantName))
+            {
+                throw new ArgumentException(nameof(serviceTenantName));
+            }
+
+            if (configurationItems == null)
+            {
+                throw new ArgumentNullException(nameof(configurationItems));
+            }
+
             ITenant serviceTenant = await this.GetServiceTenantByNameAsync(serviceTenantName).ConfigureAwait(false)
                 ?? throw new TenantNotFoundException($"Could not find a service tenant with the name '{serviceTenantName}'");
 
@@ -154,6 +194,21 @@ namespace Marain.TenantManagement.Internal
             ITenant serviceTenant,
             EnrollmentConfigurationItem[] configurationItems)
         {
+            if (enrollingTenant == null)
+            {
+                throw new ArgumentNullException(nameof(enrollingTenant));
+            }
+
+            if (serviceTenant == null)
+            {
+                throw new ArgumentNullException(nameof(serviceTenant));
+            }
+
+            if (configurationItems == null)
+            {
+                throw new ArgumentNullException(nameof(configurationItems));
+            }
+
             // First we need to ensure that all the required config items for both the service being enrolled in,
             // as well as any dependent services is provided.
             ServiceManifestRequiredConfigurationEntry[] requiredConfig = await this.GetServiceEnrollmentConfigurationRequirementsAsync(serviceTenant).ConfigureAwait(false);
@@ -201,6 +256,11 @@ namespace Marain.TenantManagement.Internal
         /// <inheritdoc/>
         public async Task<ServiceManifestRequiredConfigurationEntry[]> GetServiceEnrollmentConfigurationRequirementsAsync(string serviceTenantName)
         {
+            if (string.IsNullOrWhiteSpace(serviceTenantName))
+            {
+                throw new ArgumentException(nameof(serviceTenantName));
+            }
+
             ITenant serviceTenant = await this.GetServiceTenantByNameAsync(serviceTenantName).ConfigureAwait(false)
                 ?? throw new TenantNotFoundException($"Could not find a service tenant with the name '{serviceTenantName}'");
 

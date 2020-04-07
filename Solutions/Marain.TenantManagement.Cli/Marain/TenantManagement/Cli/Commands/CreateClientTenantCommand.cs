@@ -4,7 +4,6 @@
 
 namespace Marain.TenantManagement.Cli.Commands
 {
-    using System;
     using System.CommandLine;
     using System.CommandLine.Invocation;
     using System.Threading.Tasks;

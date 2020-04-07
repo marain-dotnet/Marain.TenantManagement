@@ -30,7 +30,7 @@ namespace Marain.TenantManagement.EnrollmentConfiguration
                 throw new ArgumentNullException(nameof(tenant));
             }
 
-            if (requiredConfigurationEntry is null)
+            if (requiredConfigurationEntry == null)
             {
                 throw new ArgumentNullException(nameof(requiredConfigurationEntry));
             }
