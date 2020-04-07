@@ -1,4 +1,4 @@
-﻿// <copyright file="ListRequiredConfigForServiceCommand.cs" company="Endjin Limited">
+﻿// <copyright file="ListRequiredConfigurationForServiceCommand.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
@@ -14,15 +14,15 @@ namespace Marain.TenantManagement.Cli.Commands
     /// <summary>
     /// Lists the configuration required to enroll a client tenant to use a service.
     /// </summary>
-    public class ListRequiredConfigForServiceCommand : Command
+    public class ListRequiredConfigurationForServiceCommand : Command
     {
         private readonly ITenantManagementService tenantManagementService;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="ListRequiredConfigForServiceCommand"/> class.
+        /// Creates a new instance of the <see cref="ListRequiredConfigurationForServiceCommand"/> class.
         /// </summary>
         /// <param name="tenantManagementService">The tenant management services.</param>
-        public ListRequiredConfigForServiceCommand(ITenantManagementService tenantManagementService)
+        public ListRequiredConfigurationForServiceCommand(ITenantManagementService tenantManagementService)
             : base("list-required-config", "Lists configuration requirements to enroll a client tenant in a service.")
         {
             this.tenantManagementService = tenantManagementService;
