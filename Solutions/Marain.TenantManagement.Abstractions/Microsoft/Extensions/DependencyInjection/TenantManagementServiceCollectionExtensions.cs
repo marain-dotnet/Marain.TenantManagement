@@ -6,9 +6,9 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     using Corvus.ContentHandling;
     using Marain.TenantManagement;
+    using Marain.TenantManagement.EnrollmentConfiguration;
     using Marain.TenantManagement.Internal;
     using Marain.TenantManagement.ServiceManifests;
-    using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
     /// Helper methods to add Marain tenant management features to a service collection.
@@ -38,6 +38,9 @@ namespace Microsoft.Extensions.DependencyInjection
             factory.RegisterTransientContent<ServiceManifest>();
             factory.RegisterTransientContent<ServiceManifestBlobStorageConfigurationEntry>();
             factory.RegisterTransientContent<ServiceManifestCosmosDbConfigurationEntry>();
+
+            factory.RegisterTransientContent<EnrollmentBlobStorageConfigurationItem>();
+            factory.RegisterTransientContent<EnrollmentCosmosConfigurationItem>();
         }
     }
 }

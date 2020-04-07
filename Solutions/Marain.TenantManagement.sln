@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceManifests", "Service
 		ServiceManifests\WorkflowServiceManifest.json = ServiceManifests\WorkflowServiceManifest.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marain.TenantManagement.Cli", "Marain.TenantManagement.Cli\Marain.TenantManagement.Cli.csproj", "{4101AE1C-2ABB-4E1B-AC92-456EE4A0C0B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marain.TenantManagement.Cli", "Marain.TenantManagement.Cli\Marain.TenantManagement.Cli.csproj", "{4101AE1C-2ABB-4E1B-AC92-456EE4A0C0B0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevOps", "DevOps", "{D7C56021-2BF5-4A76-ACD2-28994C6F993C}"
 	ProjectSection(SolutionItems) = preProject
@@ -32,6 +32,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SupportingFiles", "Supporti
 		..\README.md = ..\README.md
 		stylecop.json = stylecop.json
 		StyleCop.ruleset = StyleCop.ruleset
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EnrollmentConfigurations", "EnrollmentConfigurations", "{A4D51963-26B8-45CE-9356-6145FF012E79}"
+	ProjectSection(SolutionItems) = preProject
+		EnrollmentConfigurations\OperationsConfigForStorageEmulator.json = EnrollmentConfigurations\OperationsConfigForStorageEmulator.json
+		EnrollmentConfigurations\WorkflowConfigForStorageEmulator.json = EnrollmentConfigurations\WorkflowConfigForStorageEmulator.json
 	EndProjectSection
 EndProject
 Global
