@@ -4,6 +4,7 @@
 
 namespace Marain.TenantManagement.Cli
 {
+    using System;
     using System.CommandLine;
     using System.CommandLine.Builder;
     using System.CommandLine.Parsing;
@@ -21,11 +22,12 @@ namespace Marain.TenantManagement.Cli
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <returns>When complete, an integer representing success (0) or failure (non-0).</returns>
-        public static Task<int> Main(string[] args)
+        public static async Task<int> Main(string[] args)
         {
             ServiceProvider serviceProvider = BuildServiceProvider();
             Parser parser = BuildParser(serviceProvider);
-            return parser.InvokeAsync(args);
+
+            return await parser.InvokeAsync(args).ConfigureAwait(false);
         }
 
         private static Parser BuildParser(ServiceProvider serviceProvider)
