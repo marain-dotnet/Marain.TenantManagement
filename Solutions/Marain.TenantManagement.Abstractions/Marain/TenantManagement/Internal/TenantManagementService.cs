@@ -336,7 +336,7 @@ namespace Marain.TenantManagement.Internal
         {
             string? continuationToken = null;
 
-            while (true)
+            do
             {
                 TenantCollectionResult page = await this.tenantProvider.GetChildrenAsync(
                     parentTenantId,
@@ -353,13 +353,11 @@ namespace Marain.TenantManagement.Internal
                     return matchingTenant;
                 }
 
-                if (string.IsNullOrEmpty(page.ContinuationToken))
-                {
-                    return null;
-                }
-
                 continuationToken = page.ContinuationToken;
             }
+            while (!string.IsNullOrEmpty(continuationToken));
+
+            return null;
         }
 
         private void ThrowNotInitialisedException()
