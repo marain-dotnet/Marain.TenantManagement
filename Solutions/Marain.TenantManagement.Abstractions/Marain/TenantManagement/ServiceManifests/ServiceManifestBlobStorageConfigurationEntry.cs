@@ -26,10 +26,10 @@ namespace Marain.TenantManagement.ServiceManifests
         public override string ExpectedConfigurationItemContentType =>
             EnrollmentBlobStorageConfigurationItem.RegisteredContentType;
 
-#nullable disable annotations
         /// <summary>
         /// Gets or sets the container definition that this configuration entry relates to.
         /// </summary>
+#nullable disable annotations
         public BlobStorageContainerDefinition ContainerDefinition { get; set; }
 #nullable restore annotations
 
