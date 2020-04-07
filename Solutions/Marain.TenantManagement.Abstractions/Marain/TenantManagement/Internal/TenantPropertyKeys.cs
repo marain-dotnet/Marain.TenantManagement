@@ -22,11 +22,11 @@ namespace Marain.TenantManagement.Internal
         /// <summary>
         /// Builds the key to store the Id of a delegated service tenant that will be used by the specified service.
         /// </summary>
-        /// <param name="serviceTenantId">
-        /// The Id of the Service Tenant representing the service that will be using the Delegated Tenant.
+        /// <param name="serviceTenantName">
+        /// The name of the Service Tenant representing the service that will be using the Delegated Tenant.
         /// </param>
         /// <returns>The key to use when storing the delegated tenant Id in the tenant's properties.</returns>
-        public static string DelegatedTenantId(string serviceTenantId)
-            => $"Marain:{serviceTenantId}:DelegatedTenantId";
+        public static string DelegatedTenantId(string serviceTenantName)
+            => $"Marain:{serviceTenantName}:DelegatedTenantId";
     }
 }

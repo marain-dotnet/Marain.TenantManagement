@@ -145,7 +145,7 @@ namespace Marain.TenantManagement.Specs.Steps
             ITenant serviceTenant = tenantProvider.GetTenantByName(serviceTenantName)
                 ?? throw new TenantNotFoundException($"Could not find tenant with name '{serviceTenantName}'");
 
-            Assert.AreEqual(onBehalfOfTenant.Id, enrolledTenant.GetDelegatedTenantIdForService(serviceTenant.Id));
+            Assert.AreEqual(onBehalfOfTenant.Id, enrolledTenant.GetDelegatedTenantIdForService(serviceTenant.Name));
         }
 
         [Then("the tenant called '(.*)' should contain blob storage configuration for a blob storage container definition with container name '(.*)'")]

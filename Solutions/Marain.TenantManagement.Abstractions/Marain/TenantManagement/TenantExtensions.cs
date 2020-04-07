@@ -65,26 +65,21 @@ namespace Marain.TenantManagement
         /// <param name="tenant">
         /// The tenant who is able to make calls to the service represented by the specified Service Tenant.
         /// </param>
-        /// <param name="serviceTenantId">The Id of the Service Tenant which will uses the Delegated Tenant.</param>
+        /// <param name="serviceTenantName">The Id of the Service Tenant which will uses the Delegated Tenant.</param>
         /// <returns>The Id of the delegated tenant.</returns>
-        public static string GetDelegatedTenantIdForService(this ITenant tenant, string serviceTenantId)
+        public static string GetDelegatedTenantIdForService(this ITenant tenant, string serviceTenantName)
         {
-            if (serviceTenantId == null)
+            if (string.IsNullOrWhiteSpace(serviceTenantName))
             {
-                throw new ArgumentNullException(nameof(serviceTenantId));
+                throw new ArgumentException(nameof(serviceTenantName));
             }
 
-            if (string.IsNullOrWhiteSpace(serviceTenantId))
-            {
-                throw new ArgumentException(nameof(serviceTenantId));
-            }
-
-            if (tenant.Properties.TryGet(TenantPropertyKeys.DelegatedTenantId(serviceTenantId), out string delegatedTenantId))
+            if (tenant.Properties.TryGet(TenantPropertyKeys.DelegatedTenantId(serviceTenantName), out string delegatedTenantId))
             {
                 return delegatedTenantId;
             }
 
-            throw new ArgumentException($"Tenant '{tenant.Name}' with Id '{tenant.Id}' does not contain a delegated tenant Id for service tenant Id {serviceTenantId}");
+            throw new ArgumentException($"Tenant '{tenant.Name}' with Id '{tenant.Id}' does not contain a delegated tenant Id for service tenant named '{serviceTenantName}'");
         }
 
         /// <summary>
@@ -158,26 +153,16 @@ namespace Marain.TenantManagement
         /// <param name="tenant">
         /// The tenant who is able to make calls to the service represented by the specified Service Tenant.
         /// </param>
-        /// <param name="serviceTenantId">The Id of the Service Tenant which will be using the Delegated Tenant.</param>
+        /// <param name="serviceTenantName">The Id of the Service Tenant which will be using the Delegated Tenant.</param>
         /// <param name="delegatedTenantId">The Id of the tenant that has been created for the service to use.</param>
         internal static void SetDelegatedTenantIdForService(
             this ITenant tenant,
-            string serviceTenantId,
+            string serviceTenantName,
             string delegatedTenantId)
         {
-            if (serviceTenantId == null)
+            if (string.IsNullOrWhiteSpace(serviceTenantName))
             {
-                throw new ArgumentNullException(nameof(serviceTenantId));
-            }
-
-            if (string.IsNullOrWhiteSpace(serviceTenantId))
-            {
-                throw new ArgumentException(nameof(serviceTenantId));
-            }
-
-            if (delegatedTenantId == null)
-            {
-                throw new ArgumentNullException(nameof(delegatedTenantId));
+                throw new ArgumentException(nameof(serviceTenantName));
             }
 
             if (string.IsNullOrWhiteSpace(delegatedTenantId))
@@ -185,7 +170,7 @@ namespace Marain.TenantManagement
                 throw new ArgumentException(nameof(delegatedTenantId));
             }
 
-            tenant.Properties.Set(TenantPropertyKeys.DelegatedTenantId(serviceTenantId), delegatedTenantId);
+            tenant.Properties.Set(TenantPropertyKeys.DelegatedTenantId(serviceTenantName), delegatedTenantId);
         }
     }
 }

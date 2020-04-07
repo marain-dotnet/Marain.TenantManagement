@@ -91,7 +91,7 @@ namespace Marain.TenantManagement.Cli.Commands
 
                 if (serviceTenant != null && serviceTenant.GetServiceManifest().DependsOnServiceNames.Count > 0)
                 {
-                    string delegatedTenantId = root.Tenant.GetDelegatedTenantIdForService(enrollment);
+                    string delegatedTenantId = root.Tenant.GetDelegatedTenantIdForService(serviceTenant.Name);
                     ITenant? delegatedTenant = allTenants.FirstOrDefault(x => x.Id == delegatedTenantId);
                     Console.WriteLine($"     [Enrollment: '{serviceTenant.Name}', with delegated tenant '{delegatedTenant?.Name ?? delegatedTenantId}']");
                 }

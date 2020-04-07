@@ -248,7 +248,7 @@ namespace Marain.TenantManagement.Internal
                         configurationItems))).ConfigureAwait(false);
 
                 // Add the delegated tenant Id to the enrolling tenant
-                enrollingTenant.SetDelegatedTenantIdForService(serviceTenant.Id, delegatedTenant.Id);
+                enrollingTenant.SetDelegatedTenantIdForService(serviceTenant.Name, delegatedTenant.Id);
             }
 
             await this.tenantProvider.UpdateTenantAsync(enrollingTenant).ConfigureAwait(false);
