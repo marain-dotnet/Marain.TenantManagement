@@ -16,7 +16,7 @@ namespace Marain.TenantManagement.Cli.Commands
     using Newtonsoft.Json;
 
     /// <summary>
-    /// Creates the initialisation commands.
+    /// Enrolls client tenants to use services.
     /// </summary>
     public class EnrollCommand : Command
     {

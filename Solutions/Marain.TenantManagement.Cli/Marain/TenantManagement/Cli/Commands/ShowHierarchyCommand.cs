@@ -13,7 +13,7 @@ namespace Marain.TenantManagement.Cli.Commands
     using Corvus.Tenancy;
 
     /// <summary>
-    /// Creates the Show Hierarchy command.
+    /// Writes out the current tenancy hierarchy.
     /// </summary>
     public class ShowHierarchyCommand : Command
     {

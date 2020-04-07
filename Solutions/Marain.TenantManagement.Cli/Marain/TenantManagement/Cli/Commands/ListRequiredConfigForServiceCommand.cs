@@ -12,7 +12,7 @@ namespace Marain.TenantManagement.Cli.Commands
     using Marain.TenantManagement.ServiceManifests;
 
     /// <summary>
-    /// Creates the Get Required Config command.
+    /// Lists the configuration required to enroll a client tenant to use a service.
     /// </summary>
     public class ListRequiredConfigForServiceCommand : Command
     {
