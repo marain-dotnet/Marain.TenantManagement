@@ -6,6 +6,7 @@ namespace Marain.TenantManagement
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Corvus.Tenancy;
     using Marain.TenantManagement.Internal;
     using Marain.TenantManagement.ServiceManifests;
@@ -98,7 +99,7 @@ namespace Marain.TenantManagement
                 return enrollments;
             }
 
-            return new string[0];
+            return Enumerable.Empty<string>();
         }
 
         /// <summary>

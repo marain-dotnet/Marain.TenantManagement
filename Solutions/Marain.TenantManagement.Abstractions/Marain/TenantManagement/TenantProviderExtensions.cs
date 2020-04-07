@@ -27,7 +27,7 @@ namespace Marain.TenantManagement
         /// tenants and the underlying provider is likely to be making expensive calls to retrieve tenants, this method
         /// should be used with extreme caution.
         /// </remarks>
-        public static async Task<IList<string>> GetAllChildrenAsync(this ITenantProvider tenantProvider, string tenantId)
+        public static IAsyncEnumerable<string> EnumerateAllChildrenAsync(this ITenantProvider tenantProvider, string tenantId)
         {
             if (tenantId == null)
             {
@@ -39,25 +39,7 @@ namespace Marain.TenantManagement
                 throw new ArgumentException(nameof(tenantId));
             }
 
-            string? continuationToken = null;
-            const int limit = 100;
-
-            var tenants = new List<string>();
-
-            do
-            {
-                TenantCollectionResult results = await tenantProvider.GetChildrenAsync(
-                    tenantId,
-                    limit,
-                    continuationToken).ConfigureAwait(false);
-
-                tenants.AddRange(results.Tenants);
-
-                continuationToken = results.ContinuationToken;
-            }
-            while (!string.IsNullOrEmpty(continuationToken));
-
-            return tenants;
+            return EnumerateAllChildrenInternalAsync(tenantProvider, tenantId);
         }
 
         /// <summary>
@@ -76,6 +58,34 @@ namespace Marain.TenantManagement
             IEnumerable<Task<ITenant>> getTenantTasks = tenantIds.Select(tenantId => tenantProvider.GetTenantAsync(tenantId));
 
             return await Task.WhenAll(getTenantTasks).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Internal method corresponding to <see cref="EnumerateAllChildrenAsync(ITenantProvider, string)"/>. The public method
+        /// verifies the parameters are valid and this method implements the enumeration.
+        /// </summary>
+        private static async IAsyncEnumerable<string> EnumerateAllChildrenInternalAsync(
+            ITenantProvider tenantProvider,
+            string tenantId)
+        {
+            string? continuationToken = null;
+            const int limit = 100;
+
+            do
+            {
+                TenantCollectionResult results = await tenantProvider.GetChildrenAsync(
+                    tenantId,
+                    limit,
+                    continuationToken).ConfigureAwait(false);
+
+                foreach (string tenant in results.Tenants)
+                {
+                    yield return tenant;
+                }
+
+                continuationToken = results.ContinuationToken;
+            }
+            while (!string.IsNullOrEmpty(continuationToken));
         }
     }
 }

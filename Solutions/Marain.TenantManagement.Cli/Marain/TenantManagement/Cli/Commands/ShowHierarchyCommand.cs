@@ -40,12 +40,11 @@ namespace Marain.TenantManagement.Cli.Commands
 
         private async Task AddChildrenTo(TenantWithChildren parent)
         {
-            IList<string> children = await this.tenantProvider.GetAllChildrenAsync(parent.Tenant.Id).ConfigureAwait(false);
-            ITenant[] childTenants = await this.tenantProvider.GetTenantsAsync(children).ConfigureAwait(false);
-
-            foreach (ITenant child in childTenants)
+            await foreach (string childId in this.tenantProvider.EnumerateAllChildrenAsync(parent.Tenant.Id))
             {
-                var childEntry = new TenantWithChildren(child, parent.Depth + 1);
+                ITenant childTenant = await this.tenantProvider.GetTenantAsync(childId).ConfigureAwait(false);
+
+                var childEntry = new TenantWithChildren(childTenant, parent.Depth + 1);
                 await this.AddChildrenTo(childEntry).ConfigureAwait(false);
 
                 parent.Children.Add(childEntry);

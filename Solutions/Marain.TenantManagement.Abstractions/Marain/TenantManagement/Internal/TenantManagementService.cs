@@ -298,28 +298,14 @@ namespace Marain.TenantManagement.Internal
 
         private async Task<ITenant?> GetTenantByNameAsync(string parentTenantId, string name)
         {
-            string? continuationToken = null;
-
-            do
+            await foreach (string childTenantId in this.tenantProvider.EnumerateAllChildrenAsync(parentTenantId))
             {
-                TenantCollectionResult page = await this.tenantProvider.GetChildrenAsync(
-                    parentTenantId,
-                    20,
-                    continuationToken).ConfigureAwait(false);
-
-                IEnumerable<Task<ITenant>> tenantRequests = page.Tenants.Select(x => this.tenantProvider.GetTenantAsync(x));
-                ITenant[] tenants = await Task.WhenAll(tenantRequests).ConfigureAwait(false);
-
-                ITenant? matchingTenant = Array.Find(tenants, x => x.Name == name);
-
-                if (matchingTenant != null)
+                ITenant tenant = await this.tenantProvider.GetTenantAsync(childTenantId).ConfigureAwait(false);
+                if (tenant.Name == name)
                 {
-                    return matchingTenant;
+                    return tenant;
                 }
-
-                continuationToken = page.ContinuationToken;
             }
-            while (!string.IsNullOrEmpty(continuationToken));
 
             return null;
         }

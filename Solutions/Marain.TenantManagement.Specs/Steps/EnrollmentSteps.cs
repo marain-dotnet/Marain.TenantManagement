@@ -236,7 +236,7 @@ namespace Marain.TenantManagement.Specs.Steps
                 () => managementService.EnrollInServiceAsync(
                     enrollingTenant,
                     serviceTenant,
-                    enrollmentConfiguration.ToArray()));
+                    enrollmentConfiguration.ToArray())).ConfigureAwait(false);
         }
     }
 }
