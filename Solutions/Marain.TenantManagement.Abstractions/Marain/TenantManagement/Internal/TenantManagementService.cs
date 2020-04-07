@@ -6,6 +6,7 @@ namespace Marain.TenantManagement.Internal
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
     using Corvus.Tenancy;
@@ -45,7 +46,7 @@ namespace Marain.TenantManagement.Internal
                 this.ThrowNotInitialisedException();
             }
 
-            return await this.tenantProvider.CreateChildTenantAsync(parent!.Id, clientName).ConfigureAwait(false);
+            return await this.tenantProvider.CreateChildTenantAsync(parent.Id, clientName).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -66,7 +67,7 @@ namespace Marain.TenantManagement.Internal
             }
 
             ITenant newTenant = await this.tenantProvider.CreateChildTenantAsync(
-                parent!.Id,
+                parent.Id,
                 manifest.ServiceName).ConfigureAwait(false);
 
             newTenant.SetServiceManifest(manifest);
@@ -91,7 +92,7 @@ namespace Marain.TenantManagement.Internal
                 this.ThrowNotInitialisedException();
             }
 
-            return await this.GetTenantByNameAsync(serviceTenantParent!.Id, serviceName).ConfigureAwait(false);
+            return await this.GetTenantByNameAsync(serviceTenantParent.Id, serviceName).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -323,6 +324,7 @@ namespace Marain.TenantManagement.Internal
             return null;
         }
 
+        [DoesNotReturn]
         private void ThrowNotInitialisedException()
         {
             throw new InvalidOperationException("The underlying tenant provider has not been initialised for use with Marain. Please call the ITenantManagementService.InitialiseTenancyProviderAsync before attempting to create tenants.");
