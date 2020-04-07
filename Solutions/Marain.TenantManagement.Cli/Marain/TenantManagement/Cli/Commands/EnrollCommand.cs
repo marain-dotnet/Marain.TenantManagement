@@ -7,6 +7,7 @@ namespace Marain.TenantManagement.Cli.Commands
     using System.CommandLine;
     using System.CommandLine.Invocation;
     using System.Threading.Tasks;
+    using Marain.TenantManagement.EnrollmentConfiguration;
 
     /// <summary>
     /// Creates the initialisation commands.
@@ -46,7 +47,10 @@ namespace Marain.TenantManagement.Cli.Commands
 
         private Task HandleCommand(string enrollingTenantId, string serviceName)
         {
-            return this.tenantManagementService.EnrollInServiceAsync(enrollingTenantId, serviceName);
+            return this.tenantManagementService.EnrollInServiceAsync(
+                enrollingTenantId,
+                serviceName,
+                new EnrollmentConfigurationItem[0]);
         }
     }
 }

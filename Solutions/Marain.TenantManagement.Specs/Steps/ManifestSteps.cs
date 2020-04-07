@@ -73,19 +73,15 @@ namespace Marain.TenantManagement.Specs.Steps
         [When("I deserialize the manifest called '(.*)'")]
         public void WhenIDeserializeTheManifestCalled(string manifestName)
         {
-            IJsonSerializerSettingsProvider settingsProvider =
-                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<IJsonSerializerSettingsProvider>();
-
-            using Stream manifestStream = this.GetType().Assembly.GetManifestResourceStream($"Marain.TenantManagement.Specs.Data.ServiceManifests.{manifestName}.json")
-                ?? throw new ArgumentException($"Could not find a resource in the Marain.TenantManagement.Specs.Data.ServiceManifests namespace called {manifestName}.json");
-
-            using var manifestStreamReader = new StreamReader(manifestStream);
-
-            string manifestJson = manifestStreamReader.ReadToEnd();
-
-            ServiceManifest manifest = JsonConvert.DeserializeObject<ServiceManifest>(manifestJson, settingsProvider.Instance);
-
+            ServiceManifest manifest = this.LoadManifestFile(manifestName);
             this.scenarioContext.Set(manifest);
+        }
+
+        [Given("I have loaded the manifest called '(.*)'")]
+        public void GivenIHaveLoadedTheManifestCalled(string manifestName)
+        {
+            ServiceManifest manifest = this.LoadManifestFile(manifestName);
+            this.scenarioContext.Set(manifest, manifestName);
         }
 
         [Then("the resulting manifest should have the service name '(.*)'")]
@@ -118,8 +114,8 @@ namespace Marain.TenantManagement.Specs.Steps
             Assert.AreEqual(expectedDependencyCount, manifest.DependsOnServiceNames.Count);
         }
 
-        [Then(@"the resulting manifest should have (.*) required configuration entry")]
-        [Then(@"the resulting manifest should have (.*) required configuration entries")]
+        [Then("the resulting manifest should have (.*) required configuration entry")]
+        [Then("the resulting manifest should have (.*) required configuration entries")]
         public void ThenTheResultingManifestShouldHaveRequiredConfigurationEntry(int expectedConfigurationEntryCount)
         {
             ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>();
@@ -145,7 +141,7 @@ namespace Marain.TenantManagement.Specs.Steps
             Assert.IsTrue(manifest.DependsOnServiceNames.Contains(expectedDependencyName));
         }
 
-        [Given(@"the service manifest called '(.*)' has the following Azure Blob Storage configuration entries")]
+        [Given("the service manifest called '(.*)' has the following Azure Blob Storage configuration entries")]
         public void GivenTheServiceManifestCalledHasTheFollowingAzureBlobStorageConfigurationEntries(string manifestName, Table table)
         {
             ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>(manifestName);
@@ -174,6 +170,21 @@ namespace Marain.TenantManagement.Specs.Steps
                     null,
                     null),
             });
+        }
+
+        private ServiceManifest LoadManifestFile(string manifestName)
+        {
+            IJsonSerializerSettingsProvider settingsProvider =
+                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<IJsonSerializerSettingsProvider>();
+
+            using Stream manifestStream = this.GetType().Assembly.GetManifestResourceStream($"Marain.TenantManagement.Specs.Data.ServiceManifests.{manifestName}.json")
+                ?? throw new ArgumentException($"Could not find a resource in the Marain.TenantManagement.Specs.Data.ServiceManifests namespace called {manifestName}.json");
+
+            using var manifestStreamReader = new StreamReader(manifestStream);
+
+            string manifestJson = manifestStreamReader.ReadToEnd();
+
+            return JsonConvert.DeserializeObject<ServiceManifest>(manifestJson, settingsProvider.Instance);
         }
     }
 }

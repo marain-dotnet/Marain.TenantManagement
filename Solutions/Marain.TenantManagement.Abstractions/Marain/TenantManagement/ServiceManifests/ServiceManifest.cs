@@ -71,6 +71,7 @@ namespace Marain.TenantManagement.ServiceManifests
                 this.ValidateServiceNameAsync(tenantManagementService, errors),
                 this.ValidateDependenciesExistAsync(tenantManagementService, errors)).ConfigureAwait(false);
 
+            // TODO: Ensure there aren't multiple items with the same key.
             IEnumerable<string> configErrors = this.RequiredConfigurationEntries.SelectMany((c, i) => c.Validate($"RequiredConfigurationEntries[{i}]"));
             foreach (string configError in configErrors)
             {

@@ -4,8 +4,8 @@
 
 namespace Marain.TenantManagement.ServiceManifests
 {
-    using System;
     using System.Collections.Generic;
+    using Marain.TenantManagement.EnrollmentConfiguration;
 
     /// <summary>
     /// Base class for the different supported types of configuration entry.
@@ -21,6 +21,12 @@ namespace Marain.TenantManagement.ServiceManifests
         /// Gets the content type for the configuration entry.
         /// </summary>
         public abstract string ContentType { get; }
+
+        /// <summary>
+        /// Gets the expected content type of the <see cref="EnrollmentConfigurationItem"/> that should be provided for
+        /// this configuration entry.
+        /// </summary>
+        public abstract string ExpectedConfigurationItemContentType { get; }
 
         /// <summary>
         /// Gets or sets the key of the configuration entry. This is used to match configuration supplied as part of

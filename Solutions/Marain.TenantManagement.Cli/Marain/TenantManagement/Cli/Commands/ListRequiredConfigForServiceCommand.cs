@@ -51,7 +51,6 @@ namespace Marain.TenantManagement.Cli.Commands
 
             table.Options.OutputTo = Console.Out;
             table.Options.EnableCount = false;
-
             table.Write(Format.Minimal);
         }
     }

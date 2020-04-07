@@ -41,7 +41,7 @@ namespace Marain.TenantManagement.Specs.Steps
                 });
         }
 
-        [Given(@"I have used the tenant management service to create a new client tenant called '(.*)'")]
+        [Given("I have used the tenant management service to create a new client tenant called '(.*)'")]
         public async Task GivenIHaveUsedTheTenantManagementServiceToCreateANewClientTenantCalled(string clientName)
         {
             ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
@@ -135,6 +135,23 @@ namespace Marain.TenantManagement.Specs.Steps
         [Then("a new child tenant called '(.*)' of the service tenant called '(.*)' has been created")]
         public async Task ThenANewChildTenantCalledOfTheServiceTenantCalledHasBeenCreated(string childTenantName, string serviceTenantName)
         {
+            ITenant? matchingChild =
+                await this.GetChildTenantOfServiceTenant(childTenantName, serviceTenantName).ConfigureAwait(false);
+
+            Assert.IsNotNull(matchingChild, $"The service tenant '{serviceTenantName}' does not contain a child tenant called '{childTenantName}'");
+        }
+
+        [Then("no new child tenant called '(.*)' of the service tenant called '(.*)' has been created")]
+        public async Task ThenNoNewChildTenantCalledOfTheServiceTenantCalledHasBeenCreated(string childTenantName, string serviceTenantName)
+        {
+            ITenant? matchingChild =
+                await this.GetChildTenantOfServiceTenant(childTenantName, serviceTenantName).ConfigureAwait(false);
+
+            Assert.IsNull(matchingChild, $"The service tenant '{serviceTenantName}' contains a child tenant called '{childTenantName}'");
+        }
+
+        private async Task<ITenant?> GetChildTenantOfServiceTenant(string childTenantName, string serviceTenantName)
+        {
             ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
 
             ITenant serviceTenant = await tenantProvider.GetTenantAsync(this.scenarioContext.Get<string>(serviceTenantName)).ConfigureAwait(false);
@@ -143,9 +160,7 @@ namespace Marain.TenantManagement.Specs.Steps
             TenantCollectionResult getChildrenResult = await tenantProvider.GetChildrenAsync(serviceTenant.Id).ConfigureAwait(false);
             ITenant[] children = await tenantProvider.GetTenantsAsync(getChildrenResult.Tenants).ConfigureAwait(false);
 
-            ITenant? matchingChild = Array.Find(children, x => x.Name == childTenantName);
-
-            Assert.IsNotNull(matchingChild, $"The service tenant '{serviceTenantName}' does not contain a child tenant called '{childTenantName}'");
+            return Array.Find(children, x => x.Name == childTenantName);
         }
     }
 }

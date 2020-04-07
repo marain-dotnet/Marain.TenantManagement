@@ -10,6 +10,8 @@ namespace Marain.TenantManagement.Internal
     using System.Threading.Tasks;
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
+    using Marain.TenantManagement.EnrollmentConfiguration;
+    using Marain.TenantManagement.Exceptions;
     using Marain.TenantManagement.ServiceManifests;
 
     /// <summary>
@@ -58,7 +60,6 @@ namespace Marain.TenantManagement.Internal
                 this.ThrowNotInitialisedException();
             }
 
-            // TODO: Make sure there isn't already a tenant with the same name.
             ITenant newTenant = await this.tenantProvider.CreateChildTenantAsync(
                 parent!.Id,
                 manifest.ServiceName!).ConfigureAwait(false);
@@ -122,31 +123,60 @@ namespace Marain.TenantManagement.Internal
         }
 
         /// <inheritdoc/>
-        public async Task EnrollInServiceAsync(string enrollingTenantId, string serviceTenantName)
+        public async Task EnrollInServiceAsync(
+            string enrollingTenantId,
+            string serviceTenantName,
+            EnrollmentConfigurationItem[] configurationItems)
         {
             ITenant enrollingTenant = await this.tenantProvider.GetTenantAsync(enrollingTenantId).ConfigureAwait(false);
 
             ITenant serviceTenant = await this.GetServiceTenantByNameAsync(serviceTenantName).ConfigureAwait(false)
                 ?? throw new TenantNotFoundException($"Could not find a service tenant with the name '{serviceTenantName}'");
 
-            await this.EnrollInServiceAsync(enrollingTenant, serviceTenant).ConfigureAwait(false);
+            await this.EnrollInServiceAsync(enrollingTenant, serviceTenant, configurationItems).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task EnrollInServiceAsync(ITenant enrollingTenant, string serviceTenantName)
+        public async Task EnrollInServiceAsync(
+            ITenant enrollingTenant,
+            string serviceTenantName,
+            EnrollmentConfigurationItem[] configurationItems)
         {
             ITenant serviceTenant = await this.GetServiceTenantByNameAsync(serviceTenantName).ConfigureAwait(false)
                 ?? throw new TenantNotFoundException($"Could not find a service tenant with the name '{serviceTenantName}'");
 
-            await this.EnrollInServiceAsync(enrollingTenant, serviceTenant).ConfigureAwait(false);
+            await this.EnrollInServiceAsync(enrollingTenant, serviceTenant, configurationItems).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task EnrollInServiceAsync(ITenant enrollingTenant, ITenant serviceTenant)
+        public async Task EnrollInServiceAsync(
+            ITenant enrollingTenant,
+            ITenant serviceTenant,
+            EnrollmentConfigurationItem[] configurationItems)
         {
-            enrollingTenant.AddServiceEnrollment(serviceTenant.Id);
+            // First we need to ensure that all the required config items for both the service being enrolled in,
+            // as well as any dependent services is provided.
+            ServiceManifestRequiredConfigurationEntry[] requiredConfig = await this.GetServiceEnrollmentConfigurationRequirementsAsync(serviceTenant).ConfigureAwait(false);
+            this.ValidateEnrollmentConfigAndThrow(configurationItems, requiredConfig);
 
             ServiceManifest manifest = serviceTenant.GetServiceManifest();
+
+            // Now, match up the required config items for this service to the relevent supplied config (we may
+            // have been supplied with config for dependent services as well, so we can't just attach all
+            // of the supplied config items to the enrolling tenant - some of it could belong on delegated
+            // tenants.
+            IEnumerable<(ServiceManifestRequiredConfigurationEntry RequiredConfigurationEntry, EnrollmentConfigurationItem ProvidedConfigurationItem)> matchedConfigItems =
+                requiredConfig.Select(
+                    requiredConfigItem =>
+                    (requiredConfigItem, configurationItems.Single(item => item.Key == requiredConfigItem.Key)));
+
+            foreach ((ServiceManifestRequiredConfigurationEntry RequiredConfigurationEntry, EnrollmentConfigurationItem ProvidedConfigurationItem) current in matchedConfigItems)
+            {
+                current.ProvidedConfigurationItem.AddToTenant(enrollingTenant, current.RequiredConfigurationEntry);
+            }
+
+            // Add an enrollment entry to the tenant.
+            enrollingTenant.AddServiceEnrollment(serviceTenant.Id);
 
             // If this service has dependencies, we need to create a new delegated tenant for the service to use when
             // accessing those dependencies.
@@ -156,7 +186,10 @@ namespace Marain.TenantManagement.Internal
 
                 // Now enroll the new delegated tenant for all of the dependent services.
                 await Task.WhenAll(manifest.DependsOnServiceNames.Select(
-                    dependsOnServiceName => this.EnrollInServiceAsync(delegatedTenant, dependsOnServiceName))).ConfigureAwait(false);
+                    dependsOnServiceName => this.EnrollInServiceAsync(
+                        delegatedTenant,
+                        dependsOnServiceName,
+                        configurationItems))).ConfigureAwait(false);
 
                 // Add the delegated tenant Id to the enrolling tenant
                 enrollingTenant.SetDelegatedTenantIdForService(serviceTenant.Id, delegatedTenant.Id);
@@ -172,6 +205,43 @@ namespace Marain.TenantManagement.Internal
                 ?? throw new TenantNotFoundException($"Could not find a service tenant with the name '{serviceTenantName}'");
 
             return await this.GetServiceEnrollmentConfigurationRequirementsAsync(serviceTenant).ConfigureAwait(false);
+        }
+
+        private void ValidateEnrollmentConfigAndThrow(
+            EnrollmentConfigurationItem[] providedConfigurationItems,
+            ServiceManifestRequiredConfigurationEntry[] requiredConfigurationEntries)
+        {
+            // First, use the keys to pair up the required items with the provided.
+            (ServiceManifestRequiredConfigurationEntry RequiredConfigurationEntry, EnrollmentConfigurationItem[] ProvidedConfigurationItems)[] pairedConfigurationEntries =
+                requiredConfigurationEntries.Select(
+                    requiredConfigEntry => (
+                        requiredConfigEntry,
+                        providedConfigurationItems.Where(
+                            providedItem => providedItem.Key == requiredConfigEntry.Key).ToArray())).ToArray();
+
+            var errors = new List<string>();
+
+            // Find required config entry without corresponding config item.
+            foreach ((ServiceManifestRequiredConfigurationEntry RequiredConfigurationEntry, EnrollmentConfigurationItem[] ProvidedConfigurationItems) current in pairedConfigurationEntries.Where(x => x.ProvidedConfigurationItems.Length == 0))
+            {
+                errors.Add($"No configuration was supplied for the required configuration entry with key '{current.RequiredConfigurationEntry.Key}' and description '{current.RequiredConfigurationEntry.Description}'");
+            }
+
+            // Find required config entry with multiple corresponding config item
+            foreach ((ServiceManifestRequiredConfigurationEntry RequiredConfigurationEntry, EnrollmentConfigurationItem[] ProvidedConfigurationItems) current in pairedConfigurationEntries.Where(x => x.ProvidedConfigurationItems.Length > 1))
+            {
+                errors.Add($"Multiple configuration items were supplied for the required configuration entry with key '{current.RequiredConfigurationEntry.Key}' and description '{current.RequiredConfigurationEntry.Description}'. Only a single item should be supplied for each required configuration entry.");
+            }
+
+            // Now, foreach config item, validate it using the supplied configuration entry
+            errors.AddRange(pairedConfigurationEntries.Where(
+                pair => pair.ProvidedConfigurationItems.Length == 1)
+                .SelectMany(pair => pair.ProvidedConfigurationItems[0].Validate(pair.RequiredConfigurationEntry)));
+
+            if (errors.Count > 0)
+            {
+                throw new InvalidEnrollmentConfigurationException(errors);
+            }
         }
 
         private async Task<ServiceManifestRequiredConfigurationEntry[]> GetServiceEnrollmentConfigurationRequirementsAsync(ITenant serviceTenant)

@@ -17,17 +17,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Data\ServiceManifests\FooBarServiceManifest.json" />
     <None Remove="Data\ServiceManifests\ManifestWithConfiguration.json" />
     <None Remove="Data\ServiceManifests\ManifestWithDependencies.json" />
     <None Remove="Data\ServiceManifests\ManifestWithMultipleConfigurationItems.json" />
+    <None Remove="Data\ServiceManifests\OperationsServiceManifest.json" />
     <None Remove="Data\ServiceManifests\SimpleManifestWithNoDependenciesOrConfiguration.json" />
+    <None Remove="Data\ServiceManifests\WorkflowServiceManifest.json" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Data\ServiceManifests\ManifestWithMultipleConfigurationItems.json" />
     <EmbeddedResource Include="Data\ServiceManifests\ManifestWithConfiguration.json" />
     <EmbeddedResource Include="Data\ServiceManifests\ManifestWithDependencies.json" />
+    <EmbeddedResource Include="Data\ServiceManifests\FooBarServiceManifest.json" />
+    <EmbeddedResource Include="Data\ServiceManifests\OperationsServiceManifest.json" />
     <EmbeddedResource Include="Data\ServiceManifests\SimpleManifestWithNoDependenciesOrConfiguration.json" />
+    <EmbeddedResource Include="Data\ServiceManifests\WorkflowServiceManifest.json" />
   </ItemGroup>
 
   <ItemGroup>

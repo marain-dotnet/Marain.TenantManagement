@@ -88,44 +88,35 @@ namespace Marain.TenantManagement.Specs.Features.TenantManagement
  testRunner.Given("the tenancy provider has been initialised for use with Marain", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 11
- testRunner.And("I have a service manifest called \'FooBar Manifest\' for a service called \'FooBar v" +
-                    "1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I have loaded the manifest called \'SimpleManifestWithNoDependenciesOrConfiguratio" +
+                    "n\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 12
  testRunner.And("I have used the tenant management service to create a service tenant with manifes" +
-                    "t \'FooBar Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+                    "t \'SimpleManifestWithNoDependenciesOrConfiguration\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 13
- testRunner.And("I have a service manifest called \'Operations Manifest\' for a service called \'Oper" +
-                    "ations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I have loaded the manifest called \'FooBarServiceManifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
-                        "Service Name"});
-            table5.AddRow(new string[] {
-                        "FooBar v1"});
 #line 14
- testRunner.And("the service manifest called \'Operations Manifest\' has the following dependencies", ((string)(null)), table5, "And ");
+ testRunner.And("I have used the tenant management service to create a service tenant with manifes" +
+                    "t \'FooBarServiceManifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 15
+ testRunner.And("I have loaded the manifest called \'OperationsServiceManifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 16
+ testRunner.And("I have used the tenant management service to create a service tenant with manifes" +
+                    "t \'OperationsServiceManifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 17
- testRunner.And("I have used the tenant management service to create a service tenant with manifes" +
-                    "t \'Operations Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I have loaded the manifest called \'WorkflowServiceManifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 18
- testRunner.And("I have a service manifest called \'Workflow Manifest\' for a service called \'Workfl" +
-                    "ow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
-                        "Service Name"});
-            table6.AddRow(new string[] {
-                        "Operations v1"});
-#line 19
- testRunner.And("the service manifest called \'Workflow Manifest\' has the following dependencies", ((string)(null)), table6, "And ");
-#line hidden
-#line 22
  testRunner.And("I have used the tenant management service to create a service tenant with manifes" +
-                    "t \'Workflow Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+                    "t \'WorkflowServiceManifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 23
+#line 19
  testRunner.And("I have used the tenant management service to create a new client tenant called \'L" +
                     "itware\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
@@ -137,6 +128,47 @@ namespace Marain.TenantManagement.Specs.Features.TenantManagement
         {
             string[] tagsOfScenario = ((string[])(null));
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Basic enrollment without dependencies or configuration", null, ((string[])(null)));
+#line 21
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 9
+this.FeatureBackground();
+#line hidden
+#line 22
+ testRunner.When("I use the tenant enrollment service to enroll the tenant called \'Litware\' in the " +
+                        "service called \'Simple manifest with no dependencies or configuration\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 23
+ testRunner.Then("the tenant called \'Litware\' should have the id of the tenant called \'Simple manif" +
+                        "est with no dependencies or configuration\' added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Basic enrollment with configuration")]
+        public virtual void BasicEnrollmentWithConfiguration()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Basic enrollment with configuration", null, ((string[])(null)));
 #line 25
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -161,12 +193,76 @@ this.ScenarioInitialize(scenarioInfo);
 this.FeatureBackground();
 #line hidden
 #line 26
+ testRunner.Given("I have enrollment configuration called \'FooBar config\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+                TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Key",
+                            "Account Name",
+                            "Container"});
+                table5.AddRow(new string[] {
+                            "fooBarStore",
+                            "blobaccount",
+                            "blobcontainer"});
+#line 27
+ testRunner.And("the enrollment configuration called \'FooBar config\' contains the following Blob S" +
+                        "torage configuration items", ((string)(null)), table5, "And ");
+#line hidden
+#line 30
+ testRunner.When("I use the tenant enrollment service with the enrollment configuration called \'Foo" +
+                        "Bar config\' to enroll the tenant called \'Litware\' in the service called \'FooBar " +
+                        "v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 31
+ testRunner.Then("the tenant called \'Litware\' should have the id of the tenant called \'FooBar v1\' a" +
+                        "dded to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 32
+ testRunner.And("the tenant called \'Litware\' should contain blob storage configuration for a blob " +
+                        "storage container definition with container name \'foobar\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Basic enrollment without supplying required configuration")]
+        public virtual void BasicEnrollmentWithoutSupplyingRequiredConfiguration()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Basic enrollment without supplying required configuration", null, ((string[])(null)));
+#line 34
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 9
+this.FeatureBackground();
+#line hidden
+#line 35
  testRunner.When("I use the tenant enrollment service to enroll the tenant called \'Litware\' in the " +
                         "service called \'FooBar v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 27
- testRunner.Then("the tenant called \'Litware\' should have the id of the tenant called \'FooBar v1\' a" +
-                        "dded to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 36
+ testRunner.Then("an \'InvalidEnrollmentConfigurationException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 37
+ testRunner.Then("the tenant called \'Litware\' should not have the id of the tenant called \'FooBar v" +
+                        "1\' added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -178,7 +274,7 @@ this.FeatureBackground();
         {
             string[] tagsOfScenario = ((string[])(null));
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Enrollment with a dependency", null, ((string[])(null)));
-#line 29
+#line 39
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -201,25 +297,123 @@ this.ScenarioInitialize(scenarioInfo);
 #line 9
 this.FeatureBackground();
 #line hidden
-#line 61
- testRunner.When("I use the tenant enrollment service to enroll the tenant called \'Litware\' in the " +
-                        "service called \'Operations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 71
+ testRunner.Given("I have enrollment configuration called \'Operations config\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 62
+                TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Key",
+                            "Account Name",
+                            "Container"});
+                table6.AddRow(new string[] {
+                            "fooBarStore",
+                            "fbblobaccount",
+                            "fbblobcontainer"});
+                table6.AddRow(new string[] {
+                            "operationsStore",
+                            "opsblobaccount",
+                            "opsblobcontainer"});
+#line 72
+ testRunner.And("the enrollment configuration called \'Operations config\' contains the following Bl" +
+                        "ob Storage configuration items", ((string)(null)), table6, "And ");
+#line hidden
+#line 76
+ testRunner.When("I use the tenant enrollment service with the enrollment configuration called \'Ope" +
+                        "rations config\' to enroll the tenant called \'Litware\' in the service called \'Ope" +
+                        "rations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 77
  testRunner.Then("the tenant called \'Litware\' should have the id of the tenant called \'Operations v" +
                         "1\' added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 63
+#line 78
+ testRunner.And("the tenant called \'Litware\' should contain blob storage configuration for a blob " +
+                        "storage container definition with container name \'operations\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 79
  testRunner.And("a new child tenant called \'Operations v1\\Litware\' of the service tenant called \'O" +
                         "perations v1\' has been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 64
+#line 80
  testRunner.And("the tenant called \'Operations v1\\Litware\' should have the id of the tenant called" +
                         " \'FooBar v1\' added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 65
+#line 81
+ testRunner.And("the tenant called \'Operations v1\\Litware\' should contain blob storage configurati" +
+                        "on for a blob storage container definition with container name \'foobar\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 82
  testRunner.And("the tenant called \'Litware\' should have the id of the tenant called \'Operations v" +
                         "1\\Litware\' set as the delegated tenant for the service called \'Operations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Enrollment with a dependency without supplying configuration for the dependency s" +
+            "ervice")]
+        public virtual void EnrollmentWithADependencyWithoutSupplyingConfigurationForTheDependencyService()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Enrollment with a dependency without supplying configuration for the dependency s" +
+                    "ervice", null, ((string[])(null)));
+#line 84
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 9
+this.FeatureBackground();
+#line hidden
+#line 100
+ testRunner.Given("I have enrollment configuration called \'Operations config\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+                TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Key",
+                            "Account Name",
+                            "Container"});
+                table7.AddRow(new string[] {
+                            "operationsStore",
+                            "opsblobaccount",
+                            "opsblobcontainer"});
+#line 101
+ testRunner.And("the enrollment configuration called \'Operations config\' contains the following Bl" +
+                        "ob Storage configuration items", ((string)(null)), table7, "And ");
+#line hidden
+#line 104
+ testRunner.When("I use the tenant enrollment service with the enrollment configuration called \'Ope" +
+                        "rations config\' to enroll the tenant called \'Litware\' in the service called \'Ope" +
+                        "rations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 105
+ testRunner.Then("an \'InvalidEnrollmentConfigurationException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 106
+ testRunner.Then("the tenant called \'Litware\' should not have the id of the tenant called \'Operatio" +
+                        "ns v1\' added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 107
+ testRunner.And("the tenant called \'Litware\' should not contain blob storage configuration for a b" +
+                        "lob storage container definition with container name \'operations\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 108
+ testRunner.And("no new child tenant called \'Operations v1\\Litware\' of the service tenant called \'" +
+                        "Operations v1\' has been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -231,7 +425,7 @@ this.FeatureBackground();
         {
             string[] tagsOfScenario = ((string[])(null));
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Enrollment with multiple levels of dependency", null, ((string[])(null)));
-#line 67
+#line 110
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -254,35 +448,91 @@ this.ScenarioInitialize(scenarioInfo);
 #line 9
 this.FeatureBackground();
 #line hidden
-#line 110
- testRunner.When("I use the tenant enrollment service to enroll the tenant called \'Litware\' in the " +
-                        "service called \'Workflow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 153
+ testRunner.Given("I have enrollment configuration called \'Workflow config\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 111
+                TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Key",
+                            "Account Name",
+                            "Container"});
+                table8.AddRow(new string[] {
+                            "fooBarStore",
+                            "fbblobaccount",
+                            "fbblobcontainer"});
+                table8.AddRow(new string[] {
+                            "operationsStore",
+                            "opsblobaccount",
+                            "opsblobcontainer"});
+#line 154
+ testRunner.And("the enrollment configuration called \'Workflow config\' contains the following Blob" +
+                        " Storage configuration items", ((string)(null)), table8, "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Key",
+                            "Account Uri",
+                            "Database Name",
+                            "Container Name"});
+                table9.AddRow(new string[] {
+                            "workflowStore",
+                            "wfaccount",
+                            "wfdb",
+                            "wfcontainer"});
+                table9.AddRow(new string[] {
+                            "workflowInstanceStore",
+                            "wfaccount",
+                            "wfdb",
+                            "wfinstancecontainer"});
+#line 158
+ testRunner.And("the enrollment configuration called \'Workflow config\' contains the following Cosm" +
+                        "os configuration items", ((string)(null)), table9, "And ");
+#line hidden
+#line 162
+ testRunner.When("I use the tenant enrollment service with the enrollment configuration called \'Wor" +
+                        "kflow config\' to enroll the tenant called \'Litware\' in the service called \'Workf" +
+                        "low v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 163
  testRunner.Then("the tenant called \'Litware\' should have the id of the tenant called \'Workflow v1\'" +
                         " added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 112
+#line 164
+ testRunner.And("the tenant called \'Litware\' should contain Cosmos configuration for a Cosmos cont" +
+                        "ainer definition with database name \'workflow\' and container name \'definitions\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 165
+ testRunner.And("the tenant called \'Litware\' should contain Cosmos configuration for a Cosmos cont" +
+                        "ainer definition with database name \'workflow\' and container name \'instances\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 166
  testRunner.And("a new child tenant called \'Workflow v1\\Litware\' of the service tenant called \'Wor" +
                         "kflow v1\' has been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 113
+#line 167
  testRunner.And("the tenant called \'Workflow v1\\Litware\' should have the id of the tenant called \'" +
                         "Operations v1\' added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 114
+#line 168
+ testRunner.And("the tenant called \'Workflow v1\\Litware\' should contain blob storage configuration" +
+                        " for a blob storage container definition with container name \'operations\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 169
  testRunner.And("the tenant called \'Litware\' should have the id of the tenant called \'Workflow v1\\" +
                         "Litware\' set as the delegated tenant for the service called \'Workflow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 115
+#line 170
  testRunner.And("a new child tenant called \'Operations v1\\Workflow v1\\Litware\' of the service tena" +
                         "nt called \'Operations v1\' has been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 116
+#line 171
  testRunner.And("the tenant called \'Operations v1\\Workflow v1\\Litware\' should have the id of the t" +
                         "enant called \'FooBar v1\' added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 117
+#line 172
+ testRunner.And("the tenant called \'Operations v1\\Workflow v1\\Litware\' should contain blob storage" +
+                        " configuration for a blob storage container definition with container name \'foob" +
+                        "ar\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 173
  testRunner.And("the tenant called \'Workflow v1\\Litware\' should have the id of the tenant called \'" +
                         "Operations v1\\Workflow v1\\Litware\' set as the delegated tenant for the service c" +
                         "alled \'Operations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -299,7 +549,7 @@ this.FeatureBackground();
             string[] tagsOfScenario = ((string[])(null));
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Enrollment with multiple levels of dependency and with the client tenant directly" +
                     " enrolled in one of the dependent services", null, ((string[])(null)));
-#line 119
+#line 175
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -322,56 +572,140 @@ this.ScenarioInitialize(scenarioInfo);
 #line 9
 this.FeatureBackground();
 #line hidden
-#line 164
- testRunner.When("I use the tenant enrollment service to enroll the tenant called \'Litware\' in the " +
-                        "service called \'Workflow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 220
+ testRunner.Given("I have enrollment configuration called \'Workflow config\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 165
- testRunner.And("I use the tenant enrollment service to enroll the tenant called \'Litware\' in the " +
-                        "service called \'Operations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+                TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Key",
+                            "Account Name",
+                            "Container"});
+                table10.AddRow(new string[] {
+                            "fooBarStore",
+                            "fbblobaccount",
+                            "fbblobcontainer"});
+                table10.AddRow(new string[] {
+                            "operationsStore",
+                            "opsblobaccount",
+                            "opsblobcontainer"});
+#line 221
+ testRunner.And("the enrollment configuration called \'Workflow config\' contains the following Blob" +
+                        " Storage configuration items", ((string)(null)), table10, "And ");
 #line hidden
-#line 166
+                TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Key",
+                            "Account Uri",
+                            "Database Name",
+                            "Container Name"});
+                table11.AddRow(new string[] {
+                            "workflowStore",
+                            "wfaccount",
+                            "wfdb",
+                            "wfcontainer"});
+                table11.AddRow(new string[] {
+                            "workflowInstanceStore",
+                            "wfaccount",
+                            "wfdb",
+                            "wfinstancecontainer"});
+#line 225
+ testRunner.And("the enrollment configuration called \'Workflow config\' contains the following Cosm" +
+                        "os configuration items", ((string)(null)), table11, "And ");
+#line hidden
+#line 229
+ testRunner.And("I have enrollment configuration called \'Operations config\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table12 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Key",
+                            "Account Name",
+                            "Container"});
+                table12.AddRow(new string[] {
+                            "fooBarStore",
+                            "fbblobaccount2",
+                            "fbblobcontainer2"});
+                table12.AddRow(new string[] {
+                            "operationsStore",
+                            "opsblobaccount2",
+                            "opsblobcontainer2"});
+#line 230
+ testRunner.And("the enrollment configuration called \'Operations config\' contains the following Bl" +
+                        "ob Storage configuration items", ((string)(null)), table12, "And ");
+#line hidden
+#line 234
+ testRunner.When("I use the tenant enrollment service with the enrollment configuration called \'Wor" +
+                        "kflow config\' to enroll the tenant called \'Litware\' in the service called \'Workf" +
+                        "low v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 235
+ testRunner.And("I use the tenant enrollment service with the enrollment configuration called \'Ope" +
+                        "rations config\' to enroll the tenant called \'Litware\' in the service called \'Ope" +
+                        "rations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 236
  testRunner.Then("the tenant called \'Litware\' should have the id of the tenant called \'Workflow v1\'" +
                         " added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 167
+#line 237
+ testRunner.And("the tenant called \'Litware\' should contain Cosmos configuration for a Cosmos cont" +
+                        "ainer definition with database name \'workflow\' and container name \'definitions\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 238
+ testRunner.And("the tenant called \'Litware\' should contain Cosmos configuration for a Cosmos cont" +
+                        "ainer definition with database name \'workflow\' and container name \'instances\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 239
  testRunner.And("the tenant called \'Litware\' should have the id of the tenant called \'Operations v" +
                         "1\' added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 168
+#line 240
+ testRunner.And("the tenant called \'Litware\' should contain blob storage configuration for a blob " +
+                        "storage container definition with container name \'operations\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 241
  testRunner.And("a new child tenant called \'Workflow v1\\Litware\' of the service tenant called \'Wor" +
                         "kflow v1\' has been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 169
+#line 242
  testRunner.And("the tenant called \'Workflow v1\\Litware\' should have the id of the tenant called \'" +
                         "Operations v1\' added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 170
+#line 243
+ testRunner.And("the tenant called \'Workflow v1\\Litware\' should contain blob storage configuration" +
+                        " for a blob storage container definition with container name \'operations\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 244
  testRunner.And("the tenant called \'Litware\' should have the id of the tenant called \'Workflow v1\\" +
                         "Litware\' set as the delegated tenant for the service called \'Workflow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 171
+#line 245
  testRunner.And("a new child tenant called \'Operations v1\\Workflow v1\\Litware\' of the service tena" +
                         "nt called \'Operations v1\' has been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 172
+#line 246
  testRunner.And("the tenant called \'Operations v1\\Workflow v1\\Litware\' should have the id of the t" +
                         "enant called \'FooBar v1\' added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 173
+#line 247
+ testRunner.And("the tenant called \'Operations v1\\Workflow v1\\Litware\' should contain blob storage" +
+                        " configuration for a blob storage container definition with container name \'foob" +
+                        "ar\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 248
  testRunner.And("the tenant called \'Workflow v1\\Litware\' should have the id of the tenant called \'" +
                         "Operations v1\\Workflow v1\\Litware\' set as the delegated tenant for the service c" +
                         "alled \'Operations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 174
+#line 249
  testRunner.And("a new child tenant called \'Operations v1\\Litware\' of the service tenant called \'O" +
                         "perations v1\' has been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 175
+#line 250
  testRunner.And("the tenant called \'Operations v1\\Litware\' should have the id of the tenant called" +
                         " \'FooBar v1\' added to its enrollments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 176
+#line 251
+ testRunner.And("the tenant called \'Operations v1\\Litware\' should contain blob storage configurati" +
+                        "on for a blob storage container definition with container name \'foobar\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 252
  testRunner.And("the tenant called \'Litware\' should have the id of the tenant called \'Operations v" +
                         "1\\Litware\' set as the delegated tenant for the service called \'Operations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden

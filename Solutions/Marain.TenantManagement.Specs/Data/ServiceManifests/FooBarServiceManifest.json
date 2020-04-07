@@ -1,0 +1,15 @@
+{
+  "$schema": "./ServiceManifestSchema.json",
+  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest",
+  "serviceName": "FooBar v1",
+  "requiredConfigurationEntries": [
+    {
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage",
+      "key": "fooBarStore",
+      "containerDefinition": {
+        "containerName": "foobar"
+      },
+      "description": "Stores Foos and Bars"
+    }
+  ]
+}

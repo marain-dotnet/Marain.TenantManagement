@@ -6,6 +6,7 @@ namespace Marain.TenantManagement.ServiceManifests
 {
     using System.Collections.Generic;
     using Corvus.Azure.Cosmos.Tenancy;
+    using Marain.TenantManagement.EnrollmentConfiguration;
 
     /// <summary>
     /// Service manifest configuration entry for CosmosDb.
@@ -19,6 +20,10 @@ namespace Marain.TenantManagement.ServiceManifests
 
         /// <inheritdoc/>
         public override string ContentType => RegisteredContentType;
+
+        /// <inheritdoc/>
+        public override string ExpectedConfigurationItemContentType =>
+            EnrollmentCosmosConfigurationItem.RegisteredContentType;
 
         /// <summary>
         /// Gets or sets the name of the database that the service is expecting to use with this configuration.

@@ -7,6 +7,7 @@ namespace Marain.TenantManagement.ServiceManifests
     using System;
     using System.Collections.Generic;
     using Corvus.Azure.Storage.Tenancy;
+    using Marain.TenantManagement.EnrollmentConfiguration;
 
     /// <summary>
     /// Service manifest configuration entry for blob storage.
@@ -20,6 +21,10 @@ namespace Marain.TenantManagement.ServiceManifests
 
         /// <inheritdoc/>
         public override string ContentType => RegisteredContentType;
+
+        /// <inheritdoc/>
+        public override string ExpectedConfigurationItemContentType =>
+            EnrollmentBlobStorageConfigurationItem.RegisteredContentType;
 
 #nullable disable annotations
         /// <summary>
