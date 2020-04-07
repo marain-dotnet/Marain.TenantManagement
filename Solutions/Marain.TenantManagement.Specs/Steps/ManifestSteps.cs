@@ -70,8 +70,13 @@ namespace Marain.TenantManagement.Specs.Steps
         [When("I deserialize the manifest called '(.*)'")]
         public void WhenIDeserializeTheManifestCalled(string manifestName)
         {
-            ServiceManifest manifest = this.LoadManifestFile(manifestName);
-            this.scenarioContext.Set(manifest);
+            CatchException.AndStoreInScenarioContext(
+                this.scenarioContext,
+                () =>
+                {
+                    ServiceManifest manifest = this.LoadManifestFile(manifestName);
+                    this.scenarioContext.Set(manifest);
+                });
         }
 
         [Given("I have loaded the manifest called '(.*)'")]
