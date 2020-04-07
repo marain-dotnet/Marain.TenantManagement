@@ -16,6 +16,25 @@ namespace Marain.TenantManagement.Specs.Mocks
     /// <summary>
     /// In-memory implementation of ITenantProvider.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Tenants are stored in internal List{T} and Dictionary{T, T}; as such, this implementation should not be considered
+    /// thread-safe.
+    /// </para>
+    /// <para>
+    /// In order to emulate the behaviour of tenant providers that store their data in an external store (or the
+    /// <c>ClientTenantProvider</c>, which internally calls the tenancy REST API), data is stored internally in serialized
+    /// form. When <see cref="ITenant"/> instances are requested (e.g. via <see cref="GetTenantAsync(string, string)"/>, the
+    /// appropriate data is retrieved and deserialized to an <see cref="ITenant"/> before being returned. This means that
+    /// multiple calls to a method such as <see cref="GetTenantAsync(string, string)"/> will return different object instances.
+    /// This is done to avoid any potential issues with tests passing when using the <see cref="InMemoryTenantProvider"/> but
+    /// failing when switching to a real implementation. For example, a possible cause of this would be a spec testing an
+    /// operation that updates a tenant and later verifying that those changes have been made. If we simply stored the tenant
+    /// in memory, it would be possible for the code under test to omit calling
+    /// <see cref="UpdateTenantAsync(ITenant)"/>, but for the test which checks that the updates have been made to still
+    /// succeed. By ensuring that a unique <see cref="ITenant"/> is returned each time, we avoid this and similar problems.
+    /// </para>
+    /// </remarks>
     public class InMemoryTenantProvider : ITenantProvider
     {
         private readonly IJsonSerializerSettingsProvider jsonSerializerSettingsProvider;
@@ -49,7 +68,7 @@ namespace Marain.TenantManagement.Specs.Mocks
 
         public Task DeleteTenantAsync(string tenantId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public async Task<TenantCollectionResult> GetChildrenAsync(string tenantId, int limit = 20, string? continuationToken = null)
@@ -116,6 +135,11 @@ namespace Marain.TenantManagement.Specs.Mocks
             return children;
         }
 
+        /// <summary>
+        /// Helper class to represent a tenant being held in memory. Tenant data is held in serialized JSON form. The reasons
+        /// behind storing tenants in this form are explained in the <c>remarks</c> section of the documentation for the
+        /// <see cref="InMemoryTenantProvider"/> class.
+        /// </summary>
         private class StoredTenant
         {
             private readonly JsonSerializerSettings settings;
