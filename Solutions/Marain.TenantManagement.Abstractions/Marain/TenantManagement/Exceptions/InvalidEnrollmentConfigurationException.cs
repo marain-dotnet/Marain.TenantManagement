@@ -42,18 +42,13 @@ namespace Marain.TenantManagement.Exceptions
         }
 
         /// <summary>
-        /// Gets or sets the list of errors.
+        /// Gets the list of errors.
         /// </summary>
         public string[] Errors
         {
             get
             {
                 return (this.Data["Errors"] as string[]) ?? new string[0];
-            }
-
-            set
-            {
-                this.Data["Errors"] = value;
             }
         }
     }
