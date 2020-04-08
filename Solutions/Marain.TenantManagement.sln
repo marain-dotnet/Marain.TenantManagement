@@ -1,0 +1,68 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29905.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marain.TenantManagement.Abstractions", "Marain.TenantManagement.Abstractions\Marain.TenantManagement.Abstractions.csproj", "{0ABA615E-512F-4F38-863C-149708DDD1A5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marain.TenantManagement.Specs", "Marain.TenantManagement.Specs\Marain.TenantManagement.Specs.csproj", "{90360BFF-F5FA-4A98-8A89-7B48E83FBE70}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceManifests", "ServiceManifests", "{6AFB6642-7013-4C22-A6B6-8D770516F733}"
+	ProjectSection(SolutionItems) = preProject
+		ServiceManifests\OperationsServiceManifest.json = ServiceManifests\OperationsServiceManifest.json
+		ServiceManifests\ServiceManifestSchema.json = ServiceManifests\ServiceManifestSchema.json
+		ServiceManifests\WorkflowServiceManifest.json = ServiceManifests\WorkflowServiceManifest.json
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marain.TenantManagement.Cli", "Marain.TenantManagement.Cli\Marain.TenantManagement.Cli.csproj", "{4101AE1C-2ABB-4E1B-AC92-456EE4A0C0B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevOps", "DevOps", "{D7C56021-2BF5-4A76-ACD2-28994C6F993C}"
+	ProjectSection(SolutionItems) = preProject
+		..\azure-pipelines.release.yml = ..\azure-pipelines.release.yml
+		..\azure-pipelines.yml = ..\azure-pipelines.yml
+		..\GitVersion.yml = ..\GitVersion.yml
+		..\imm.yaml = ..\imm.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SupportingFiles", "SupportingFiles", "{2CBA1258-9C3F-4294-A5CA-C9131F590E11}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		..\.gitignore = ..\.gitignore
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+		stylecop.json = stylecop.json
+		StyleCop.ruleset = StyleCop.ruleset
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EnrollmentConfigurations", "EnrollmentConfigurations", "{A4D51963-26B8-45CE-9356-6145FF012E79}"
+	ProjectSection(SolutionItems) = preProject
+		EnrollmentConfigurations\OperationsConfigForStorageEmulator.json = EnrollmentConfigurations\OperationsConfigForStorageEmulator.json
+		EnrollmentConfigurations\WorkflowConfigForStorageEmulator.json = EnrollmentConfigurations\WorkflowConfigForStorageEmulator.json
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0ABA615E-512F-4F38-863C-149708DDD1A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0ABA615E-512F-4F38-863C-149708DDD1A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0ABA615E-512F-4F38-863C-149708DDD1A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0ABA615E-512F-4F38-863C-149708DDD1A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90360BFF-F5FA-4A98-8A89-7B48E83FBE70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90360BFF-F5FA-4A98-8A89-7B48E83FBE70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90360BFF-F5FA-4A98-8A89-7B48E83FBE70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90360BFF-F5FA-4A98-8A89-7B48E83FBE70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4101AE1C-2ABB-4E1B-AC92-456EE4A0C0B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4101AE1C-2ABB-4E1B-AC92-456EE4A0C0B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4101AE1C-2ABB-4E1B-AC92-456EE4A0C0B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4101AE1C-2ABB-4E1B-AC92-456EE4A0C0B0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E9AFBC50-54DA-47F9-B2FD-586C4FEAA71C}
+	EndGlobalSection
+EndGlobal

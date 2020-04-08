@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "http://example.com/root.json",
+  "type": "object",
+  "title": "Root Schema",
+  "description": "Foo",
+  "required": [],
+  "properties": {
+    "serviceName": {
+      "type": "string"
+    },
+    "dependsOnServiceNames": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "requiredConfigurationEntries": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          { "$ref": "#/definitions/azureBlobContainerConfigurationEntry" },
+          { "$ref": "#/definitions/cosmosContainerConfiguration" }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "azureBlobContainerConfigurationEntry": {
+      "type": "object",
+      "properties": {
+        "contentType": { "enum": [ "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage" ] },
+        "key": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "containerDefinition": { "$ref": "#/definitions/blobStorageContainerDefinition" }
+      }
+    },
+    "cosmosContainerConfiguration": {
+      "type": "object",
+      "properties": {
+        "contentType": { "enum": [ "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb" ] },
+        "key": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "containerDefinition": { "$ref": "#/definitions/cosmosContainerDefinition" }
+      }
+    },
+    "blobStorageContainerDefinition": {
+      "type": "object",
+      "properties": {
+        "containerName": { "type": "string" }
+      }
+    },
+    "cosmosContainerDefinition": {
+      "databaseName": { "type": "string" },
+      "containerName": { "type": "string" }
+    }
+  }
+}

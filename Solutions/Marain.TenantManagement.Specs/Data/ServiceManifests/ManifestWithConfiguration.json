@@ -1,0 +1,14 @@
+{
+  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest",
+  "serviceName": "Manifest with configuration",
+  "requiredConfigurationEntries": [
+    {
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage",
+      "key": "operationsStore",
+      "containerDefinition": {
+        "containerName": "operations"
+      },
+      "description": "Stores the status of all current operations"
+    }
+  ]
+}

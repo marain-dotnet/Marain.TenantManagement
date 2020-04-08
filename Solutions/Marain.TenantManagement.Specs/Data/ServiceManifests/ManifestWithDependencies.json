@@ -1,0 +1,5 @@
+{
+  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest",
+  "serviceName": "Manifest with dependencies",
+  "dependsOnServiceNames": [ "Operations", "FooBar" ]
+}

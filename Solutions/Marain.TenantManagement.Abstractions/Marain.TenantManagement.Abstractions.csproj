@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="$(EndjinProjectPropsPath)" Condition="$(EndjinProjectPropsPath) != ''" />
+  
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
+    <PackageDescription>Management components for Marain, allowing tenants to be created and enrolled into services.</PackageDescription>
+    <PackageTags>Marain</PackageTags>
+    <PackageReleaseNotes></PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Corvus.Tenancy.Abstractions" Version="0.24.0-preview.26" />
+    <PackageReference Include="Corvus.Azure.Storage.Tenancy" Version="0.24.0-preview.26" />
+    <PackageReference Include="Corvus.Azure.Cosmos.Tenancy" Version="0.24.0-preview.26" />
+    <PackageReference Include="Endjin.RecommendedPractices" Version="0.2.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

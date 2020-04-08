@@ -1,0 +1,11 @@
+{
+  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest",
+  "serviceName": "Manifest with configuration with unknown content type.",
+  "requiredConfigurationEntries": [
+    {
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.unknown",
+      "key": "unknownThing",
+      "description": "This is here to cause a deserializaton exception."
+    }
+  ]
+}

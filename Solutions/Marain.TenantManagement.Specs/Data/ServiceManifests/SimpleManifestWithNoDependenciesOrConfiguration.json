@@ -1,0 +1,4 @@
+{
+  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest",
+  "serviceName": "Simple manifest with no dependencies or configuration"
+}
