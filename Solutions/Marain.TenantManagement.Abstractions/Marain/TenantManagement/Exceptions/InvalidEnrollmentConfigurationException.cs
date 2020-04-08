@@ -46,10 +46,9 @@ namespace Marain.TenantManagement.Exceptions
         /// </summary>
         public string[] Errors
         {
-            get
-            {
-                return (this.Data["Errors"] as string[]) ?? new string[0];
-            }
+            get => (this.Data["Errors"] as string[]) ?? new string[0];
+
+            private set => this.Data["Errors"] = value;
         }
     }
 }
