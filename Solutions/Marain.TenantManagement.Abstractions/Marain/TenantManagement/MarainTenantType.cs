@@ -18,7 +18,7 @@ namespace Marain.TenantManagement
         /// The tenant represents a client.
         /// </summary>
         /// <remarks>
-        /// All service tenants should exist in a hierarchy starting under the well known "Client Tenants" parent.
+        /// All client tenants should exist in a hierarchy starting under the well known "Client Tenants" parent.
         /// </remarks>
         Client = 1,
 

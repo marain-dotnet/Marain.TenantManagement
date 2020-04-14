@@ -30,9 +30,7 @@ namespace Marain.TenantManagement.ServiceManifests
         /// <summary>
         /// Gets or sets the well known Guid that will be used when creating the service tenant.
         /// </summary>
-#nullable disable annotations
         public Guid WellKnownTenantGuid { get; set; }
-#nullable restore annotations
 
         /// <summary>
         /// Gets or sets the name of the service.
@@ -95,7 +93,7 @@ namespace Marain.TenantManagement.ServiceManifests
         {
             if (this.WellKnownTenantGuid == Guid.Empty)
             {
-                errors.Add("A value must be supplied for Well Known Tenant Guid. This is necessary to ensure that the Id of the service tenant is well known.");
+                errors.Add("A value must be supplied for the Well Known Tenant Guid. This is necessary to ensure that the Id of the service tenant is well known.");
             }
 
             string expectedChildTenantId = WellKnownTenantIds.ServiceTenantParentId.CreateChildId(this.WellKnownTenantGuid);
@@ -134,7 +132,7 @@ namespace Marain.TenantManagement.ServiceManifests
             {
                 for (int i = 0; i < dependentServiceTenantRequests.Length; i++)
                 {
-                    if (dependentServiceTenantRequests[i].Status == TaskStatus.Faulted)
+                    if (dependentServiceTenantRequests[i].Exception != null)
                     {
                         if (dependentServiceTenantRequests[i].Exception!.InnerException is TenantNotFoundException)
                         {

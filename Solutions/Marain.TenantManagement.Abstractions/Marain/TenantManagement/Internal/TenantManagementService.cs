@@ -215,14 +215,21 @@ namespace Marain.TenantManagement.Internal
             ITenant serviceTenant,
             EnrollmentConfigurationItem[] configurationItems)
         {
-            this.EnsureTenantIsOfType(
-                enrollingTenant ?? throw new ArgumentNullException(nameof(enrollingTenant)),
+            if (enrollingTenant == null)
+            {
+                throw new ArgumentNullException(nameof(enrollingTenant));
+            }
+
+            enrollingTenant.EnsureTenantIsOfType(
                 MarainTenantType.Client,
                 MarainTenantType.Delegated);
 
-            this.EnsureTenantIsOfType(
-                serviceTenant ?? throw new ArgumentNullException(nameof(serviceTenant)),
-                MarainTenantType.Service);
+            if (serviceTenant == null)
+            {
+                throw new ArgumentNullException(nameof(serviceTenant));
+            }
+
+            serviceTenant.EnsureTenantIsOfType(MarainTenantType.Service);
 
             if (configurationItems == null)
             {
@@ -288,7 +295,7 @@ namespace Marain.TenantManagement.Internal
 
         private async Task<ServiceManifestRequiredConfigurationEntry[]> GetServiceEnrollmentConfigurationRequirementsAsync(ITenant serviceTenant)
         {
-            this.EnsureTenantIsOfType(serviceTenant, MarainTenantType.Service);
+            serviceTenant.EnsureTenantIsOfType(MarainTenantType.Service);
 
             var requirements = new List<ServiceManifestRequiredConfigurationEntry>();
             ServiceManifest serviceManifest = serviceTenant.GetServiceManifest();
@@ -315,19 +322,8 @@ namespace Marain.TenantManagement.Internal
         private async Task<ITenant> GetTenantOfTypeAsync(string tenantId, params MarainTenantType[] allowableTenantTypes)
         {
             ITenant tenant = await this.tenantProvider.GetTenantAsync(tenantId).ConfigureAwait(false);
-            this.EnsureTenantIsOfType(tenant, allowableTenantTypes);
+            tenant.EnsureTenantIsOfType(allowableTenantTypes);
             return tenant;
-        }
-
-        private void EnsureTenantIsOfType(ITenant tenant, params MarainTenantType[] allowableTenantTypes)
-        {
-            MarainTenantType tenantType = tenant.GetMarainTenantType();
-            if (!allowableTenantTypes.Contains(tenantType))
-            {
-                throw new ArgumentException(
-                    $"The tenant with Id '{tenant.Id}' has a tenant type of '{tenantType}'. Valid tenant type(s) here are: {string.Join(", ", allowableTenantTypes)}",
-                    nameof(tenant));
-            }
         }
 
         private Task<ITenant> GetClientTenantParentAsync() =>

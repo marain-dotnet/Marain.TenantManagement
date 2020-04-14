@@ -17,6 +17,24 @@ namespace Marain.TenantManagement
     public static class TenantExtensions
     {
         /// <summary>
+        /// Ensures that the specified tenant is one of the allowable types, throwing an <see cref="ArgumentException"/> if
+        /// it is not.
+        /// </summary>
+        /// <param name="tenant">The tenant to check.</param>
+        /// <param name="allowableTenantTypes">The list of allowable types for the tenant.</param>
+        /// <exception cref="ArgumentException">The supplied tenant is not one of the specified types.</exception>
+        public static void EnsureTenantIsOfType(this ITenant tenant, params MarainTenantType[] allowableTenantTypes)
+        {
+            MarainTenantType tenantType = tenant.GetMarainTenantType();
+            if (!allowableTenantTypes.Contains(tenantType))
+            {
+                throw new ArgumentException(
+                    $"The tenant with Id '{tenant.Id}' has a tenant type of '{tenantType}'. Valid tenant type(s) here are: {string.Join(", ", allowableTenantTypes)}",
+                    nameof(tenant));
+            }
+        }
+
+        /// <summary>
         /// Gets the <see cref="ServiceManifest"/> from the specified tenant.
         /// </summary>
         /// <param name="tenant">The tenant to get the manifest from.</param>
@@ -69,12 +87,7 @@ namespace Marain.TenantManagement
         /// <returns>The Id of the delegated tenant.</returns>
         public static string GetDelegatedTenantIdForServiceId(this ITenant tenant, string serviceTenantId)
         {
-            MarainTenantType tenantType = tenant.GetMarainTenantType();
-
-            if (tenantType != MarainTenantType.Client && tenantType != MarainTenantType.Delegated)
-            {
-                throw new ArgumentException($"Delegated tenant Ids are only valid for Client or Delegated tenant types. The supplied tenant is of type '{tenantType}'", nameof(tenant));
-            }
+            tenant.EnsureTenantIsOfType(MarainTenantType.Client, MarainTenantType.Delegated);
 
             if (string.IsNullOrWhiteSpace(serviceTenantId))
             {
@@ -187,36 +200,21 @@ namespace Marain.TenantManagement
             ITenant serviceTenant,
             ITenant delegatedTenant)
         {
-            MarainTenantType tenantType = tenant.GetMarainTenantType();
-
-            if (tenantType != MarainTenantType.Client && tenantType != MarainTenantType.Delegated)
-            {
-                throw new ArgumentException($"Delegated tenant Ids can only be set for Client or Delegated tenant types. The supplied tenant is of type '{tenantType}'", nameof(tenant));
-            }
+            tenant.EnsureTenantIsOfType(MarainTenantType.Client, MarainTenantType.Delegated);
 
             if (serviceTenant == null)
             {
                 throw new ArgumentNullException(nameof(serviceTenant));
             }
 
-            MarainTenantType serviceTenantType = serviceTenant.GetMarainTenantType();
-
-            if (serviceTenantType != MarainTenantType.Service)
-            {
-                throw new ArgumentException($"The specified service tenant must have its Tenant Type set to Service. The supplied tenant is of type '{serviceTenantType}'", nameof(serviceTenantType));
-            }
+            serviceTenant.EnsureTenantIsOfType(MarainTenantType.Service);
 
             if (delegatedTenant == null)
             {
                 throw new ArgumentNullException(nameof(delegatedTenant));
             }
 
-            MarainTenantType delegatedTenantType = delegatedTenant.GetMarainTenantType();
-
-            if (delegatedTenantType != MarainTenantType.Delegated)
-            {
-                throw new ArgumentException($"The specified delegated tenant must have its Tenant Type set to Delegated. The supplied tenant is of type '{delegatedTenantType}'", nameof(delegatedTenantType));
-            }
+            delegatedTenant.EnsureTenantIsOfType(MarainTenantType.Delegated);
 
             tenant.Properties.Set(TenantPropertyKeys.DelegatedTenantId(serviceTenant.Id), delegatedTenant.Id);
         }

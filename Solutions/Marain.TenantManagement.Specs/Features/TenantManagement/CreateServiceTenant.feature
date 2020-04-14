@@ -12,11 +12,11 @@ Background:
 	And I have a service manifest called 'Workflow Manifest' for a service called 'Workflow v1'
 	And the well-known tenant Guid for the manifest called 'Workflow Manifest' is '8664b477-3403-4c77-abb2-f9d1b95b0c18'
 	And the service manifest called 'Workflow Manifest' has the following dependencies
-	| Service Name                                                     |
+	| Service Id                                                       |
 	| 3633754ac4c9be44b55bfe791b1780f12429524fe7b6cc48a265a307407ec858 |
 	And I have a service manifest called 'Workflow Manifest with invalid dependency' for a service called 'Workflow v1'
 	And the service manifest called 'Workflow Manifest with invalid dependency' has the following dependencies
-	| Service Name                                                     |
+	| Service Id                                                       |
 	| 3633754ac4c9be44b55bfe791b1780f1ac641e0cdeee4246abdf41dfb1e94946 |
 
 Scenario: Create new service tenant

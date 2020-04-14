@@ -5,6 +5,7 @@
 namespace Marain.TenantManagement
 {
     using System;
+    using Corvus.Tenancy;
 
     /// <summary>
     /// Ids for well known tenants in the Marain tenancy hierarchy.
@@ -12,14 +13,16 @@ namespace Marain.TenantManagement
     public static class WellKnownTenantIds
     {
         /// <summary>
-        /// Id of the client tenant parent.
+        /// Gets the Id of the client tenant parent.
         /// </summary>
-        public const string ClientTenantParentId = "75b9261673c2714681f14c97bc0439fb";
+        /// <remarks>This evaluates to "75b9261673c2714681f14c97bc0439fb".</remarks>
+        public static string ClientTenantParentId { get; } = RootTenant.RootTenantId.CreateChildId(ClientTenantParentGuid);
 
         /// <summary>
-        /// Id of the service tenant parent.
+        /// Gets the Id of the service tenant parent.
         /// </summary>
-        public const string ServiceTenantParentId = "3633754ac4c9be44b55bfe791b1780f1";
+        /// <remarks>This evaluates to "3633754ac4c9be44b55bfe791b1780f1".</remarks>
+        public static string ServiceTenantParentId { get; } = RootTenant.RootTenantId.CreateChildId(ServiceTenantParentGuid);
 
         /// <summary>
         /// Gets the Guid to use when creating the client tenant parent.
