@@ -15,8 +15,8 @@ Scenario: Manifest with dependencies
 	When I deserialize the manifest called 'ManifestWithDependencies'
 	Then the resulting manifest should have the service name 'Manifest with dependencies'
 	And the resulting manifest should have 2 dependencies
-	And the resulting manifest should have a dependency called 'Operations'
-	And the resulting manifest should have a dependency called 'FooBar'
+	And the resulting manifest should have a dependency with Id '3633754ac4c9be44b55bfe791b1780f12429524fe7b6cc48a265a307407ec858'
+	And the resulting manifest should have a dependency with Id '3633754ac4c9be44b55bfe791b1780f187732ecba95e0e41b5ad8b2605aa5fb3'
 	And the resulting manifest should not have any required configuration entries
 
 Scenario: Manifest with a configuration item

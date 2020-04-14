@@ -157,10 +157,12 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("the resulting manifest should have 2 dependencies", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 18
- testRunner.And("the resulting manifest should have a dependency called \'Operations\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("the resulting manifest should have a dependency with Id \'3633754ac4c9be44b55bfe79" +
+                        "1b1780f12429524fe7b6cc48a265a307407ec858\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 19
- testRunner.And("the resulting manifest should have a dependency called \'FooBar\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("the resulting manifest should have a dependency with Id \'3633754ac4c9be44b55bfe79" +
+                        "1b1780f187732ecba95e0e41b5ad8b2605aa5fb3\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 20
  testRunner.And("the resulting manifest should not have any required configuration entries", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");

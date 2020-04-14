@@ -12,7 +12,6 @@ namespace Marain.TenantManagement.Internal
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
     using Marain.TenantManagement.EnrollmentConfiguration;
-    using Marain.TenantManagement.Exceptions;
     using Marain.TenantManagement.ServiceManifests;
 
     /// <summary>
@@ -39,12 +38,7 @@ namespace Marain.TenantManagement.Internal
                 throw new ArgumentException(nameof(clientName));
             }
 
-            ITenant? parent = await this.GetClientTenantParentAsync().ConfigureAwait(false);
-
-            if (parent == null)
-            {
-                this.ThrowNotInitialisedException();
-            }
+            ITenant parent = await this.GetClientTenantParentAsync().ConfigureAwait(false);
 
             return await this.tenantProvider.CreateChildTenantAsync(parent.Id, clientName).ConfigureAwait(false);
         }
@@ -59,15 +53,11 @@ namespace Marain.TenantManagement.Internal
 
             await manifest.ValidateAndThrowAsync(this).ConfigureAwait(false);
 
-            ITenant? parent = await this.GetServiceTenantParentAsync().ConfigureAwait(false);
+            ITenant parent = await this.GetServiceTenantParentAsync().ConfigureAwait(false);
 
-            if (parent == null)
-            {
-                this.ThrowNotInitialisedException();
-            }
-
-            ITenant newTenant = await this.tenantProvider.CreateChildTenantAsync(
+            ITenant newTenant = await this.tenantProvider.CreateWellKnownChildTenantAsync(
                 parent.Id,
+                manifest.WellKnownTenantGuid,
                 manifest.ServiceName).ConfigureAwait(false);
 
             newTenant.SetServiceManifest(manifest);
@@ -78,31 +68,46 @@ namespace Marain.TenantManagement.Internal
         }
 
         /// <inheritdoc/>
-        public async Task<ITenant?> GetServiceTenantByNameAsync(string serviceName)
+        public async Task<ITenant> GetServiceTenantAsync(string serviceTenantId)
         {
-            if (string.IsNullOrWhiteSpace(serviceName))
-            {
-                throw new ArgumentException(nameof(serviceName));
-            }
+            ITenant tenant = await this.tenantProvider.GetTenantAsync(serviceTenantId).ConfigureAwait(false);
 
-            ITenant? serviceTenantParent = await this.GetServiceTenantParentAsync().ConfigureAwait(false);
+            // TODO: Check tenant is a service tenant.
+            return tenant;
+        }
 
-            if (serviceTenantParent == null)
-            {
-                this.ThrowNotInitialisedException();
-            }
+        /// <inheritdoc/>
+        public async Task<ITenant> GetClientTenantAsync(string clientTenantId)
+        {
+            ITenant tenant = await this.tenantProvider.GetTenantAsync(clientTenantId).ConfigureAwait(false);
 
-            return await this.GetTenantByNameAsync(serviceTenantParent.Id, serviceName).ConfigureAwait(false);
+            // TODO: Check tenant is a client tenant.
+            return tenant;
         }
 
         /// <inheritdoc/>
         public async Task InitialiseTenancyProviderAsync(bool force = false)
         {
-            TenantCollectionResult existingTopLevelTenantIds = await this.tenantProvider.GetChildrenAsync(
-                this.tenantProvider.Root.Id).ConfigureAwait(false);
+            ITenant? existingClientTenantParent = null;
+            try
+            {
+                existingClientTenantParent = await this.GetClientTenantParentAsync().ConfigureAwait(false);
+            }
+            catch (InvalidOperationException)
+            {
+                // No-op - this is expected if the provider isn't yet initialised.
+            }
 
-            ITenant? existingClientTenantParent = await this.GetClientTenantParentAsync().ConfigureAwait(false);
-            ITenant? existingServiceTenantParent = await this.GetServiceTenantParentAsync().ConfigureAwait(false);
+            ITenant? existingServiceTenantParent = null;
+
+            try
+            {
+                existingServiceTenantParent = await this.GetServiceTenantParentAsync().ConfigureAwait(false);
+            }
+            catch (InvalidOperationException)
+            {
+                // No-op - this is expected if the provider isn't yet initialised.
+            }
 
             if (existingClientTenantParent != null && existingServiceTenantParent != null)
             {
@@ -110,8 +115,14 @@ namespace Marain.TenantManagement.Internal
                 return;
             }
 
-            // The parent tenants don't exist. If there are other tenants, we're being asked to initialise into a non-empty
-            // tenant provider, which we shouldn't do by default.
+            // At least one of the parent tenants don't exist. If there are other tenants, we're being asked to initialise
+            // into a non-empty tenant provider, which we shouldn't do by default. To check this, we only need to retrieve
+            // 2 tenants.
+            TenantCollectionResult existingTopLevelTenantIds = await this.tenantProvider.GetChildrenAsync(
+                this.tenantProvider.Root.Id,
+                2,
+                null).ConfigureAwait(false);
+
             if (existingTopLevelTenantIds.Tenants.Count != 0 && !force)
             {
                 throw new InvalidOperationException($"Cannot initialise the tenancy provider for use with Marain because it already contains non-Marain tenants at the root level. If you wish to initialise anyway, re-invoke the method with the 'force' parameter set to true.");
@@ -120,15 +131,17 @@ namespace Marain.TenantManagement.Internal
             // Create the tenants
             if (existingClientTenantParent == null)
             {
-                await this.tenantProvider.CreateChildTenantAsync(
+                await this.tenantProvider.CreateWellKnownChildTenantAsync(
                     this.tenantProvider.Root.Id,
+                    WellKnownTenantIds.ClientTenantParentGuid,
                     TenantNames.ClientTenantParent).ConfigureAwait(false);
             }
 
             if (existingServiceTenantParent == null)
             {
-                await this.tenantProvider.CreateChildTenantAsync(
+                await this.tenantProvider.CreateWellKnownChildTenantAsync(
                     this.tenantProvider.Root.Id,
+                    WellKnownTenantIds.ServiceTenantParentGuid,
                     TenantNames.ServiceTenantParent).ConfigureAwait(false);
             }
         }
@@ -136,7 +149,7 @@ namespace Marain.TenantManagement.Internal
         /// <inheritdoc/>
         public async Task EnrollInServiceAsync(
             string enrollingTenantId,
-            string serviceTenantName,
+            string serviceTenantId,
             EnrollmentConfigurationItem[] configurationItems)
         {
             if (string.IsNullOrWhiteSpace(enrollingTenantId))
@@ -144,9 +157,9 @@ namespace Marain.TenantManagement.Internal
                 throw new ArgumentException(nameof(enrollingTenantId));
             }
 
-            if (string.IsNullOrWhiteSpace(serviceTenantName))
+            if (string.IsNullOrWhiteSpace(serviceTenantId))
             {
-                throw new ArgumentException(nameof(serviceTenantName));
+                throw new ArgumentException(nameof(serviceTenantId));
             }
 
             if (configurationItems == null)
@@ -156,8 +169,8 @@ namespace Marain.TenantManagement.Internal
 
             ITenant enrollingTenant = await this.tenantProvider.GetTenantAsync(enrollingTenantId).ConfigureAwait(false);
 
-            ITenant serviceTenant = await this.GetServiceTenantByNameAsync(serviceTenantName).ConfigureAwait(false)
-                ?? throw new TenantNotFoundException($"Could not find a service tenant with the name '{serviceTenantName}'");
+            ITenant serviceTenant = await this.tenantProvider.GetTenantAsync(serviceTenantId).ConfigureAwait(false)
+                ?? throw new TenantNotFoundException($"Could not find a service tenant with the Id '{serviceTenantId}'");
 
             await this.EnrollInServiceAsync(enrollingTenant, serviceTenant, configurationItems).ConfigureAwait(false);
         }
@@ -165,7 +178,7 @@ namespace Marain.TenantManagement.Internal
         /// <inheritdoc/>
         public async Task EnrollInServiceAsync(
             ITenant enrollingTenant,
-            string serviceTenantName,
+            string serviceTenantId,
             EnrollmentConfigurationItem[] configurationItems)
         {
             if (enrollingTenant == null)
@@ -173,9 +186,9 @@ namespace Marain.TenantManagement.Internal
                 throw new ArgumentNullException(nameof(enrollingTenant));
             }
 
-            if (string.IsNullOrWhiteSpace(serviceTenantName))
+            if (string.IsNullOrWhiteSpace(serviceTenantId))
             {
-                throw new ArgumentException(nameof(serviceTenantName));
+                throw new ArgumentException(nameof(serviceTenantId));
             }
 
             if (configurationItems == null)
@@ -183,8 +196,8 @@ namespace Marain.TenantManagement.Internal
                 throw new ArgumentNullException(nameof(configurationItems));
             }
 
-            ITenant serviceTenant = await this.GetServiceTenantByNameAsync(serviceTenantName).ConfigureAwait(false)
-                ?? throw new TenantNotFoundException($"Could not find a service tenant with the name '{serviceTenantName}'");
+            ITenant serviceTenant = await this.GetServiceTenantAsync(serviceTenantId).ConfigureAwait(false)
+                ?? throw new TenantNotFoundException($"Could not find a service tenant with the Id '{serviceTenantId}'");
 
             await this.EnrollInServiceAsync(enrollingTenant, serviceTenant, configurationItems).ConfigureAwait(false);
         }
@@ -236,12 +249,12 @@ namespace Marain.TenantManagement.Internal
 
             // If this service has dependencies, we need to create a new delegated tenant for the service to use when
             // accessing those dependencies.
-            if (manifest.DependsOnServiceNames.Count > 0)
+            if (manifest.DependsOnServiceTenantIds.Count > 0)
             {
                 ITenant delegatedTenant = await this.CreateDelegatedTenant(enrollingTenant, serviceTenant).ConfigureAwait(false);
 
                 // Now enroll the new delegated tenant for all of the dependent services.
-                await Task.WhenAll(manifest.DependsOnServiceNames.Select(
+                await Task.WhenAll(manifest.DependsOnServiceTenantIds.Select(
                     dependsOnServiceName => this.EnrollInServiceAsync(
                         delegatedTenant,
                         dependsOnServiceName,
@@ -255,17 +268,23 @@ namespace Marain.TenantManagement.Internal
         }
 
         /// <inheritdoc/>
-        public async Task<ServiceManifestRequiredConfigurationEntry[]> GetServiceEnrollmentConfigurationRequirementsAsync(string serviceTenantName)
+        public async Task<ServiceManifestRequiredConfigurationEntry[]> GetServiceEnrollmentConfigurationRequirementsAsync(string serviceTenantId)
         {
-            if (string.IsNullOrWhiteSpace(serviceTenantName))
+            if (string.IsNullOrWhiteSpace(serviceTenantId))
             {
-                throw new ArgumentException(nameof(serviceTenantName));
+                throw new ArgumentException(nameof(serviceTenantId));
             }
 
-            ITenant serviceTenant = await this.GetServiceTenantByNameAsync(serviceTenantName).ConfigureAwait(false)
-                ?? throw new TenantNotFoundException($"Could not find a service tenant with the name '{serviceTenantName}'");
+            ITenant serviceTenant = await this.GetServiceTenantAsync(serviceTenantId).ConfigureAwait(false)
+                ?? throw new TenantNotFoundException($"Could not find a service tenant with the Id '{serviceTenantId}'");
 
             return await this.GetServiceEnrollmentConfigurationRequirementsAsync(serviceTenant).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+        public string GetServiceTenantId(Guid wellKnownServiceTenantGuid)
+        {
+            return WellKnownTenantIds.ServiceTenantParentId.CreateChildId(wellKnownServiceTenantGuid);
         }
 
         private async Task<ServiceManifestRequiredConfigurationEntry[]> GetServiceEnrollmentConfigurationRequirementsAsync(ITenant serviceTenant)
@@ -276,7 +295,7 @@ namespace Marain.TenantManagement.Internal
 
             ServiceManifestRequiredConfigurationEntry[][] dependentServicesConfigRequirements =
                 await Task.WhenAll(
-                    serviceManifest.DependsOnServiceNames.Select(
+                    serviceManifest.DependsOnServiceTenantIds.Select(
                         x => this.GetServiceEnrollmentConfigurationRequirementsAsync(x))).ConfigureAwait(false);
 
             requirements.AddRange(dependentServicesConfigRequirements.SelectMany(x => x));
@@ -290,30 +309,22 @@ namespace Marain.TenantManagement.Internal
             return this.tenantProvider.CreateChildTenantAsync(serviceTenant.Id, delegatedTenantName);
         }
 
-        private Task<ITenant?> GetClientTenantParentAsync() =>
-            this.GetTenantByNameAsync(this.tenantProvider.Root.Id, TenantNames.ClientTenantParent);
+        private Task<ITenant> GetClientTenantParentAsync() =>
+            this.GetWellKnownParentTenant(WellKnownTenantIds.ClientTenantParentId);
 
-        private Task<ITenant?> GetServiceTenantParentAsync() =>
-            this.GetTenantByNameAsync(this.tenantProvider.Root.Id, TenantNames.ServiceTenantParent);
+        private Task<ITenant> GetServiceTenantParentAsync() =>
+            this.GetWellKnownParentTenant(WellKnownTenantIds.ServiceTenantParentId);
 
-        private async Task<ITenant?> GetTenantByNameAsync(string parentTenantId, string name)
+        private async Task<ITenant> GetWellKnownParentTenant(string parentTenantId)
         {
-            await foreach (string childTenantId in this.tenantProvider.EnumerateAllChildrenAsync(parentTenantId))
+            try
             {
-                ITenant tenant = await this.tenantProvider.GetTenantAsync(childTenantId).ConfigureAwait(false);
-                if (tenant.Name == name)
-                {
-                    return tenant;
-                }
+                return await this.tenantProvider.GetTenantAsync(parentTenantId).ConfigureAwait(false);
             }
-
-            return null;
-        }
-
-        [DoesNotReturn]
-        private void ThrowNotInitialisedException()
-        {
-            throw new InvalidOperationException("The underlying tenant provider has not been initialised for use with Marain. Please call the ITenantManagementService.InitialiseTenancyProviderAsync before attempting to create tenants.");
+            catch (TenantNotFoundException)
+            {
+                throw new InvalidOperationException("The underlying tenant provider has not been initialised for use with Marain. Please call the ITenantManagementService.InitialiseTenancyProviderAsync before attempting to create tenants.");
+            }
         }
     }
 }

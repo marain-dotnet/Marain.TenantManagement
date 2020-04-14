@@ -89,7 +89,7 @@ namespace Marain.TenantManagement.Cli.Commands
                 ITenant? serviceTenant = allTenants.FirstOrDefault(x => x.Id == enrollment);
                 Console.Write(spacing);
 
-                if (serviceTenant != null && serviceTenant.GetServiceManifest().DependsOnServiceNames.Count > 0)
+                if (serviceTenant != null && serviceTenant.GetServiceManifest().DependsOnServiceTenantIds.Count > 0)
                 {
                     string delegatedTenantId = root.Tenant.GetDelegatedTenantIdForService(serviceTenant.Name);
                     ITenant? delegatedTenant = allTenants.FirstOrDefault(x => x.Id == delegatedTenantId);

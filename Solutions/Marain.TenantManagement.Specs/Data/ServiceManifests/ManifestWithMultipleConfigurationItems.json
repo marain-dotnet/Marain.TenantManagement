@@ -1,5 +1,6 @@
 {
   "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest",
+  "wellKnownTenantGuid": "ba80b530-20c6-4c78-ab18-8ac70cb4db9e",
   "serviceName": "Manifest with multiple configuration items",
   "requiredConfigurationEntries": [
     {

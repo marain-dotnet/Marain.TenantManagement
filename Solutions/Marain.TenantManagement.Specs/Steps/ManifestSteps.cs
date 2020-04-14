@@ -41,8 +41,20 @@ namespace Marain.TenantManagement.Specs.Steps
                 serviceName = serviceName.TrimStart('"').TrimEnd('"');
             }
 
-            var manifest = new ServiceManifest { ServiceName = serviceName };
+            var manifest = new ServiceManifest
+            {
+                WellKnownTenantGuid = Guid.NewGuid(),
+                ServiceName = serviceName,
+            };
+
             this.scenarioContext.Set(manifest, manifestName);
+        }
+
+        [Given("the well-known tenant Guid for the manifest called '(.*)' is '(.*)'")]
+        public void GivenTheWell_KnownTenantGuidForTheManifestCalledIs(string manifestName, Guid wellKnownTenantGuid)
+        {
+            ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>(manifestName);
+            manifest.WellKnownTenantGuid = wellKnownTenantGuid;
         }
 
         [Given("the service manifest called '(.*)' has the following dependencies")]
@@ -52,7 +64,7 @@ namespace Marain.TenantManagement.Specs.Steps
 
             foreach (TableRow row in dependencyTable.Rows)
             {
-                manifest.DependsOnServiceNames.Add(row[0]);
+                manifest.DependsOnServiceTenantIds.Add(row[0]);
             }
         }
 
@@ -113,7 +125,7 @@ namespace Marain.TenantManagement.Specs.Steps
         {
             ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>();
 
-            Assert.AreEqual(expectedDependencyCount, manifest.DependsOnServiceNames.Count);
+            Assert.AreEqual(expectedDependencyCount, manifest.DependsOnServiceTenantIds.Count);
         }
 
         [Then("the resulting manifest should have (.*) required configuration entry")]
@@ -135,12 +147,12 @@ namespace Marain.TenantManagement.Specs.Steps
             Assert.AreEqual(expectedTypeName, configurationItem.GetType().Name);
         }
 
-        [Then("the resulting manifest should have a dependency called '(.*)'")]
-        public void ThenTheResultingManifestShouldHaveADependencyCalled(string expectedDependencyName)
+        [Then("the resulting manifest should have a dependency with Id '(.*)'")]
+        public void ThenTheResultingManifestShouldHaveADependencyWithId(string expectedDependencyId)
         {
             ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>();
 
-            Assert.IsTrue(manifest.DependsOnServiceNames.Contains(expectedDependencyName));
+            Assert.IsTrue(manifest.DependsOnServiceTenantIds.Contains(expectedDependencyId));
         }
 
         [Given("the service manifest called '(.*)' has the following Azure Blob Storage configuration entries")]

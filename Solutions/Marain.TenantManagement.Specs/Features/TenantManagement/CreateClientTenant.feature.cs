@@ -114,8 +114,7 @@ this.ScenarioInitialize(scenarioInfo);
                         "\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 12
- testRunner.Then("there is a tenant called \'Litware\' as a child of the tenant called \'Client Tenant" +
-                        "s\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("there is a client tenant called \'Litware\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

@@ -7,6 +7,7 @@ namespace Marain.TenantManagement
     using System;
     using System.Threading.Tasks;
     using Corvus.Tenancy;
+    using Corvus.Tenancy.Exceptions;
     using Marain.TenantManagement.EnrollmentConfiguration;
     using Marain.TenantManagement.ServiceManifests;
 
@@ -45,13 +46,6 @@ namespace Marain.TenantManagement
         /// </param>
         /// <returns>The new tenant.</returns>
         Task<ITenant> CreateServiceTenantAsync(ServiceManifest manifest);
-
-        /// <summary>
-        /// Retrieves the Service tenant with the given name.
-        /// </summary>
-        /// <param name="serviceName">The name of the tenant to retrieve.</param>
-        /// <returns>The tenant, or null if it does not exist.</returns>
-        Task<ITenant?> GetServiceTenantByNameAsync(string serviceName);
 
         /// <summary>
         /// Retrieves the complete list of configuration items required in order to enroll a tenant to a service. This will
@@ -98,5 +92,30 @@ namespace Marain.TenantManagement
             ITenant enrollingTenant,
             ITenant serviceTenant,
             EnrollmentConfigurationItem[] configurationItems);
+
+        /// <summary>
+        /// Retrieves the service tenant with the specified Id.
+        /// </summary>
+        /// <param name="serviceTenantId">The Id of the service tenant.</param>
+        /// <returns>The service tenant.</returns>
+        /// <exception cref="TenantNotFoundException">There is no tenant with the specified Id.</exception>
+        /// <exception cref="ArgumentException">The tenant Id provided is not for a service tenant.</exception>
+        Task<ITenant> GetServiceTenantAsync(string serviceTenantId);
+
+        /// <summary>
+        /// Retrieves the client tenant with the specified Id.
+        /// </summary>
+        /// <param name="clientTenantId">The Id of the client tenant.</param>
+        /// <returns>The client tenant.</returns>
+        /// <exception cref="TenantNotFoundException">There is no tenant with the specified Id.</exception>
+        /// <exception cref="ArgumentException">The tenant Id provided is not for a client tenant.</exception>
+        Task<ITenant> GetClientTenantAsync(string clientTenantId);
+
+        /// <summary>
+        /// Constructs the expected Id for a service tenant, given the well known Guid for that tenant.
+        /// </summary>
+        /// <param name="wellKnownServiceTenantGuid">The well known Guid for the service tenant.</param>
+        /// <returns>The tenant Id for the service tenant.</returns>
+        string GetServiceTenantId(Guid wellKnownServiceTenantGuid);
     }
 }

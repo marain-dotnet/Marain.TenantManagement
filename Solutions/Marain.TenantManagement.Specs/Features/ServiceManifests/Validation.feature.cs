@@ -177,11 +177,11 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Manifest name already in use")]
-        public virtual void ManifestNameAlreadyInUse()
+        [NUnit.Framework.DescriptionAttribute("Duplicate service names are allowed")]
+        public virtual void DuplicateServiceNamesAreAllowed()
         {
             string[] tagsOfScenario = ((string[])(null));
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Manifest name already in use", null, ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Duplicate service names are allowed", null, ((string[])(null)));
 #line 28
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -205,31 +205,17 @@ this.ScenarioInitialize(scenarioInfo);
 #line 9
 this.FeatureBackground();
 #line hidden
-#line 29
- testRunner.Given("I have a service manifest called \'Operations Manifest\' for a service called \'Oper" +
-                        "ations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-#line 30
- testRunner.And("I have used the tenant management service to create a service tenant with manifes" +
-                        "t \'Operations Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 31
- testRunner.When("I validate the service manifest called \'Operations Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 32
- testRunner.Then("an \'InvalidServiceManifestException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
             }
             this.ScenarioCleanup();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Dependent service does not exist")]
-        public virtual void DependentServiceDoesNotExist()
+        [NUnit.Framework.DescriptionAttribute("Well known tenant GUID is already in use")]
+        public virtual void WellKnownTenantGUIDIsAlreadyInUse()
         {
             string[] tagsOfScenario = ((string[])(null));
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Dependent service does not exist", null, ((string[])(null)));
-#line 34
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Well known tenant GUID is already in use", null, ((string[])(null)));
+#line 30
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -252,21 +238,80 @@ this.ScenarioInitialize(scenarioInfo);
 #line 9
 this.FeatureBackground();
 #line hidden
+#line 31
+ testRunner.Given("I have a service manifest called \'Operations Manifest\' for a service called \'Oper" +
+                        "ations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 32
+ testRunner.And("the well-known tenant Guid for the manifest called \'Operations Manifest\' is \'085f" +
+                        "50fa-5006-4fca-aac1-cf1f74b0198e\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 33
+ testRunner.Given("I have a service manifest called \'Operations Manifest 2\' for a service called \'Op" +
+                        "erations v2\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 34
+ testRunner.And("the well-known tenant Guid for the manifest called \'Operations Manifest 2\' is \'08" +
+                        "5f50fa-5006-4fca-aac1-cf1f74b0198e\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
 #line 35
+ testRunner.And("I have used the tenant management service to create a service tenant with manifes" +
+                        "t \'Operations Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 36
+ testRunner.When("I validate the service manifest called \'Operations Manifest 2\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 37
+ testRunner.Then("an \'InvalidServiceManifestException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Dependent service does not exist")]
+        public virtual void DependentServiceDoesNotExist()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Dependent service does not exist", null, ((string[])(null)));
+#line 40
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 9
+this.FeatureBackground();
+#line hidden
+#line 41
  testRunner.Given("I have a service manifest called \'Workflow Manifest\' for a service called \'Workfl" +
                         "ow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
                 TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
-                            "Service Name"});
+                            "Service Id"});
                 table1.AddRow(new string[] {
                             "Operations v1"});
-#line 36
+#line 42
  testRunner.And("the service manifest called \'Workflow Manifest\' has the following dependencies", ((string)(null)), table1, "And ");
 #line hidden
-#line 39
+#line 45
  testRunner.When("I validate the service manifest called \'Workflow Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 40
+#line 46
  testRunner.Then("an \'InvalidServiceManifestException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -283,7 +328,7 @@ this.FeatureBackground();
         {
             string[] tagsOfScenario = exampleTags;
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Invalid required configuration items - Blob storage", null, exampleTags);
-#line 42
+#line 48
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -306,7 +351,7 @@ this.ScenarioInitialize(scenarioInfo);
 #line 9
 this.FeatureBackground();
 #line hidden
-#line 43
+#line 49
  testRunner.Given("I have a service manifest called \'Workflow Manifest\' for a service called \'Workfl" +
                         "ow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
@@ -318,17 +363,17 @@ this.FeatureBackground();
                             string.Format("{0}", key),
                             string.Format("{0}", description),
                             string.Format("{0}", containerName)});
-#line 44
+#line 50
  testRunner.And("the service manifest called \'Workflow Manifest\' has the following Azure Blob Stor" +
                         "age configuration entries", ((string)(null)), table2, "And ");
 #line hidden
-#line 47
+#line 53
  testRunner.When("I validate the service manifest called \'Workflow Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 48
+#line 54
  testRunner.Then("an \'InvalidServiceManifestException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 49
+#line 55
  testRunner.And(string.Format("the list of errors attached to the InvalidServiceManifestException contains {0} e" +
                             "ntries", expectedErrorCount), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
@@ -347,7 +392,7 @@ this.FeatureBackground();
         {
             string[] tagsOfScenario = exampleTags;
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Invalid required configuration items - CosmosDb storage", null, exampleTags);
-#line 58
+#line 64
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -370,7 +415,7 @@ this.ScenarioInitialize(scenarioInfo);
 #line 9
 this.FeatureBackground();
 #line hidden
-#line 59
+#line 65
  testRunner.Given("I have a service manifest called \'Workflow Manifest\' for a service called \'Workfl" +
                         "ow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
@@ -384,17 +429,17 @@ this.FeatureBackground();
                             string.Format("{0}", description),
                             string.Format("{0}", databaseName),
                             string.Format("{0}", containerName)});
-#line 60
+#line 66
  testRunner.And("the service manifest called \'Workflow Manifest\' has the following Azure CosmosDb " +
                         "Storage configuration entries", ((string)(null)), table3, "And ");
 #line hidden
-#line 63
+#line 69
  testRunner.When("I validate the service manifest called \'Workflow Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 64
+#line 70
  testRunner.Then("an \'InvalidServiceManifestException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 65
+#line 71
  testRunner.And(string.Format("the list of errors attached to the InvalidServiceManifestException contains {0} e" +
                             "ntries", expectedErrorCount), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden

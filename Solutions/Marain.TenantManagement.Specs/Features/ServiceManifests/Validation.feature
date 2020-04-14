@@ -25,16 +25,22 @@ Scenario Outline: Creating a manifest with invalid service names
 		| Spaces only          | "  "         |
 		| Tabs only            | "	"         |
 
-Scenario: Manifest name already in use
+Scenario: Duplicate service names are allowed
+
+Scenario: Well known tenant GUID is already in use
 	Given I have a service manifest called 'Operations Manifest' for a service called 'Operations v1'
+	And the well-known tenant Guid for the manifest called 'Operations Manifest' is '085f50fa-5006-4fca-aac1-cf1f74b0198e'
+	Given I have a service manifest called 'Operations Manifest 2' for a service called 'Operations v2'
+	And the well-known tenant Guid for the manifest called 'Operations Manifest 2' is '085f50fa-5006-4fca-aac1-cf1f74b0198e'
 	And I have used the tenant management service to create a service tenant with manifest 'Operations Manifest'
-	When I validate the service manifest called 'Operations Manifest'
+	When I validate the service manifest called 'Operations Manifest 2'
 	Then an 'InvalidServiceManifestException' is thrown
+	
 
 Scenario: Dependent service does not exist
 	Given I have a service manifest called 'Workflow Manifest' for a service called 'Workflow v1'
 	And the service manifest called 'Workflow Manifest' has the following dependencies
-	| Service Name  |
+	| Service Id    |
 	| Operations v1 |
 	When I validate the service manifest called 'Workflow Manifest'
 	Then an 'InvalidServiceManifestException' is thrown
