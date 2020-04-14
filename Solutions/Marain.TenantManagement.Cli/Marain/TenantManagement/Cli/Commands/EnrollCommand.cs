@@ -46,9 +46,9 @@ namespace Marain.TenantManagement.Cli.Commands
 
             this.AddArgument(clientTenantId);
 
-            var serviceName = new Argument<string>("serviceName")
+            var serviceName = new Argument<string>("serviceTenantId")
             {
-                Description = "The name of the service tenant.",
+                Description = "The Id of the service tenant.",
                 Arity = ArgumentArity.ExactlyOne,
             };
 
@@ -62,10 +62,10 @@ namespace Marain.TenantManagement.Cli.Commands
             this.AddOption(configFile);
 
             this.Handler = CommandHandler.Create(
-                (string clientTenantId, string serviceName, FileInfo? config) => this.HandleCommand(clientTenantId, serviceName, config));
+                (string clientTenantId, string serviceTenantId, FileInfo? config) => this.HandleCommand(clientTenantId, serviceTenantId, config));
         }
 
-        private async Task<int> HandleCommand(string enrollingTenantId, string serviceName, FileInfo? config)
+        private async Task<int> HandleCommand(string enrollingTenantId, string serviceTenantId, FileInfo? config)
         {
             var enrollmentConfig = new EnrollmentConfigurationItem[0];
 
@@ -80,7 +80,7 @@ namespace Marain.TenantManagement.Cli.Commands
             {
                 await this.tenantManagementService.EnrollInServiceAsync(
                     enrollingTenantId,
-                    serviceName,
+                    serviceTenantId,
                     enrollmentConfig).ConfigureAwait(false);
 
                 return 0;
