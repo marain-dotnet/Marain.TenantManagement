@@ -33,4 +33,6 @@ Scenario: Initialise a non-empty but uninitialised tenancy provider with the for
 	When I use the tenant management service to initialise the tenancy provider using the force option
 	Then the tenancy provider contains 7 tenants as children of the root tenant
 	And there is a tenant with Id '75b9261673c2714681f14c97bc0439fb' as a child of the root tenant
+	And the tenant with Id '75b9261673c2714681f14c97bc0439fb' is called 'Client Tenants'
 	And there is a tenant with Id '3633754ac4c9be44b55bfe791b1780f1' as a child of the root tenant
+	And the tenant with Id '3633754ac4c9be44b55bfe791b1780f1' is called 'Service Tenants'

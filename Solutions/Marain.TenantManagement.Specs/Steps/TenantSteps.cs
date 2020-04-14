@@ -170,8 +170,7 @@ namespace Marain.TenantManagement.Specs.Steps
         public async Task ThenThereIsAClientTenantCalled(string clientTenantName)
         {
             ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
-            IAsyncEnumerable<string> clientTenantIds = tenantProvider.EnumerateAllChildrenAsync(WellKnownTenantIds.ClientTenantParentId);
-            await foreach (string clientTenantId in clientTenantIds)
+            await foreach (string clientTenantId in tenantProvider.EnumerateAllChildrenAsync(WellKnownTenantIds.ClientTenantParentId))
             {
                 ITenant tenant = await tenantProvider.GetTenantAsync(clientTenantId).ConfigureAwait(false);
                 if (tenant.Name == clientTenantName)

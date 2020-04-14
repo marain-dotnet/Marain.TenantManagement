@@ -125,7 +125,7 @@ namespace Marain.TenantManagement.Internal
 
             if (existingTopLevelTenantIds.Tenants.Count != 0 && !force)
             {
-                throw new InvalidOperationException($"Cannot initialise the tenancy provider for use with Marain because it already contains non-Marain tenants at the root level. If you wish to initialise anyway, re-invoke the method with the 'force' parameter set to true.");
+                throw new InvalidOperationException("Cannot initialise the tenancy provider for use with Marain because it already contains non-Marain tenants at the root level. If you wish to initialise anyway, re-invoke the method with the 'force' parameter set to true.");
             }
 
             // Create the tenants
@@ -196,8 +196,7 @@ namespace Marain.TenantManagement.Internal
                 throw new ArgumentNullException(nameof(configurationItems));
             }
 
-            ITenant serviceTenant = await this.GetServiceTenantAsync(serviceTenantId).ConfigureAwait(false)
-                ?? throw new TenantNotFoundException($"Could not find a service tenant with the Id '{serviceTenantId}'");
+            ITenant serviceTenant = await this.GetServiceTenantAsync(serviceTenantId).ConfigureAwait(false);
 
             await this.EnrollInServiceAsync(enrollingTenant, serviceTenant, configurationItems).ConfigureAwait(false);
         }
@@ -279,12 +278,6 @@ namespace Marain.TenantManagement.Internal
                 ?? throw new TenantNotFoundException($"Could not find a service tenant with the Id '{serviceTenantId}'");
 
             return await this.GetServiceEnrollmentConfigurationRequirementsAsync(serviceTenant).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc/>
-        public string GetServiceTenantId(Guid wellKnownServiceTenantGuid)
-        {
-            return WellKnownTenantIds.ServiceTenantParentId.CreateChildId(wellKnownServiceTenantGuid);
         }
 
         private async Task<ServiceManifestRequiredConfigurationEntry[]> GetServiceEnrollmentConfigurationRequirementsAsync(ITenant serviceTenant)

@@ -106,6 +106,14 @@ namespace Marain.TenantManagement.Specs.Steps
             Assert.AreEqual(serviceName, manifest.ServiceName);
         }
 
+        [Then("the resulting manifest should have a well known service GUID of '(.*)'")]
+        public void ThenTheResultingManifestShouldHaveAWellKnownServiceGUIDOf(Guid expectedWellKnownServiceGuid)
+        {
+            ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>();
+
+            Assert.AreEqual(expectedWellKnownServiceGuid, manifest.WellKnownTenantGuid);
+        }
+
         [Then("the resulting manifest should not have any dependencies")]
         public void ThenTheResultingManifestShouldNotHaveAnyDependencies()
         {

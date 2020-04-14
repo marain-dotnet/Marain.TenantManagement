@@ -98,7 +98,7 @@ namespace Marain.TenantManagement.ServiceManifests
                 errors.Add("A value must be supplied for Well Known Tenant Guid. This is necessary to ensure that the Id of the service tenant is well known.");
             }
 
-            string expectedChildTenantId = tenantManagementService.GetServiceTenantId(this.WellKnownTenantGuid);
+            string expectedChildTenantId = WellKnownTenantIds.ServiceTenantParentId.CreateChildId(this.WellKnownTenantGuid);
 
             try
             {

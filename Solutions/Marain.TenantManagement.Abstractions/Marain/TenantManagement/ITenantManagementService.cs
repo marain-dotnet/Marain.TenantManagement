@@ -61,24 +61,24 @@ namespace Marain.TenantManagement
         /// Enrolls the specified tenant in the service.
         /// </summary>
         /// <param name="enrollingTenantId">The Id of the tenant to enroll.</param>
-        /// <param name="serviceTenantName">The name of the service to enroll in.</param>
+        /// <param name="serviceTenantId">The Id of the service to enroll in.</param>
         /// <param name="configurationItems">Configuration for the enrollment.</param>
         /// <returns>A task which completes when the enrollment has finished.</returns>
         Task EnrollInServiceAsync(
             string enrollingTenantId,
-            string serviceTenantName,
+            string serviceTenantId,
             EnrollmentConfigurationItem[] configurationItems);
 
         /// <summary>
         /// Enrolls the specified tenant in the service.
         /// </summary>
         /// <param name="enrollingTenant">The tenant to enroll.</param>
-        /// <param name="serviceTenantName">The name of the service to enroll in.</param>
+        /// <param name="serviceTenantId">The name of the service to enroll in.</param>
         /// <param name="configurationItems">Configuration for the enrollment.</param>
         /// <returns>A task which completes when the enrollment has finished.</returns>
         Task EnrollInServiceAsync(
             ITenant enrollingTenant,
-            string serviceTenantName,
+            string serviceTenantId,
             EnrollmentConfigurationItem[] configurationItems);
 
         /// <summary>
@@ -110,12 +110,5 @@ namespace Marain.TenantManagement
         /// <exception cref="TenantNotFoundException">There is no tenant with the specified Id.</exception>
         /// <exception cref="ArgumentException">The tenant Id provided is not for a client tenant.</exception>
         Task<ITenant> GetClientTenantAsync(string clientTenantId);
-
-        /// <summary>
-        /// Constructs the expected Id for a service tenant, given the well known Guid for that tenant.
-        /// </summary>
-        /// <param name="wellKnownServiceTenantGuid">The well known Guid for the service tenant.</param>
-        /// <returns>The tenant Id for the service tenant.</returns>
-        string GetServiceTenantId(Guid wellKnownServiceTenantGuid);
     }
 }

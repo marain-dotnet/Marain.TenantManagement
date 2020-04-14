@@ -264,8 +264,15 @@ this.ScenarioInitialize(scenarioInfo);
                         "ot tenant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 36
+ testRunner.And("the tenant with Id \'75b9261673c2714681f14c97bc0439fb\' is called \'Client Tenants\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 37
  testRunner.And("there is a tenant with Id \'3633754ac4c9be44b55bfe791b1780f1\' as a child of the ro" +
                         "ot tenant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 38
+ testRunner.And("the tenant with Id \'3633754ac4c9be44b55bfe791b1780f1\' is called \'Service Tenants\'" +
+                        "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
