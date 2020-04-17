@@ -6,6 +6,7 @@ namespace Marain.TenantManagement.Specs.Steps
 {
     using System;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
     using Corvus.Azure.Cosmos.Tenancy;
     using Corvus.Azure.Storage.Tenancy;
@@ -64,7 +65,11 @@ namespace Marain.TenantManagement.Specs.Steps
 
             foreach (TableRow row in dependencyTable.Rows)
             {
-                manifest.DependsOnServiceTenantIds.Add(row[0]);
+                manifest.DependsOnServiceTenants.Add(new ServiceDependency
+                {
+                    Id = row[0],
+                    ExpectedName = row[1],
+                });
             }
         }
 
@@ -133,7 +138,7 @@ namespace Marain.TenantManagement.Specs.Steps
         {
             ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>();
 
-            Assert.AreEqual(expectedDependencyCount, manifest.DependsOnServiceTenantIds.Count);
+            Assert.AreEqual(expectedDependencyCount, manifest.DependsOnServiceTenants.Count);
         }
 
         [Then("the resulting manifest should have (.*) required configuration entry")]
@@ -160,7 +165,7 @@ namespace Marain.TenantManagement.Specs.Steps
         {
             ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>();
 
-            Assert.IsTrue(manifest.DependsOnServiceTenantIds.Contains(expectedDependencyId));
+            Assert.IsTrue(manifest.DependsOnServiceTenants.Any(x => x.Id == expectedDependencyId));
         }
 
         [Given("the service manifest called '(.*)' has the following Azure Blob Storage configuration entries")]
@@ -199,8 +204,8 @@ namespace Marain.TenantManagement.Specs.Steps
             IJsonSerializerSettingsProvider settingsProvider =
                 ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<IJsonSerializerSettingsProvider>();
 
-            using Stream manifestStream = this.GetType().Assembly.GetManifestResourceStream($"Marain.TenantManagement.Specs.Data.ServiceManifests.{manifestName}.json")
-                ?? throw new ArgumentException($"Could not find a resource in the Marain.TenantManagement.Specs.Data.ServiceManifests namespace called {manifestName}.json");
+            using Stream manifestStream = this.GetType().Assembly.GetManifestResourceStream($"Marain.TenantManagement.Specs.Data.ServiceManifests.{manifestName}.jsonp")
+                ?? throw new ArgumentException($"Could not find a resource in the Marain.TenantManagement.Specs.Data.ServiceManifests namespace called {manifestName}.jsonp");
 
             using var manifestStreamReader = new StreamReader(manifestStream);
 

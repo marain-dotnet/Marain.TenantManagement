@@ -262,15 +262,15 @@ namespace Marain.TenantManagement.Internal
 
             // If this service has dependencies, we need to create a new delegated tenant for the service to use when
             // accessing those dependencies.
-            if (manifest.DependsOnServiceTenantIds.Count > 0)
+            if (manifest.DependsOnServiceTenants.Count > 0)
             {
                 ITenant delegatedTenant = await this.CreateDelegatedTenant(enrollingTenant, serviceTenant).ConfigureAwait(false);
 
                 // Now enroll the new delegated tenant for all of the dependent services.
-                await Task.WhenAll(manifest.DependsOnServiceTenantIds.Select(
-                    dependsOnServiceName => this.EnrollInServiceAsync(
+                await Task.WhenAll(manifest.DependsOnServiceTenants.Select(
+                    dependsOnService => this.EnrollInServiceAsync(
                         delegatedTenant,
-                        dependsOnServiceName,
+                        dependsOnService.Id,
                         configurationItems))).ConfigureAwait(false);
 
                 // Add the delegated tenant Id to the enrolling tenant
@@ -303,8 +303,8 @@ namespace Marain.TenantManagement.Internal
 
             ServiceManifestRequiredConfigurationEntry[][] dependentServicesConfigRequirements =
                 await Task.WhenAll(
-                    serviceManifest.DependsOnServiceTenantIds.Select(
-                        x => this.GetServiceEnrollmentConfigurationRequirementsAsync(x))).ConfigureAwait(false);
+                    serviceManifest.DependsOnServiceTenants.Select(
+                        x => this.GetServiceEnrollmentConfigurationRequirementsAsync(x.Id))).ConfigureAwait(false);
 
             requirements.AddRange(dependentServicesConfigRequirements.SelectMany(x => x));
 

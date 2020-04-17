@@ -40,9 +40,9 @@ namespace Marain.TenantManagement.ServiceManifests
 #nullable restore annotations
 
         /// <summary>
-        /// Gets a list of the names of other Service Tenants whose services this depends upon.
+        /// Gets a list of other Service Tenants whose services this depends upon.
         /// </summary>
-        public IList<string> DependsOnServiceTenantIds { get; } = new List<string>();
+        public IList<ServiceDependency> DependsOnServiceTenants { get; } = new List<ServiceDependency>();
 
         /// <summary>
         /// Gets the list of configuration items required when enrolling a tenant to this service.
@@ -75,7 +75,7 @@ namespace Marain.TenantManagement.ServiceManifests
 
             await Task.WhenAll(
                 this.ValidateWellKnownTenantId(tenantManagementService, errors),
-                this.VerifyDependenciesExistAsync(tenantManagementService, errors)).ConfigureAwait(false);
+                this.VerifyDependenciesAsync(tenantManagementService, errors)).ConfigureAwait(false);
 
             // TODO: Ensure there aren't multiple items with the same key.
             IEnumerable<string> configErrors = this.RequiredConfigurationEntries.SelectMany((c, i) => c.Validate($"RequiredConfigurationEntries[{i}]"));
@@ -108,42 +108,34 @@ namespace Marain.TenantManagement.ServiceManifests
             catch (TenantNotFoundException)
             {
                 // This is fine. The tenant doesn't already exist, so we can continue.
-                // TODO: Catch scenario where the tenant exists but isn't a service tenant.
             }
         }
 
-        private async Task VerifyDependenciesExistAsync(
+        private async Task VerifyDependenciesAsync(
             ITenantManagementService tenantManagementService,
             ConcurrentBag<string> errors)
         {
-            if (this.DependsOnServiceTenantIds.Count == 0)
+            if (this.DependsOnServiceTenants.Count == 0)
             {
                 return;
             }
 
-            Task<ITenant>[] dependentServiceTenantRequests =
-                this.DependsOnServiceTenantIds.Select(tenantManagementService.GetServiceTenantAsync).ToArray();
+            // Ensure there aren't any duplicates
+            string[] duplicateIds = this.DependsOnServiceTenants.GroupBy(x => x.Id).Where(x => x.Count() > 1).Select(x => x.Key).ToArray();
 
-            try
+            if (duplicateIds.Length > 0)
             {
-                await Task.WhenAll(dependentServiceTenantRequests).ConfigureAwait(false);
+                string mergedIds = string.Join(", ", duplicateIds.Select(x => $"'{x}'"));
+                errors.Add($"The following tenant Ids appear more than once in the DependsOnServiceTenants list: [{mergedIds}]. Each depended-upon service should appear only once.");
             }
-            catch (Exception)
+
+            IList<string>[] dependencyErrors = await Task.WhenAll(
+                this.DependsOnServiceTenants.Select(
+                    (dependency, index) => dependency.ValidateAsync(tenantManagementService, $"DependsOnServiceTenants[{index}]"))).ConfigureAwait(false);
+
+            foreach (string dependencyError in dependencyErrors.SelectMany(x => x))
             {
-                for (int i = 0; i < dependentServiceTenantRequests.Length; i++)
-                {
-                    if (dependentServiceTenantRequests[i].Exception != null)
-                    {
-                        if (dependentServiceTenantRequests[i].Exception!.InnerException is TenantNotFoundException)
-                        {
-                            errors.Add($"The manifest contains a dependency with Id '{this.DependsOnServiceTenantIds[i]}', but no Service Tenant with that Id exists.");
-                        }
-                        else
-                        {
-                            errors.Add($"An unexpected exception occurred when trying to verify the dependency with Id '{this.DependsOnServiceTenantIds[i]}': {dependentServiceTenantRequests[i].Exception}");
-                        }
-                    }
-                }
+                errors.Add(dependencyError);
             }
         }
     }

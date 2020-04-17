@@ -101,9 +101,11 @@ namespace Marain.TenantManagement.Specs.Features.TenantManagement
                     "77-3403-4c77-abb2-f9d1b95b0c18\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
-                        "Service Id"});
+                        "Service Id",
+                        "Expected Name"});
             table4.AddRow(new string[] {
-                        "3633754ac4c9be44b55bfe791b1780f12429524fe7b6cc48a265a307407ec858"});
+                        "3633754ac4c9be44b55bfe791b1780f12429524fe7b6cc48a265a307407ec858",
+                        "Operations v1"});
 #line 14
  testRunner.And("the service manifest called \'Workflow Manifest\' has the following dependencies", ((string)(null)), table4, "And ");
 #line hidden
@@ -112,9 +114,11 @@ namespace Marain.TenantManagement.Specs.Features.TenantManagement
                     "a service called \'Workflow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
-                        "Service Id"});
+                        "Service Id",
+                        "Expected Name"});
             table5.AddRow(new string[] {
-                        "3633754ac4c9be44b55bfe791b1780f1ac641e0cdeee4246abdf41dfb1e94946"});
+                        "3633754ac4c9be44b55bfe791b1780f1ac641e0cdeee4246abdf41dfb1e94946",
+                        ""});
 #line 18
  testRunner.And("the service manifest called \'Workflow Manifest with invalid dependency\' has the f" +
                     "ollowing dependencies", ((string)(null)), table5, "And ");

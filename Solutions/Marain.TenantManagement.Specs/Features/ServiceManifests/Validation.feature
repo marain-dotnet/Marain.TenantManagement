@@ -50,8 +50,8 @@ Scenario: Duplicate service names are allowed as long as the well known tenant G
 Scenario: Dependent service does not exist
 	Given I have a service manifest called 'Workflow Manifest' for a service called 'Workflow v1'
 	And the service manifest called 'Workflow Manifest' has the following dependencies
-	| Service Id    |
-	| Operations v1 |
+	| Service Id    | Expected Name |
+	| Operations v1 |               |
 	When I validate the service manifest called 'Workflow Manifest'
 	Then an 'InvalidServiceManifestException' is thrown
 

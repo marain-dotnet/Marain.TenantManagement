@@ -369,9 +369,11 @@ this.FeatureBackground();
                         "ow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
                 TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
-                            "Service Id"});
+                            "Service Id",
+                            "Expected Name"});
                 table1.AddRow(new string[] {
-                            "Operations v1"});
+                            "Operations v1",
+                            ""});
 #line 52
  testRunner.And("the service manifest called \'Workflow Manifest\' has the following dependencies", ((string)(null)), table1, "And ");
 #line hidden

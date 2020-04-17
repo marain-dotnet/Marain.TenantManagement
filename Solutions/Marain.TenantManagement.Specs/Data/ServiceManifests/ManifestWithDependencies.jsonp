@@ -1,0 +1,13 @@
+{
+  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest",
+  "wellKnownTenantGuid": "31b74bd9-b45d-4402-81cf-13fc6f680a85",
+  "serviceName": "Manifest with dependencies",
+  "dependsOnServiceTenants": [
+    {
+      "id": "3633754ac4c9be44b55bfe791b1780f12429524fe7b6cc48a265a307407ec858"
+    },
+    {
+      "id": "3633754ac4c9be44b55bfe791b1780f187732ecba95e0e41b5ad8b2605aa5fb3"
+    }
+  ]
+}

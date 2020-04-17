@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marain.TenantManagement.Spe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceManifests", "ServiceManifests", "{6AFB6642-7013-4C22-A6B6-8D770516F733}"
 	ProjectSection(SolutionItems) = preProject
-		ServiceManifests\OperationsServiceManifest.json = ServiceManifests\OperationsServiceManifest.json
+		ServiceManifests\OperationsServiceManifest.jsonp = ServiceManifests\OperationsServiceManifest.jsonp
 		ServiceManifests\ServiceManifestSchema.json = ServiceManifests\ServiceManifestSchema.json
-		ServiceManifests\WorkflowServiceManifest.json = ServiceManifests\WorkflowServiceManifest.json
+		ServiceManifests\WorkflowServiceManifest.jsonp = ServiceManifests\WorkflowServiceManifest.jsonp
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marain.TenantManagement.Cli", "Marain.TenantManagement.Cli\Marain.TenantManagement.Cli.csproj", "{4101AE1C-2ABB-4E1B-AC92-456EE4A0C0B0}"
