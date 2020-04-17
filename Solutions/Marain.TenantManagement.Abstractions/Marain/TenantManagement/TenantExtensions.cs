@@ -118,9 +118,9 @@ namespace Marain.TenantManagement
         }
 
         /// <summary>
-        /// Sets the Marain tenant type of the tenant.
+        /// Gets the Marain tenant type of the tenant.
         /// </summary>
-        /// <param name="tenant">The tenant to set the type of.</param>
+        /// <param name="tenant">The tenant to get the type of.</param>
         /// <returns>
         /// The <see cref="MarainTenantType"/> of the tenant, or <see cref="MarainTenantType.Undefined"/> if not set.
         /// </returns>
