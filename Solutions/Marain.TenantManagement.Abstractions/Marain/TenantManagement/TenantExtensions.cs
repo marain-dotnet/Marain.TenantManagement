@@ -17,6 +17,24 @@ namespace Marain.TenantManagement
     public static class TenantExtensions
     {
         /// <summary>
+        /// Ensures that the specified tenant is one of the allowable types, throwing an <see cref="ArgumentException"/> if
+        /// it is not.
+        /// </summary>
+        /// <param name="tenant">The tenant to check.</param>
+        /// <param name="allowableTenantTypes">The list of allowable types for the tenant.</param>
+        /// <exception cref="ArgumentException">The supplied tenant is not one of the specified types.</exception>
+        public static void EnsureTenantIsOfType(this ITenant tenant, params MarainTenantType[] allowableTenantTypes)
+        {
+            MarainTenantType tenantType = tenant.GetMarainTenantType();
+            if (!allowableTenantTypes.Contains(tenantType))
+            {
+                throw new ArgumentException(
+                    $"The tenant with Id '{tenant.Id}' has a tenant type of '{tenantType}'. Valid tenant type(s) here are: {string.Join(", ", allowableTenantTypes)}",
+                    nameof(tenant));
+            }
+        }
+
+        /// <summary>
         /// Gets the <see cref="ServiceManifest"/> from the specified tenant.
         /// </summary>
         /// <param name="tenant">The tenant to get the manifest from.</param>
@@ -65,21 +83,23 @@ namespace Marain.TenantManagement
         /// <param name="tenant">
         /// The tenant who is able to make calls to the service represented by the specified Service Tenant.
         /// </param>
-        /// <param name="serviceTenantName">The Id of the Service Tenant which will uses the Delegated Tenant.</param>
+        /// <param name="serviceTenantId">The Id of the Service Tenant which will uses the Delegated Tenant.</param>
         /// <returns>The Id of the delegated tenant.</returns>
-        public static string GetDelegatedTenantIdForService(this ITenant tenant, string serviceTenantName)
+        public static string GetDelegatedTenantIdForServiceId(this ITenant tenant, string serviceTenantId)
         {
-            if (string.IsNullOrWhiteSpace(serviceTenantName))
+            tenant.EnsureTenantIsOfType(MarainTenantType.Client, MarainTenantType.Delegated);
+
+            if (string.IsNullOrWhiteSpace(serviceTenantId))
             {
-                throw new ArgumentException(nameof(serviceTenantName));
+                throw new ArgumentException(nameof(serviceTenantId));
             }
 
-            if (tenant.Properties.TryGet(TenantPropertyKeys.DelegatedTenantId(serviceTenantName), out string delegatedTenantId))
+            if (tenant.Properties.TryGet(TenantPropertyKeys.DelegatedTenantId(serviceTenantId), out string delegatedTenantId))
             {
                 return delegatedTenantId;
             }
 
-            throw new ArgumentException($"Tenant '{tenant.Name}' with Id '{tenant.Id}' does not contain a delegated tenant Id for service tenant named '{serviceTenantName}'");
+            throw new ArgumentException($"Tenant '{tenant.Name}' with Id '{tenant.Id}' does not contain a delegated tenant Id for service tenant with Id '{serviceTenantId}'");
         }
 
         /// <summary>
@@ -98,10 +118,28 @@ namespace Marain.TenantManagement
         }
 
         /// <summary>
+        /// Gets the Marain tenant type of the tenant.
+        /// </summary>
+        /// <param name="tenant">The tenant to get the type of.</param>
+        /// <returns>
+        /// The <see cref="MarainTenantType"/> of the tenant, or <see cref="MarainTenantType.Undefined"/> if not set.
+        /// </returns>
+        public static MarainTenantType GetMarainTenantType(this ITenant tenant)
+        {
+            if (tenant.Properties.TryGet(TenantPropertyKeys.MarainTenantType, out MarainTenantType tenantType))
+            {
+                return tenantType;
+            }
+
+            return MarainTenantType.Undefined;
+        }
+
+        /// <summary>
         /// Adds the given <see cref="ServiceManifest"/> to the tenant's property bag.
         /// </summary>
         /// <param name="tenant">The tenant to add to.</param>
         /// <param name="manifest">The manifest to add.</param>
+        /// <remarks>This method does not persist the tenant. Calling code should do this once all changes have been made.</remarks>
         internal static void SetServiceManifest(this ITenant tenant, ServiceManifest manifest)
         {
             if (manifest == null)
@@ -117,6 +155,7 @@ namespace Marain.TenantManagement
         /// </summary>
         /// <param name="tenant">The tenant being enrolled.</param>
         /// <param name="serviceTenantId">The Service Tenant Id of the service being enrolled in.</param>
+        /// <remarks>This method does not persist the tenant. Calling code should do this once all changes have been made.</remarks>
         internal static void AddServiceEnrollment(this ITenant tenant, string serviceTenantId)
         {
             if (serviceTenantId == null)
@@ -153,24 +192,42 @@ namespace Marain.TenantManagement
         /// <param name="tenant">
         /// The tenant who is able to make calls to the service represented by the specified Service Tenant.
         /// </param>
-        /// <param name="serviceTenantName">The Id of the Service Tenant which will be using the Delegated Tenant.</param>
-        /// <param name="delegatedTenantId">The Id of the tenant that has been created for the service to use.</param>
-        internal static void SetDelegatedTenantIdForService(
+        /// <param name="serviceTenant">The Service Tenant which will be using the Delegated Tenant.</param>
+        /// <param name="delegatedTenant">The tenant that has been created for the service to use.</param>
+        /// <remarks>This method does not persist the tenant. Calling code should do this once all changes have been made.</remarks>
+        internal static void SetDelegatedTenantForService(
             this ITenant tenant,
-            string serviceTenantName,
-            string delegatedTenantId)
+            ITenant serviceTenant,
+            ITenant delegatedTenant)
         {
-            if (string.IsNullOrWhiteSpace(serviceTenantName))
+            tenant.EnsureTenantIsOfType(MarainTenantType.Client, MarainTenantType.Delegated);
+
+            if (serviceTenant == null)
             {
-                throw new ArgumentException(nameof(serviceTenantName));
+                throw new ArgumentNullException(nameof(serviceTenant));
             }
 
-            if (string.IsNullOrWhiteSpace(delegatedTenantId))
+            serviceTenant.EnsureTenantIsOfType(MarainTenantType.Service);
+
+            if (delegatedTenant == null)
             {
-                throw new ArgumentException(nameof(delegatedTenantId));
+                throw new ArgumentNullException(nameof(delegatedTenant));
             }
 
-            tenant.Properties.Set(TenantPropertyKeys.DelegatedTenantId(serviceTenantName), delegatedTenantId);
+            delegatedTenant.EnsureTenantIsOfType(MarainTenantType.Delegated);
+
+            tenant.Properties.Set(TenantPropertyKeys.DelegatedTenantId(serviceTenant.Id), delegatedTenant.Id);
+        }
+
+        /// <summary>
+        /// Sets the Marain tenant type of the tenant.
+        /// </summary>
+        /// <param name="tenant">The tenant to set the type of.</param>
+        /// <param name="marainTenantType">The tenant type to set.</param>
+        /// <remarks>This method does not persist the tenant. Calling code should do this once all changes have been made.</remarks>
+        internal static void SetMarainTenantType(this ITenant tenant, MarainTenantType marainTenantType)
+        {
+            tenant.Properties.Set(TenantPropertyKeys.MarainTenantType, marainTenantType);
         }
     }
 }

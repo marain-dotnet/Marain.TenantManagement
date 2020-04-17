@@ -10,6 +10,7 @@ namespace Marain.TenantManagement.ServiceManifests
     using System.Linq;
     using System.Threading.Tasks;
     using Corvus.Tenancy;
+    using Corvus.Tenancy.Exceptions;
 
     /// <summary>
     /// Manifest for a Marain service, needed when onboarding a new tenant to use that service.
@@ -27,6 +28,11 @@ namespace Marain.TenantManagement.ServiceManifests
         public string ContentType => RegisteredContentType;
 
         /// <summary>
+        /// Gets or sets the well known Guid that will be used when creating the service tenant.
+        /// </summary>
+        public Guid WellKnownTenantGuid { get; set; }
+
+        /// <summary>
         /// Gets or sets the name of the service.
         /// </summary>
 #nullable disable annotations
@@ -34,9 +40,9 @@ namespace Marain.TenantManagement.ServiceManifests
 #nullable restore annotations
 
         /// <summary>
-        /// Gets a list of the names of other Service Tenants whose services this depends upon.
+        /// Gets a list of other Service Tenants whose services this depends upon.
         /// </summary>
-        public IList<string> DependsOnServiceNames { get; } = new List<string>();
+        public IList<ServiceDependency> DependsOnServiceTenants { get; } = new List<ServiceDependency>();
 
         /// <summary>
         /// Gets the list of configuration items required when enrolling a tenant to this service.
@@ -62,9 +68,14 @@ namespace Marain.TenantManagement.ServiceManifests
 
             var errors = new ConcurrentBag<string>();
 
+            if (string.IsNullOrWhiteSpace(this.ServiceName))
+            {
+                errors.Add("The ServiceName on the this is not set or is invalid. ServiceName must be at least one non-whitespace character.");
+            }
+
             await Task.WhenAll(
-                this.ValidateServiceNameAsync(tenantManagementService, errors),
-                this.VerifyDependenciesExistAsync(tenantManagementService, errors)).ConfigureAwait(false);
+                this.ValidateWellKnownTenantId(tenantManagementService, errors),
+                this.VerifyDependenciesAsync(tenantManagementService, errors)).ConfigureAwait(false);
 
             // TODO: Ensure there aren't multiple items with the same key.
             IEnumerable<string> configErrors = this.RequiredConfigurationEntries.SelectMany((c, i) => c.Validate($"RequiredConfigurationEntries[{i}]"));
@@ -76,46 +87,55 @@ namespace Marain.TenantManagement.ServiceManifests
             return new List<string>(errors);
         }
 
-        private async Task ValidateServiceNameAsync(
+        private async Task ValidateWellKnownTenantId(
             ITenantManagementService tenantManagementService,
             ConcurrentBag<string> errors)
         {
-            if (string.IsNullOrWhiteSpace(this.ServiceName))
+            if (this.WellKnownTenantGuid == Guid.Empty)
             {
-                errors.Add("The ServiceName on the this is not set or is invalid. ServiceName must be at least one non-whitespace character.");
+                errors.Add("A value must be supplied for the Well Known Tenant Guid. This is necessary to ensure that the Id of the service tenant is well known.");
             }
-            else
-            {
-                ITenant? existingTenantWithSameName =
-                    await tenantManagementService.GetServiceTenantByNameAsync(this.ServiceName).ConfigureAwait(false);
 
-                if (existingTenantWithSameName != null)
-                {
-                    errors.Add($"A Service Tenant called '{this.ServiceName}' already exists.");
-                }
+            string expectedChildTenantId = WellKnownTenantIds.ServiceTenantParentId.CreateChildId(this.WellKnownTenantGuid);
+
+            try
+            {
+                // See if the tenant already exists...
+                ITenant existingTenant = await tenantManagementService.GetServiceTenantAsync(expectedChildTenantId).ConfigureAwait(false);
+
+                errors.Add($"A service tenant with well-known GUID '{this.WellKnownTenantGuid}' (resulting in Id '{expectedChildTenantId}') called '{existingTenant.Name}' already exists. All tenants must have unique well-known tenant GUIDs/IDs.");
+            }
+            catch (TenantNotFoundException)
+            {
+                // This is fine. The tenant doesn't already exist, so we can continue.
             }
         }
 
-        private async Task VerifyDependenciesExistAsync(
+        private async Task VerifyDependenciesAsync(
             ITenantManagementService tenantManagementService,
             ConcurrentBag<string> errors)
         {
-            if (this.DependsOnServiceNames.Count == 0)
+            if (this.DependsOnServiceTenants.Count == 0)
             {
                 return;
             }
 
-            IEnumerable<Task<ITenant?>> dependentServiceTenantRequests =
-                this.DependsOnServiceNames.Select(tenantManagementService.GetServiceTenantByNameAsync);
+            // Ensure there aren't any duplicates
+            string[] duplicateIds = this.DependsOnServiceTenants.GroupBy(x => x.Id).Where(x => x.Count() > 1).Select(x => x.Key).ToArray();
 
-            ITenant[] dependentServiceTenants = await Task.WhenAll(dependentServiceTenantRequests).ConfigureAwait(false);
-
-            for (int index = 0; index < this.DependsOnServiceNames.Count; index++)
+            if (duplicateIds.Length > 0)
             {
-                if (dependentServiceTenants[index] == null)
-                {
-                    errors.Add($"The manifest contains a dependency called '{this.DependsOnServiceNames[index]}', but no Service Tenant with that name exists.");
-                }
+                string mergedIds = string.Join(", ", duplicateIds.Select(x => $"'{x}'"));
+                errors.Add($"The following tenant Ids appear more than once in the DependsOnServiceTenants list: [{mergedIds}]. Each depended-upon service should appear only once.");
+            }
+
+            IList<string>[] dependencyErrors = await Task.WhenAll(
+                this.DependsOnServiceTenants.Select(
+                    (dependency, index) => dependency.ValidateAsync(tenantManagementService, $"DependsOnServiceTenants[{index}]"))).ConfigureAwait(false);
+
+            foreach (string dependencyError in dependencyErrors.SelectMany(x => x))
+            {
+                errors.Add(dependencyError);
             }
         }
     }

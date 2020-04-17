@@ -20,6 +20,11 @@ namespace Marain.TenantManagement.Internal
         public const string Enrollments = "Marain:Enrollments";
 
         /// <summary>
+        /// Key for storing a tenant's type.
+        /// </summary>
+        public const string MarainTenantType = "Marain:TenantType";
+
+        /// <summary>
         /// Builds the key to store the Id of a delegated service tenant that will be used by the specified service.
         /// </summary>
         /// <param name="serviceTenantName">

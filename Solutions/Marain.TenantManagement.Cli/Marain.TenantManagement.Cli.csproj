@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Marain.Tenancy.ClientTenantProvider" Version="0.3.0-corvus-tenancy-update.17" />
+    <PackageReference Include="Marain.Tenancy.ClientTenantProvider" Version="0.3.0-corvus-tenancy-update.36" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.2" />
     <PackageReference Include="System.CommandLine.Hosting" Version="0.3.0-alpha.20158.1" />
     <PackageReference Include="Corvus.Identity.ManagedServiceIdentity.ClientAuthentication" Version="0.2.0-preview.5" />

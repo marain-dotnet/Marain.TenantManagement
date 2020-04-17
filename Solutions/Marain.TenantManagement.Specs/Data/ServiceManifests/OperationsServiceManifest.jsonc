@@ -1,6 +1,14 @@
 {
+  "$schema": "./ServiceManifestSchema.json",
   "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest",
-  "serviceName": "Manifest with multiple configuration items",
+  "wellKnownTenantGuid": "4f522924-b6e7-48cc-a265-a307407ec858", // 3633754ac4c9be44b55bfe791b1780f12429524fe7b6cc48a265a307407ec858
+  "serviceName": "Operations v1",
+  "dependsOnServiceTenants": [
+    {
+      "id": "3633754ac4c9be44b55bfe791b1780f11ea674ff6030d340bfec60dfe12febac",
+      "expectedName": "FooBar v1"
+    }
+  ],
   "requiredConfigurationEntries": [
     {
       "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage",
@@ -9,15 +17,6 @@
         "containerName": "operations"
       },
       "description": "Stores the status of all current operations"
-    },
-    {
-      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb",
-      "key": "workflowStore",
-      "containerDefinition": {
-        "databaseName": "workflow",
-        "containerName": "definitions"
-      },
-      "description": "Workflow definitions"
     }
   ]
 }

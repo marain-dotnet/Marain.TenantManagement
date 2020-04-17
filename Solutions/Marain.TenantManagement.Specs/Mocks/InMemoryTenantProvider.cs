@@ -49,13 +49,17 @@ namespace Marain.TenantManagement.Specs.Mocks
 
         public ITenant Root { get; }
 
-        public async Task<ITenant> CreateChildTenantAsync(string parentTenantId, string name)
+        public Task<ITenant> CreateChildTenantAsync(string parentTenantId, string name)
+        {
+            return this.CreateWellKnownChildTenantAsync(parentTenantId, Guid.NewGuid(), name);
+        }
+
+        public async Task<ITenant> CreateWellKnownChildTenantAsync(string parentTenantId, Guid wellKnownChildTenantGuid, string name)
         {
             ITenant parent = await this.GetTenantAsync(parentTenantId).ConfigureAwait(false);
-
             var newTenant = new Tenant(this.jsonSerializerSettingsProvider)
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = parent.Id.CreateChildId(wellKnownChildTenantGuid),
                 Name = name,
             };
 

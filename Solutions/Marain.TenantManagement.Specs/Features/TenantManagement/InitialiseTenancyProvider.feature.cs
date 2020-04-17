@@ -116,10 +116,19 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.Then("the tenancy provider contains 2 tenants as children of the root tenant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 13
- testRunner.And("there is a tenant called \'Client Tenants\' as a child of the root tenant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("there is a tenant with Id \'75b9261673c2714681f14c97bc0439fb\' as a child of the ro" +
+                        "ot tenant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 14
- testRunner.And("there is a tenant called \'Service Tenants\' as a child of the root tenant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("the tenant with Id \'75b9261673c2714681f14c97bc0439fb\' is called \'Client Tenants\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 15
+ testRunner.And("there is a tenant with Id \'3633754ac4c9be44b55bfe791b1780f1\' as a child of the ro" +
+                        "ot tenant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 16
+ testRunner.And("the tenant with Id \'3633754ac4c9be44b55bfe791b1780f1\' is called \'Service Tenants\'" +
+                        "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -131,7 +140,7 @@ this.ScenarioInitialize(scenarioInfo);
         {
             string[] tagsOfScenario = ((string[])(null));
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Initialise a tenancy provider that\'s already been initialised", null, ((string[])(null)));
-#line 16
+#line 18
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -151,13 +160,13 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 17
+#line 19
  testRunner.Given("the tenancy provider has been initialised for use with Marain", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 18
+#line 20
  testRunner.When("I use the tenant management service to initialise the tenancy provider", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 19
+#line 21
  testRunner.Then("the tenancy provider contains 2 tenants as children of the root tenant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -170,7 +179,7 @@ this.ScenarioInitialize(scenarioInfo);
         {
             string[] tagsOfScenario = ((string[])(null));
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Initialise a non-empty but uninitialised tenancy provider", null, ((string[])(null)));
-#line 21
+#line 23
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -190,23 +199,25 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 22
+#line 24
  testRunner.Given("the tenancy provider contains 5 tenants as children of the root tenant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 23
+#line 25
  testRunner.When("I use the tenant management service to initialise the tenancy provider", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 24
+#line 26
  testRunner.Then("an \'InvalidOperationException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 25
+#line 27
  testRunner.And("the tenancy provider contains 5 tenants as children of the root tenant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 26
- testRunner.And("there is no tenant called \'Client Tenants\' as a child of the root tenant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 28
+ testRunner.And("there is no tenant with Id \'75b9261673c2714681f14c97bc0439fb\' as a child of the r" +
+                        "oot tenant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 27
- testRunner.And("there is no tenant called \'Service Tenants\' as a child of the root tenant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 29
+ testRunner.And("there is no tenant with Id \'3633754ac4c9be44b55bfe791b1780f1\' as a child of the r" +
+                        "oot tenant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -218,7 +229,7 @@ this.ScenarioInitialize(scenarioInfo);
         {
             string[] tagsOfScenario = ((string[])(null));
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Initialise a non-empty but uninitialised tenancy provider with the force option", null, ((string[])(null)));
-#line 29
+#line 31
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -238,21 +249,30 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 30
+#line 32
  testRunner.Given("the tenancy provider contains 5 tenants as children of the root tenant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 31
+#line 33
  testRunner.When("I use the tenant management service to initialise the tenancy provider using the " +
                         "force option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 32
+#line 34
  testRunner.Then("the tenancy provider contains 7 tenants as children of the root tenant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 33
- testRunner.And("there is a tenant called \'Client Tenants\' as a child of the root tenant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 35
+ testRunner.And("there is a tenant with Id \'75b9261673c2714681f14c97bc0439fb\' as a child of the ro" +
+                        "ot tenant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 34
- testRunner.And("there is a tenant called \'Service Tenants\' as a child of the root tenant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 36
+ testRunner.And("the tenant with Id \'75b9261673c2714681f14c97bc0439fb\' is called \'Client Tenants\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 37
+ testRunner.And("there is a tenant with Id \'3633754ac4c9be44b55bfe791b1780f1\' as a child of the ro" +
+                        "ot tenant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 38
+ testRunner.And("the tenant with Id \'3633754ac4c9be44b55bfe791b1780f1\' is called \'Service Tenants\'" +
+                        "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();

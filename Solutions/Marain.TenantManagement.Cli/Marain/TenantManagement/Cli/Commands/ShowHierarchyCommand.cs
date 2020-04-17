@@ -82,6 +82,8 @@ namespace Marain.TenantManagement.Cli.Commands
             }
 
             Console.WriteLine($"{root.Tenant.Name} - ({root.Tenant.Id})");
+            Console.Write(spacing);
+            Console.WriteLine($"     [Type: {root.Tenant.GetMarainTenantType()}]");
 
             var enrollments = root.Tenant.GetEnrollments().ToList();
             foreach (string enrollment in enrollments)
@@ -89,9 +91,9 @@ namespace Marain.TenantManagement.Cli.Commands
                 ITenant? serviceTenant = allTenants.FirstOrDefault(x => x.Id == enrollment);
                 Console.Write(spacing);
 
-                if (serviceTenant != null && serviceTenant.GetServiceManifest().DependsOnServiceNames.Count > 0)
+                if (serviceTenant != null && serviceTenant.GetServiceManifest().DependsOnServiceTenants.Count > 0)
                 {
-                    string delegatedTenantId = root.Tenant.GetDelegatedTenantIdForService(serviceTenant.Name);
+                    string delegatedTenantId = root.Tenant.GetDelegatedTenantIdForServiceId(serviceTenant.Id);
                     ITenant? delegatedTenant = allTenants.FirstOrDefault(x => x.Id == delegatedTenantId);
                     Console.WriteLine($"     [Enrollment: '{serviceTenant.Name}', with delegated tenant '{delegatedTenant?.Name ?? delegatedTenantId}']");
                 }

@@ -89,27 +89,39 @@ namespace Marain.TenantManagement.Specs.Features.TenantManagement
                     "ations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 11
+ testRunner.And("the well-known tenant Guid for the manifest called \'Operations Manifest\' is \'4f52" +
+                    "2924-b6e7-48cc-a265-a307407ec858\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 12
  testRunner.And("I have a service manifest called \'Workflow Manifest\' for a service called \'Workfl" +
                     "ow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
-                        "Service Name"});
-            table4.AddRow(new string[] {
-                        "Operations v1"});
-#line 12
- testRunner.And("the service manifest called \'Workflow Manifest\' has the following dependencies", ((string)(null)), table4, "And ");
+#line 13
+ testRunner.And("the well-known tenant Guid for the manifest called \'Workflow Manifest\' is \'8664b4" +
+                    "77-3403-4c77-abb2-f9d1b95b0c18\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 15
+            TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Service Id",
+                        "Expected Name"});
+            table8.AddRow(new string[] {
+                        "3633754ac4c9be44b55bfe791b1780f12429524fe7b6cc48a265a307407ec858",
+                        "Operations v1"});
+#line 14
+ testRunner.And("the service manifest called \'Workflow Manifest\' has the following dependencies", ((string)(null)), table8, "And ");
+#line hidden
+#line 17
  testRunner.And("I have a service manifest called \'Workflow Manifest with invalid dependency\' for " +
                     "a service called \'Workflow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
-                        "Service Name"});
-            table5.AddRow(new string[] {
-                        "Operations"});
-#line 16
+            TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Service Id",
+                        "Expected Name"});
+            table9.AddRow(new string[] {
+                        "3633754ac4c9be44b55bfe791b1780f1ac641e0cdeee4246abdf41dfb1e94946",
+                        ""});
+#line 18
  testRunner.And("the service manifest called \'Workflow Manifest with invalid dependency\' has the f" +
-                    "ollowing dependencies", ((string)(null)), table5, "And ");
+                    "ollowing dependencies", ((string)(null)), table9, "And ");
 #line hidden
         }
         
@@ -119,7 +131,7 @@ namespace Marain.TenantManagement.Specs.Features.TenantManagement
         {
             string[] tagsOfScenario = ((string[])(null));
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Create new service tenant", null, ((string[])(null)));
-#line 20
+#line 22
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -142,16 +154,20 @@ this.ScenarioInitialize(scenarioInfo);
 #line 9
 this.FeatureBackground();
 #line hidden
-#line 21
+#line 23
  testRunner.Given("the tenancy provider has been initialised for use with Marain", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 22
+#line 24
  testRunner.When("I use the tenant management service to create a new service tenant with manifest " +
                         "\'Operations Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 23
- testRunner.Then("there is a tenant called \'Operations v1\' as a child of the tenant called \'Service" +
-                        " Tenants\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 25
+ testRunner.Then("there is a service tenant with Id \'3633754ac4c9be44b55bfe791b1780f12429524fe7b6cc" +
+                        "48a265a307407ec858\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 26
+ testRunner.And("the tenant with Id \'3633754ac4c9be44b55bfe791b1780f12429524fe7b6cc48a265a307407ec" +
+                        "858\' is called \'Operations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -163,7 +179,7 @@ this.FeatureBackground();
         {
             string[] tagsOfScenario = ((string[])(null));
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Create a new service tenant without supplying a manifest", null, ((string[])(null)));
-#line 25
+#line 28
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -186,14 +202,14 @@ this.ScenarioInitialize(scenarioInfo);
 #line 9
 this.FeatureBackground();
 #line hidden
-#line 26
+#line 29
  testRunner.Given("the tenancy provider has been initialised for use with Marain", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 27
+#line 30
  testRunner.When("I use the tenant management service to create a new service tenant without supply" +
                         "ing a manifest", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 28
+#line 31
  testRunner.Then("an \'ArgumentNullException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -206,7 +222,7 @@ this.FeatureBackground();
         {
             string[] tagsOfScenario = ((string[])(null));
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Create new service tenant when the tenancy provider has not been initialised", null, ((string[])(null)));
-#line 30
+#line 33
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -229,11 +245,11 @@ this.ScenarioInitialize(scenarioInfo);
 #line 9
 this.FeatureBackground();
 #line hidden
-#line 31
+#line 34
  testRunner.When("I use the tenant management service to create a new service tenant with manifest " +
                         "\'Operations Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 32
+#line 35
  testRunner.Then("an \'InvalidOperationException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -246,7 +262,7 @@ this.FeatureBackground();
         {
             string[] tagsOfScenario = ((string[])(null));
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Create a new service tenant that has a dependency", null, ((string[])(null)));
-#line 34
+#line 37
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -269,24 +285,32 @@ this.ScenarioInitialize(scenarioInfo);
 #line 9
 this.FeatureBackground();
 #line hidden
-#line 35
+#line 38
  testRunner.Given("the tenancy provider has been initialised for use with Marain", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 36
+#line 39
  testRunner.When("I use the tenant management service to create a new service tenant with manifest " +
                         "\'Operations Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 37
+#line 40
  testRunner.And("I use the tenant management service to create a new service tenant with manifest " +
                         "\'Workflow Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 38
- testRunner.Then("there is a tenant called \'Operations v1\' as a child of the tenant called \'Service" +
-                        " Tenants\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 41
+ testRunner.Then("there is a service tenant with Id \'3633754ac4c9be44b55bfe791b1780f12429524fe7b6cc" +
+                        "48a265a307407ec858\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 39
- testRunner.And("there is a tenant called \'Workflow v1\' as a child of the tenant called \'Service T" +
-                        "enants\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 42
+ testRunner.And("the tenant with Id \'3633754ac4c9be44b55bfe791b1780f12429524fe7b6cc48a265a307407ec" +
+                        "858\' is called \'Operations v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 43
+ testRunner.And("there is a service tenant with Id \'3633754ac4c9be44b55bfe791b1780f177b46486033477" +
+                        "4cabb2f9d1b95b0c18\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 44
+ testRunner.And("the tenant with Id \'3633754ac4c9be44b55bfe791b1780f177b464860334774cabb2f9d1b95b0" +
+                        "c18\' is called \'Workflow v1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -300,49 +324,6 @@ this.FeatureBackground();
             string[] tagsOfScenario = ((string[])(null));
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Create a new service tenant where at least one of the services in the list of dep" +
                     "endencies does not exist", null, ((string[])(null)));
-#line 41
-this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            bool isScenarioIgnored = default(bool);
-            bool isFeatureIgnored = default(bool);
-            if ((tagsOfScenario != null))
-            {
-                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((this._featureTags != null))
-            {
-                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((isScenarioIgnored || isFeatureIgnored))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                this.ScenarioStart();
-#line 9
-this.FeatureBackground();
-#line hidden
-#line 42
- testRunner.Given("the tenancy provider has been initialised for use with Marain", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-#line 43
- testRunner.When("I use the tenant management service to create a new service tenant with manifest " +
-                        "\'Workflow Manifest with invalid dependency\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 44
- testRunner.Then("an \'InvalidServiceManifestException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-            }
-            this.ScenarioCleanup();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Create a new service tenant where the name in the manifest is already in use")]
-        public virtual void CreateANewServiceTenantWhereTheNameInTheManifestIsAlreadyInUse()
-        {
-            string[] tagsOfScenario = ((string[])(null));
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Create a new service tenant where the name in the manifest is already in use", null, ((string[])(null)));
 #line 46
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -370,14 +351,59 @@ this.FeatureBackground();
  testRunner.Given("the tenancy provider has been initialised for use with Marain", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 48
+ testRunner.When("I use the tenant management service to create a new service tenant with manifest " +
+                        "\'Workflow Manifest with invalid dependency\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 49
+ testRunner.Then("an \'InvalidServiceManifestException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Create a new service tenant where the well-known tenant GUID in the manifest is a" +
+            "lready in use")]
+        public virtual void CreateANewServiceTenantWhereTheWell_KnownTenantGUIDInTheManifestIsAlreadyInUse()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Create a new service tenant where the well-known tenant GUID in the manifest is a" +
+                    "lready in use", null, ((string[])(null)));
+#line 51
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 9
+this.FeatureBackground();
+#line hidden
+#line 52
+ testRunner.Given("the tenancy provider has been initialised for use with Marain", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 53
  testRunner.And("I have used the tenant management service to create a service tenant with manifes" +
                         "t \'Operations Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 49
+#line 54
  testRunner.When("I use the tenant management service to create a new service tenant with manifest " +
                         "\'Operations Manifest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 50
+#line 55
  testRunner.Then("an \'InvalidServiceManifestException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }

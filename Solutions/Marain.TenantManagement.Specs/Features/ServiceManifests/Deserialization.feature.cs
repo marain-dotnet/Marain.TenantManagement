@@ -112,9 +112,13 @@ this.ScenarioInitialize(scenarioInfo);
                         "ndencies or configuration\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 11
- testRunner.And("the resulting manifest should not have any dependencies", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("the resulting manifest should have a well known service GUID of \'b4dd52e4-a6cd-4e" +
+                        "7b-842f-059528a23153\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 12
+ testRunner.And("the resulting manifest should not have any dependencies", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 13
  testRunner.And("the resulting manifest should not have any required configuration entries", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
@@ -127,7 +131,7 @@ this.ScenarioInitialize(scenarioInfo);
         {
             string[] tagsOfScenario = ((string[])(null));
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Manifest with dependencies", null, ((string[])(null)));
-#line 14
+#line 15
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -147,22 +151,28 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 15
+#line 16
  testRunner.When("I deserialize the manifest called \'ManifestWithDependencies\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 16
+#line 17
  testRunner.Then("the resulting manifest should have the service name \'Manifest with dependencies\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 17
- testRunner.And("the resulting manifest should have 2 dependencies", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
 #line 18
- testRunner.And("the resulting manifest should have a dependency called \'Operations\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("the resulting manifest should have a well known service GUID of \'31b74bd9-b45d-44" +
+                        "02-81cf-13fc6f680a85\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 19
- testRunner.And("the resulting manifest should have a dependency called \'FooBar\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("the resulting manifest should have 2 dependencies", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 20
+ testRunner.And("the resulting manifest should have a dependency with Id \'3633754ac4c9be44b55bfe79" +
+                        "1b1780f12429524fe7b6cc48a265a307407ec858\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 21
+ testRunner.And("the resulting manifest should have a dependency with Id \'3633754ac4c9be44b55bfe79" +
+                        "1b1780f187732ecba95e0e41b5ad8b2605aa5fb3\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 22
  testRunner.And("the resulting manifest should not have any required configuration entries", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
@@ -175,7 +185,7 @@ this.ScenarioInitialize(scenarioInfo);
         {
             string[] tagsOfScenario = ((string[])(null));
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Manifest with a configuration item", null, ((string[])(null)));
-#line 22
+#line 24
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -195,20 +205,24 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 23
+#line 25
  testRunner.When("I deserialize the manifest called \'ManifestWithConfiguration\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 24
+#line 26
  testRunner.Then("the resulting manifest should have the service name \'Manifest with configuration\'" +
                         "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 25
+#line 27
+ testRunner.And("the resulting manifest should have a well known service GUID of \'910825dd-7aa1-44" +
+                        "f1-9fbf-c95e8b43e7e2\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 28
  testRunner.And("the resulting manifest should not have any dependencies", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 26
+#line 29
  testRunner.And("the resulting manifest should have 1 required configuration entry", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 27
+#line 30
  testRunner.And("the configuration item with index 0 should be of type \'ServiceManifestBlobStorage" +
                         "ConfigurationEntry\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
@@ -222,7 +236,7 @@ this.ScenarioInitialize(scenarioInfo);
         {
             string[] tagsOfScenario = ((string[])(null));
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Manifest with multiple configuration items", null, ((string[])(null)));
-#line 29
+#line 32
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -242,24 +256,28 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 30
+#line 33
  testRunner.When("I deserialize the manifest called \'ManifestWithMultipleConfigurationItems\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 31
+#line 34
  testRunner.Then("the resulting manifest should have the service name \'Manifest with multiple confi" +
                         "guration items\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 32
+#line 35
+ testRunner.And("the resulting manifest should have a well known service GUID of \'ba80b530-20c6-4c" +
+                        "78-ab18-8ac70cb4db9e\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 36
  testRunner.And("the resulting manifest should not have any dependencies", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 33
+#line 37
  testRunner.And("the resulting manifest should have 2 required configuration entries", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 34
+#line 38
  testRunner.And("the configuration item with index 0 should be of type \'ServiceManifestBlobStorage" +
                         "ConfigurationEntry\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 35
+#line 39
  testRunner.And("the configuration item with index 1 should be of type \'ServiceManifestCosmosDbCon" +
                         "figurationEntry\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
@@ -273,7 +291,7 @@ this.ScenarioInitialize(scenarioInfo);
         {
             string[] tagsOfScenario = ((string[])(null));
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Manifest with a configuration item that has an unknown content type", null, ((string[])(null)));
-#line 37
+#line 41
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -293,11 +311,11 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 38
+#line 42
  testRunner.When("I deserialize the manifest called \'ManifestWithConfigurationWithUnknownContentTyp" +
                         "e\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 39
+#line 43
  testRunner.Then("an \'InvalidOperationException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }

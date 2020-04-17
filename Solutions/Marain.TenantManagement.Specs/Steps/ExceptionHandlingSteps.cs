@@ -34,6 +34,15 @@ namespace Marain.TenantManagement.Specs.Steps
                 $"Expected an exception of type '{exceptionTypeName}' to have been thrown, but the last exception captured was of type '{lastExceptionType}'");
         }
 
+        [Then("no exception is thrown")]
+        public void ThenNoExceptionIsThrown()
+        {
+            if (this.scenarioContext.TryGetValue(out Exception lastException))
+            {
+                Assert.Fail("An exception was thrown.");
+            }
+        }
+
         [Then("the list of errors attached to the InvalidServiceManifestException contains (.*) entries")]
         public void ThenTheListOfErrorsAttachedToTheExceptionContainsEntries(int expectedErrorCount)
         {

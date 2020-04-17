@@ -17,6 +17,11 @@ Background:
 	And I have loaded the manifest called 'WorkflowServiceManifest'
 	And I have used the tenant management service to create a service tenant with manifest 'WorkflowServiceManifest'
 	And I have used the tenant management service to create a new client tenant called 'Litware'
+	And I have used the tenant management service to create a new client tenant called 'Contoso'
+
+Scenario: Attempt to enroll in a non-service tenant
+	When I use the tenant enrollment service to enroll the tenant called 'Litware' in the service called 'Contoso'
+	Then an 'ArgumentException' is thrown
 
 Scenario: Basic enrollment without dependencies or configuration
 	When I use the tenant enrollment service to enroll the tenant called 'Litware' in the service called 'Simple manifest with no dependencies or configuration'

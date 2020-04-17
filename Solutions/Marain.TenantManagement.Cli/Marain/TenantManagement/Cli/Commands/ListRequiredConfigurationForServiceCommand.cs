@@ -27,25 +27,25 @@ namespace Marain.TenantManagement.Cli.Commands
         {
             this.tenantManagementService = tenantManagementService;
 
-            var serviceName = new Argument<string>("serviceName")
+            var serviceName = new Argument<string>("serviceTenantId")
             {
-                Description = "The name of the service tenant.",
+                Description = "The Id of the service tenant.",
                 Arity = ArgumentArity.ExactlyOne,
             };
 
             this.AddArgument(serviceName);
 
-            this.Handler = CommandHandler.Create((string serviceName) => this.HandleCommand(serviceName));
+            this.Handler = CommandHandler.Create((string serviceTenantId) => this.HandleCommand(serviceTenantId));
         }
 
-        private async Task HandleCommand(string serviceName)
+        private async Task HandleCommand(string serviceTenantId)
         {
             ServiceManifestRequiredConfigurationEntry[] configRequirements =
-                await this.tenantManagementService.GetServiceEnrollmentConfigurationRequirementsAsync(serviceName).ConfigureAwait(false);
+                await this.tenantManagementService.GetServiceEnrollmentConfigurationRequirementsAsync(serviceTenantId).ConfigureAwait(false);
 
             if (configRequirements.Length == 0)
             {
-                Console.WriteLine($"The service '{serviceName}' does not have any configuration requirements for enrollment.");
+                Console.WriteLine($"The service '{serviceTenantId}' does not have any configuration requirements for enrollment.");
             }
             else
             {
