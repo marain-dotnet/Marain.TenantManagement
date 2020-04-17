@@ -17,25 +17,25 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Data\ServiceManifests\FooBarServiceManifest.jsonp" />
-    <None Remove="Data\ServiceManifests\ManifestWithConfiguration.jsonp" />
-    <None Remove="Data\ServiceManifests\ManifestWithConfigurationWithUnknownContentType.jsonp" />
-    <None Remove="Data\ServiceManifests\ManifestWithDependencies.jsonp" />
-    <None Remove="Data\ServiceManifests\ManifestWithMultipleConfigurationItems.jsonp" />
-    <None Remove="Data\ServiceManifests\OperationsServiceManifest.jsonp" />
-    <None Remove="Data\ServiceManifests\SimpleManifestWithNoDependenciesOrConfiguration.jsonp" />
-    <None Remove="Data\ServiceManifests\WorkflowServiceManifest.jsonp" />
+    <None Remove="Data\ServiceManifests\FooBarServiceManifest.jsonc" />
+    <None Remove="Data\ServiceManifests\ManifestWithConfiguration.jsonc" />
+    <None Remove="Data\ServiceManifests\ManifestWithConfigurationWithUnknownContentType.jsonc" />
+    <None Remove="Data\ServiceManifests\ManifestWithDependencies.jsonc" />
+    <None Remove="Data\ServiceManifests\ManifestWithMultipleConfigurationItems.jsonc" />
+    <None Remove="Data\ServiceManifests\OperationsServiceManifest.jsonc" />
+    <None Remove="Data\ServiceManifests\SimpleManifestWithNoDependenciesOrConfiguration.jsonc" />
+    <None Remove="Data\ServiceManifests\WorkflowServiceManifest.jsonc" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Data\ServiceManifests\ManifestWithConfigurationWithUnknownContentType.jsonp" />
-    <EmbeddedResource Include="Data\ServiceManifests\ManifestWithMultipleConfigurationItems.jsonp" />
-    <EmbeddedResource Include="Data\ServiceManifests\ManifestWithConfiguration.jsonp" />
-    <EmbeddedResource Include="Data\ServiceManifests\ManifestWithDependencies.jsonp" />
-    <EmbeddedResource Include="Data\ServiceManifests\FooBarServiceManifest.jsonp" />
-    <EmbeddedResource Include="Data\ServiceManifests\OperationsServiceManifest.jsonp" />
-    <EmbeddedResource Include="Data\ServiceManifests\SimpleManifestWithNoDependenciesOrConfiguration.jsonp" />
-    <EmbeddedResource Include="Data\ServiceManifests\WorkflowServiceManifest.jsonp" />
+    <EmbeddedResource Include="Data\ServiceManifests\ManifestWithConfigurationWithUnknownContentType.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\ManifestWithMultipleConfigurationItems.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\ManifestWithConfiguration.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\ManifestWithDependencies.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\FooBarServiceManifest.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\OperationsServiceManifest.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\SimpleManifestWithNoDependenciesOrConfiguration.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\WorkflowServiceManifest.jsonc" />
   </ItemGroup>
 
   <ItemGroup>
