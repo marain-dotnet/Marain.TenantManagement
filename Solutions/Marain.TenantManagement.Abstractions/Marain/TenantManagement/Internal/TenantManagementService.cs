@@ -355,7 +355,7 @@ namespace Marain.TenantManagement.Internal
             await this.tenantProvider.UpdateTenantAsync(enrollingTenant).ConfigureAwait(false);
 
             this.logger.LogInformation(
-                "Successfully enrolled tenant '{enrollingTenantName}' with Id '{enrollingTenant.Id}' from service '{serviceTenantName}' with Id '{serviceTenantId}'",
+                "Successfully enrolled tenant '{enrollingTenantName}' with Id '{enrollingTenant.Id}' for service '{serviceTenantName}' with Id '{serviceTenantId}'",
                 enrollingTenant.Name,
                 enrollingTenant.Id,
                 serviceTenant.Name,
