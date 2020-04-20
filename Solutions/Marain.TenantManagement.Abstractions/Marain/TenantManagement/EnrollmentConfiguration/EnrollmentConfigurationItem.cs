@@ -33,17 +33,6 @@ namespace Marain.TenantManagement.EnrollmentConfiguration
 #nullable restore annotations
 
         /// <summary>
-        /// Adds the configuration to the given tenant, using the supplied required config entry to provide any
-        /// additional information required.
-        /// </summary>
-        /// <param name="tenant">The tenant to add configuration to.</param>
-        /// <param name="requiredConfigurationEntry">
-        /// The configuration entry that relates to this enrollment configutation, which will likely contain
-        /// additional information required to attach the config to the tenant.
-        /// </param>
-        public abstract void AddToTenant(ITenant tenant, ServiceManifestRequiredConfigurationEntry requiredConfigurationEntry);
-
-        /// <summary>
         /// Validates the configuration item against it's corresponding required configuration entry.
         /// </summary>
         /// <param name="requiredConfigurationEntry">The corresponding required configuration entry.</param>

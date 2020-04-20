@@ -191,6 +191,7 @@ namespace Marain.TenantManagement.Specs.Steps
             Assert.IsNotNull(matchingChild, $"The service tenant '{serviceTenantName}' does not contain a child tenant called '{childTenantName}'");
         }
 
+        [Then("there should not be a child tenant called '(.*)' of the service tenant called '(.*)'")]
         [Then("no new child tenant called '(.*)' of the service tenant called '(.*)' has been created")]
         public async Task ThenNoNewChildTenantCalledOfTheServiceTenantCalledHasBeenCreated(string childTenantName, string serviceTenantName)
         {

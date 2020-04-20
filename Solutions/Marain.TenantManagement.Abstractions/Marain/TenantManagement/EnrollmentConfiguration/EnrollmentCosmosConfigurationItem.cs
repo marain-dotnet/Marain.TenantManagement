@@ -21,28 +21,5 @@ namespace Marain.TenantManagement.EnrollmentConfiguration
 
         /// <inheritdoc/>
         public override string ContentType => RegisteredContentType;
-
-        /// <inheritdoc/>
-        public override void AddToTenant(ITenant tenant, ServiceManifestRequiredConfigurationEntry requiredConfigurationEntry)
-        {
-            if (tenant == null)
-            {
-                throw new ArgumentNullException(nameof(tenant));
-            }
-
-            if (requiredConfigurationEntry == null)
-            {
-                throw new ArgumentNullException(nameof(requiredConfigurationEntry));
-            }
-
-            if (!(requiredConfigurationEntry is ServiceManifestCosmosDbConfigurationEntry cosmosConfigurationEntry))
-            {
-                throw new ArgumentException(
-                    $"The supplied value must be of type {nameof(ServiceManifestCosmosDbConfigurationEntry)}",
-                    nameof(requiredConfigurationEntry));
-            }
-
-            tenant.SetCosmosConfiguration(cosmosConfigurationEntry.ContainerDefinition, this.Configuration);
-        }
     }
 }

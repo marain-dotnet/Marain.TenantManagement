@@ -9,6 +9,7 @@ namespace Marain.TenantManagement
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
     using Marain.TenantManagement.EnrollmentConfiguration;
+    using Marain.TenantManagement.Exceptions;
     using Marain.TenantManagement.ServiceManifests;
 
     /// <summary>
@@ -94,6 +95,16 @@ namespace Marain.TenantManagement
             EnrollmentConfigurationItem[] configurationItems);
 
         /// <summary>
+        /// Unenrolls the specified tenant from the service.
+        /// </summary>
+        /// <param name="enrolledTenantId">The tenant that is currently enrolled.</param>
+        /// <param name="serviceTenantId">The service they need to be unenrolled from.</param>
+        /// <returns>A task which completes when the unenrollment has finished.</returns>
+        Task UnenrollFromServiceAsync(
+            string enrolledTenantId,
+            string serviceTenantId);
+
+        /// <summary>
         /// Retrieves the service tenant with the specified Id.
         /// </summary>
         /// <param name="serviceTenantId">The Id of the service tenant.</param>
@@ -117,7 +128,7 @@ namespace Marain.TenantManagement
         /// <param name="delegatedTenantId">The Id of the client tenant.</param>
         /// <returns>The client tenant.</returns>
         /// <exception cref="TenantNotFoundException">There is no tenant with the specified Id.</exception>
-        /// <exception cref="ArgumentException">The tenant Id provided is not for a delegated tenant.</exception>
+        /// <exception cref="InvalidMarainTenantTypeException">The tenant Id provided is not for a delegated tenant.</exception>
         Task<ITenant> GetDelegatedTenantAsync(string delegatedTenantId);
 
         /// <summary>

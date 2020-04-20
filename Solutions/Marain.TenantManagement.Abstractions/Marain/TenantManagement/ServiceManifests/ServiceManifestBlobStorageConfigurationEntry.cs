@@ -7,6 +7,7 @@ namespace Marain.TenantManagement.ServiceManifests
     using System;
     using System.Collections.Generic;
     using Corvus.Azure.Storage.Tenancy;
+    using Corvus.Tenancy;
     using Marain.TenantManagement.EnrollmentConfiguration;
 
     /// <summary>
@@ -32,6 +33,35 @@ namespace Marain.TenantManagement.ServiceManifests
 #nullable disable annotations
         public BlobStorageContainerDefinition ContainerDefinition { get; set; }
 #nullable restore annotations
+
+        /// <inheritdoc/>
+        public override void AddToTenant(ITenant tenant, EnrollmentConfigurationItem enrollmentConfigurationItem)
+        {
+            if (tenant == null)
+            {
+                throw new ArgumentNullException(nameof(tenant));
+            }
+
+            if (enrollmentConfigurationItem == null)
+            {
+                throw new ArgumentNullException(nameof(enrollmentConfigurationItem));
+            }
+
+            if (!(enrollmentConfigurationItem is EnrollmentBlobStorageConfigurationItem blobStorageConfigurationItem))
+            {
+                throw new ArgumentException(
+                    $"The supplied value must be of type {nameof(EnrollmentBlobStorageConfigurationItem)}",
+                    nameof(enrollmentConfigurationItem));
+            }
+
+            tenant.SetBlobStorageConfiguration(this.ContainerDefinition, blobStorageConfigurationItem.Configuration);
+        }
+
+        /// <inheritdoc/>
+        public override void RemoveFromTenant(ITenant tenant)
+        {
+            tenant.ClearBlobStorageConfiguration(this.ContainerDefinition);
+        }
 
         /// <inheritdoc/>
         public override IList<string> Validate(string messagePrefix)
