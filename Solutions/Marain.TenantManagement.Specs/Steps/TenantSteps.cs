@@ -5,7 +5,6 @@
 namespace Marain.TenantManagement.Specs.Steps
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Corvus.SpecFlow.Extensions;
@@ -13,7 +12,6 @@ namespace Marain.TenantManagement.Specs.Steps
     using Corvus.Tenancy.Exceptions;
     using Marain.TenantManagement;
     using Marain.TenantManagement.ServiceManifests;
-    using Marain.TenantManagement.Specs.Mocks;
     using Microsoft.Extensions.DependencyInjection;
     using NUnit.Framework;
     using TechTalk.SpecFlow;

@@ -4,10 +4,7 @@
 
 namespace Marain.TenantManagement.EnrollmentConfiguration
 {
-    using System;
     using Corvus.Azure.Cosmos.Tenancy;
-    using Corvus.Tenancy;
-    using Marain.TenantManagement.ServiceManifests;
 
     /// <summary>
     /// Enrollment configuration item for tenanted cosmos storage config.

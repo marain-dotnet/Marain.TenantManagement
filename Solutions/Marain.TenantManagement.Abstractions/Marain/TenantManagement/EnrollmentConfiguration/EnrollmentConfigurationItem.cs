@@ -6,7 +6,6 @@ namespace Marain.TenantManagement.EnrollmentConfiguration
 {
     using System;
     using System.Collections.Generic;
-    using Corvus.Tenancy;
     using Marain.TenantManagement.ServiceManifests;
 
     /// <summary>

@@ -7,13 +7,9 @@ namespace Marain.TenantManagement.Cli.Commands
     using System;
     using System.CommandLine;
     using System.CommandLine.Invocation;
-    using System.IO;
     using System.Threading.Tasks;
     using Corvus.Extensions.Json;
     using Corvus.Tenancy.Exceptions;
-    using Marain.TenantManagement.EnrollmentConfiguration;
-    using Marain.TenantManagement.Exceptions;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Enrolls client tenants to use services.
