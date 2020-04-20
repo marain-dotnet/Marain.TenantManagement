@@ -9,6 +9,7 @@ namespace Marain.TenantManagement
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
     using Marain.TenantManagement.EnrollmentConfiguration;
+    using Marain.TenantManagement.Exceptions;
     using Marain.TenantManagement.ServiceManifests;
 
     /// <summary>
@@ -51,35 +52,11 @@ namespace Marain.TenantManagement
         /// Retrieves the complete list of configuration items required in order to enroll a tenant to a service. This will
         /// include configuration entries required by any dependent services.
         /// </summary>
-        /// <param name="serviceTenantId">The Id of the service to gather configuration for.</param>
+        /// <param name="serviceTenant">The service to gather configuration for.</param>
         /// <returns>
         /// A list of <see cref="ServiceManifestRequiredConfigurationEntry"/> representing the configuration requirements.
         /// </returns>
-        Task<ServiceManifestRequiredConfigurationEntry[]> GetServiceEnrollmentConfigurationRequirementsAsync(string serviceTenantId);
-
-        /// <summary>
-        /// Enrolls the specified tenant in the service.
-        /// </summary>
-        /// <param name="enrollingTenantId">The Id of the tenant to enroll.</param>
-        /// <param name="serviceTenantId">The Id of the service to enroll in.</param>
-        /// <param name="configurationItems">Configuration for the enrollment.</param>
-        /// <returns>A task which completes when the enrollment has finished.</returns>
-        Task EnrollInServiceAsync(
-            string enrollingTenantId,
-            string serviceTenantId,
-            EnrollmentConfigurationItem[] configurationItems);
-
-        /// <summary>
-        /// Enrolls the specified tenant in the service.
-        /// </summary>
-        /// <param name="enrollingTenant">The tenant to enroll.</param>
-        /// <param name="serviceTenantId">The Id of the service to enroll in.</param>
-        /// <param name="configurationItems">Configuration for the enrollment.</param>
-        /// <returns>A task which completes when the enrollment has finished.</returns>
-        Task EnrollInServiceAsync(
-            ITenant enrollingTenant,
-            string serviceTenantId,
-            EnrollmentConfigurationItem[] configurationItems);
+        Task<ServiceManifestRequiredConfigurationEntry[]> GetServiceEnrollmentConfigurationRequirementsAsync(ITenant serviceTenant);
 
         /// <summary>
         /// Enrolls the specified tenant in the service.
@@ -94,47 +71,23 @@ namespace Marain.TenantManagement
             EnrollmentConfigurationItem[] configurationItems);
 
         /// <summary>
-        /// Retrieves the service tenant with the specified Id.
+        /// Unenrolls the specified tenant from the service.
         /// </summary>
-        /// <param name="serviceTenantId">The Id of the service tenant.</param>
-        /// <returns>The service tenant.</returns>
-        /// <exception cref="TenantNotFoundException">There is no tenant with the specified Id.</exception>
-        /// <exception cref="ArgumentException">The tenant Id provided is not for a service tenant.</exception>
-        Task<ITenant> GetServiceTenantAsync(string serviceTenantId);
+        /// <param name="enrolledTenant">The tenant that is currently enrolled.</param>
+        /// <param name="serviceTenant">The service they need to be unenrolled from.</param>
+        /// <returns>A task which completes when the unenrollment has finished.</returns>
+        Task UnenrollFromServiceAsync(
+            ITenant enrolledTenant,
+            ITenant serviceTenant);
 
         /// <summary>
-        /// Retrieves the client tenant with the specified Id.
+        /// Retrieves the tenant with the specified Id and ensures it is of the correct type.
         /// </summary>
-        /// <param name="clientTenantId">The Id of the client tenant.</param>
+        /// <param name="tenantId">The Id of the tenant to retrieve.</param>
+        /// <param name="allowableTenantTypes">The list of valid types for the tenant.</param>
         /// <returns>The client tenant.</returns>
         /// <exception cref="TenantNotFoundException">There is no tenant with the specified Id.</exception>
-        /// <exception cref="ArgumentException">The tenant Id provided is not for a client tenant.</exception>
-        Task<ITenant> GetClientTenantAsync(string clientTenantId);
-
-        /// <summary>
-        /// Retrieves the delegated tenant with the specified Id.
-        /// </summary>
-        /// <param name="delegatedTenantId">The Id of the client tenant.</param>
-        /// <returns>The client tenant.</returns>
-        /// <exception cref="TenantNotFoundException">There is no tenant with the specified Id.</exception>
-        /// <exception cref="ArgumentException">The tenant Id provided is not for a delegated tenant.</exception>
-        Task<ITenant> GetDelegatedTenantAsync(string delegatedTenantId);
-
-        /// <summary>
-        /// Retrieves the delegated tenant for the specified client and service.
-        /// </summary>
-        /// <param name="clientTenantId">
-        /// The Id of the client tenant.
-        /// </param>
-        /// <param name="serviceTenantId">
-        /// The Id of the service tenant representing the service that needs to make use of the delegated tenant.
-        /// </param>
-        /// <returns>The client tenant.</returns>
-        /// <exception cref="TenantNotFoundException">There is no tenant with the specified client or service tenant Id.</exception>
-        /// <exception cref="ArgumentException">
-        /// The tenant Ids provided do not match the correct types of tenant, or there is no delegated tenant for the
-        /// specified client and service.
-        /// </exception>
-        Task<ITenant> GetDelegatedTenantAsync(string clientTenantId, string serviceTenantId);
+        /// <exception cref="InvalidMarainTenantTypeException">The tenant Id provided is not for a tenant with the specified type.</exception>
+        Task<ITenant> GetTenantOfTypeAsync(string tenantId, params MarainTenantType[] allowableTenantTypes);
     }
 }

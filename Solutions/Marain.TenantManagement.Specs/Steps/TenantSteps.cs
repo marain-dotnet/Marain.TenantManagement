@@ -5,7 +5,6 @@
 namespace Marain.TenantManagement.Specs.Steps
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Corvus.SpecFlow.Extensions;
@@ -13,7 +12,6 @@ namespace Marain.TenantManagement.Specs.Steps
     using Corvus.Tenancy.Exceptions;
     using Marain.TenantManagement;
     using Marain.TenantManagement.ServiceManifests;
-    using Marain.TenantManagement.Specs.Mocks;
     using Microsoft.Extensions.DependencyInjection;
     using NUnit.Framework;
     using TechTalk.SpecFlow;
@@ -191,6 +189,7 @@ namespace Marain.TenantManagement.Specs.Steps
             Assert.IsNotNull(matchingChild, $"The service tenant '{serviceTenantName}' does not contain a child tenant called '{childTenantName}'");
         }
 
+        [Then("there should not be a child tenant called '(.*)' of the service tenant called '(.*)'")]
         [Then("no new child tenant called '(.*)' of the service tenant called '(.*)' has been created")]
         public async Task ThenNoNewChildTenantCalledOfTheServiceTenantCalledHasBeenCreated(string childTenantName, string serviceTenantName)
         {

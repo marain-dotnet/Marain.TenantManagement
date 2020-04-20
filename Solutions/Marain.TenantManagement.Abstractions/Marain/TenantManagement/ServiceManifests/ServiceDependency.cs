@@ -9,6 +9,7 @@ namespace Marain.TenantManagement.ServiceManifests
     using System.Threading.Tasks;
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
+    using Marain.TenantManagement.Exceptions;
 
     /// <summary>
     /// Represents a dependency of a service on another service.
@@ -74,9 +75,8 @@ namespace Marain.TenantManagement.ServiceManifests
             {
                 errors.Add($"{messagePrefix}: Could not find a tenant with Id '{this.Id}'");
             }
-            catch (ArgumentException ex)
+            catch (InvalidMarainTenantTypeException ex)
             {
-                // Likely to be thrown if the tenant was found but was of the wrong type.
                 errors.Add($"{messagePrefix}: {ex.Message}");
             }
 

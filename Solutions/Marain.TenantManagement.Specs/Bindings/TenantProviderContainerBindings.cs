@@ -8,6 +8,7 @@ namespace Marain.TenantManagement.Specs.Bindings
     using Corvus.Tenancy;
     using Marain.TenantManagement.Specs.Mocks;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using TechTalk.SpecFlow;
 
     [Binding]
@@ -18,6 +19,12 @@ namespace Marain.TenantManagement.Specs.Bindings
         {
             ContainerBindings.ConfigureServices(scenarioContext, collection =>
             {
+                collection.AddLogging(config =>
+                {
+                    config.SetMinimumLevel(LogLevel.Debug);
+                    config.AddConsole();
+                });
+
                 collection.AddJsonSerializerSettings();
                 collection.AddRootTenant();
                 collection.AddMarainTenantManagement();

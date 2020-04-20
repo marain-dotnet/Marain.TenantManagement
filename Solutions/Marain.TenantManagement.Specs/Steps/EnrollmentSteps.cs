@@ -78,21 +78,42 @@ namespace Marain.TenantManagement.Specs.Steps
                     }));
         }
 
-        [When("I use the tenant enrollment service to enroll the tenant called '(.*)' in the service called '(.*)'")]
-        public Task WhenIUseTheTenantEnrollmentServiceToEnrollTheClientTenantCalledInTheServiceCalled(
+        [Given("I have used the tenant management service to enroll the tenant called '(.*)' in the service called '(.*)'")]
+        [When("I use the tenant management service to enroll the tenant called '(.*)' in the service called '(.*)'")]
+        public Task WhenIUseTheTenantManagementServiceToEnrollTheClientTenantCalledInTheServiceCalled(
             string enrollingTenantName,
             string serviceTenantName)
         {
             return this.EnrollTenantForService(enrollingTenantName, serviceTenantName);
         }
 
-        [When("I use the tenant enrollment service with the enrollment configuration called '(.*)' to enroll the tenant called '(.*)' in the service called '(.*)'")]
-        public Task WhenIUseTheTenantEnrollmentServiceToEnrollTheClientTenantCalledInTheServiceCalled(
+        [Given("I have used the tenant management service with the enrollment configuration called '(.*)' to enroll the tenant called '(.*)' in the service called '(.*)'")]
+        [When("I use the tenant management service with the enrollment configuration called '(.*)' to enroll the tenant called '(.*)' in the service called '(.*)'")]
+        public Task WhenIUseTheTenantManagementServiceToEnrollTheClientTenantCalledInTheServiceCalled(
             string enrollmentConfigurationName,
             string enrollingTenantName,
             string serviceTenantName)
         {
             return this.EnrollTenantForService(enrollingTenantName, serviceTenantName, enrollmentConfigurationName);
+        }
+
+        [When("I use the tenant management service to unenroll the tenant called '(.*)' from the service called '(.*)'")]
+        public async Task WhenIUseTheTenantManagementServiceToUnenrollTheTenantCalledFromTheServiceCalled(
+            string unenrollingTenantName,
+            string serviceTenantName)
+        {
+            ITenantManagementService managementService =
+                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
+            ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
+
+            ITenant unenrollingTenant = await tenantProvider.GetTenantAsync(this.scenarioContext.Get<string>(unenrollingTenantName)).ConfigureAwait(false);
+            ITenant serviceTenant = await tenantProvider.GetTenantAsync(this.scenarioContext.Get<string>(serviceTenantName)).ConfigureAwait(false);
+
+            await CatchException.AndStoreInScenarioContextAsync(
+                this.scenarioContext,
+                () => managementService.UnenrollFromServiceAsync(
+                    unenrollingTenant.Id,
+                    serviceTenant.Id)).ConfigureAwait(false);
         }
 
         [Then("the tenant called '(.*)' should have the id of the tenant called '(.*)' added to its enrollments")]
@@ -111,16 +132,16 @@ namespace Marain.TenantManagement.Specs.Steps
             Assert.IsTrue(enrollingTenant.IsEnrolledForService(serviceTenant.Id));
         }
 
-        [Then("the tenant called '(.*)' should not have the id of the tenant called '(.*)' added to its enrollments")]
-        public void ThenTheTenantCalledShouldNotHaveTheIdOfTheTenantCalledAddedToItsEnrollments(
-            string enrollingTenantName,
+        [Then("the tenant called '(.*)' should not have the id of the tenant called '(.*)' in its enrollments")]
+        public void ThenTheTenantCalledShouldNotHaveTheIdOfTheTenantCalledInItsEnrollments(
+            string enrolledTenantName,
             string serviceTenantName)
         {
             InMemoryTenantProvider tenantProvider =
                 ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<InMemoryTenantProvider>();
 
-            ITenant enrollingTenant = tenantProvider.GetTenantByName(enrollingTenantName)
-                ?? throw new TenantNotFoundException($"Could not find tenant with name '{enrollingTenantName}'");
+            ITenant enrollingTenant = tenantProvider.GetTenantByName(enrolledTenantName)
+                ?? throw new TenantNotFoundException($"Could not find tenant with name '{enrolledTenantName}'");
             ITenant serviceTenant = tenantProvider.GetTenantByName(serviceTenantName)
                 ?? throw new TenantNotFoundException($"Could not find tenant with name '{serviceTenantName}'");
 
@@ -146,6 +167,30 @@ namespace Marain.TenantManagement.Specs.Steps
                 ?? throw new TenantNotFoundException($"Could not find tenant with name '{serviceTenantName}'");
 
             Assert.AreEqual(onBehalfOfTenant.Id, enrolledTenant.GetDelegatedTenantIdForServiceId(serviceTenant.Id));
+        }
+
+        [Then("the tenant called '(.*)' should not have a delegated tenant for the service called '(.*)'")]
+        public void ThenTheTenantCalledShouldNotHaveADelegatedTenantForTheServiceCalled(
+            string enrolledTenantName,
+            string serviceTenantName)
+        {
+            InMemoryTenantProvider tenantProvider =
+                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<InMemoryTenantProvider>();
+
+            ITenant enrolledTenant = tenantProvider.GetTenantByName(enrolledTenantName)
+                ?? throw new TenantNotFoundException($"Could not find tenant with name '{enrolledTenantName}'");
+
+            ITenant serviceTenant = tenantProvider.GetTenantByName(serviceTenantName)
+                ?? throw new TenantNotFoundException($"Could not find tenant with name '{serviceTenantName}'");
+
+            try
+            {
+                enrolledTenant.GetDelegatedTenantIdForServiceId(serviceTenant.Id);
+                Assert.Fail($"Did not expect tenant with name '{enrolledTenant}' to have a delegated tenant for service '{serviceTenantName}', but one exists.");
+            }
+            catch (ArgumentException)
+            {
+            }
         }
 
         [Then("the tenant called '(.*)' should contain blob storage configuration for a blob storage container definition with container name '(.*)'")]
@@ -207,6 +252,32 @@ namespace Marain.TenantManagement.Specs.Steps
                 // This should throw. If it doesn't, then the config exists and the test fails.
                 enrolledTenant.GetBlobStorageConfiguration(containerDefinition);
                 Assert.Fail($"Did not expect to find blob storage configuration in tenant '{enrolledTenantName}' for container definition with container name '{containerName}', but it was present.");
+            }
+            catch (ArgumentException)
+            {
+                // This is what's expected - all is well.
+            }
+        }
+
+        [Then("the tenant called '(.*)' should not contain Cosmos configuration for a Cosmos container definition with database name '(.*)' and container name '(.*)'")]
+        public void ThenTheTenantCalledShouldNotContainCosmosConfigurationForACosmosContainerDefinitionWithDatabaseNameAndContainerName(
+            string enrolledTenantName,
+            string databaseName,
+            string containerName)
+        {
+            InMemoryTenantProvider tenantProvider =
+                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<InMemoryTenantProvider>();
+
+            ITenant enrolledTenant = tenantProvider.GetTenantByName(enrolledTenantName)
+                ?? throw new TenantNotFoundException($"Could not find tenant with name '{enrolledTenantName}'");
+
+            var containerDefinition = new CosmosContainerDefinition(databaseName, containerName, null);
+
+            try
+            {
+                // This should throw. If it doesn't, then the config exists and the test fails.
+                enrolledTenant.GetCosmosConfiguration(containerDefinition);
+                Assert.Fail($"Did not expect to find Cosmos configuration in tenant '{enrolledTenantName}' for container definition with database name '{databaseName}' and container name '{containerName}', but it was present.");
             }
             catch (ArgumentException)
             {

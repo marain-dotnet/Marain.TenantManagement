@@ -6,6 +6,7 @@ namespace Marain.TenantManagement.ServiceManifests
 {
     using System;
     using System.Collections.Generic;
+    using Corvus.Tenancy;
     using Marain.TenantManagement.EnrollmentConfiguration;
 
     /// <summary>
@@ -43,6 +44,22 @@ namespace Marain.TenantManagement.ServiceManifests
 #nullable disable annotations
         public string Description { get; set; }
 #nullable restore annotations
+
+        /// <summary>
+        /// Adds the configuration entry to the given tenant, using the supplied enrollment configuration item to provide the
+        /// data.
+        /// </summary>
+        /// <param name="tenant">The tenant to add configuration to.</param>
+        /// <param name="enrollmentConfigurationItem">
+        /// The configuration item that contains the actual configuration to add to the tenant.
+        /// </param>
+        public abstract void AddToTenant(ITenant tenant, EnrollmentConfigurationItem enrollmentConfigurationItem);
+
+        /// <summary>
+        /// Removes any data associated with this required configuration entry from the specified tenant.
+        /// </summary>
+        /// <param name="tenant">The tenant to remove configuration from.</param>
+        public abstract void RemoveFromTenant(ITenant tenant);
 
         /// <summary>
         /// Validates the configuration entry.

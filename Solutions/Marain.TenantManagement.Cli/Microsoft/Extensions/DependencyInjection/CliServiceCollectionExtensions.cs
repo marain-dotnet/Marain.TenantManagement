@@ -12,6 +12,7 @@ namespace Microsoft.Extensions.DependencyInjection
     using Marain.Tenancy.Client;
     using Marain.TenantManagement.Cli.Commands;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// Extension methods to configure the DI container used by the CLI.
@@ -55,6 +56,11 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>The service collection, for chaining.</returns>
         public static IServiceCollection AddMarainServices(this IServiceCollection services, IConfiguration config)
         {
+            services.AddLogging(config =>
+            {
+                config.AddConsole();
+            });
+
             services.AddJsonSerializerSettings();
 
             var msiTokenSourceOptions = new AzureManagedIdentityTokenSourceOptions

@@ -72,7 +72,20 @@ namespace Marain.TenantManagement.Specs.Mocks
 
         public Task DeleteTenantAsync(string tenantId)
         {
-            throw new NotImplementedException();
+            if (this.tenantsByParent.TryGetValue(tenantId, out List<string>? children) && children.Count > 0)
+            {
+                throw new InvalidOperationException("Cannot delete a tenant with children.");
+            }
+
+            StoredTenant storedTenant = this.allTenants.Single(x => x.Id == tenantId);
+            this.allTenants.Remove(storedTenant);
+
+            string parentTenantId = storedTenant.Tenant.GetRequiredParentId();
+
+            List<string> siblings = this.tenantsByParent[parentTenantId];
+            siblings.Remove(tenantId);
+
+            return Task.CompletedTask;
         }
 
         public async Task<TenantCollectionResult> GetChildrenAsync(string tenantId, int limit = 20, string? continuationToken = null)
