@@ -77,7 +77,6 @@ namespace Marain.TenantManagement.ServiceManifests
             }
             catch (InvalidMarainTenantTypeException ex)
             {
-                // Likely to be thrown if the tenant was found but was of the wrong type.
                 errors.Add($"{messagePrefix}: {ex.Message}");
             }
 

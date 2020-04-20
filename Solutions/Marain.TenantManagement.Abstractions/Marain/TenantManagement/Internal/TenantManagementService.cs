@@ -105,29 +105,6 @@ namespace Marain.TenantManagement.Internal
         }
 
         /// <inheritdoc/>
-        public Task<ITenant> GetServiceTenantAsync(string serviceTenantId)
-            => this.GetTenantOfTypeAsync(serviceTenantId, MarainTenantType.Service);
-
-        /// <inheritdoc/>
-        public Task<ITenant> GetClientTenantAsync(string clientTenantId)
-            => this.GetTenantOfTypeAsync(clientTenantId, MarainTenantType.Client);
-
-        /// <inheritdoc/>
-        public Task<ITenant> GetDelegatedTenantAsync(string delegatedTenantId)
-            => this.GetTenantOfTypeAsync(delegatedTenantId, MarainTenantType.Delegated);
-
-        /// <inheritdoc/>
-        public async Task<ITenant> GetDelegatedTenantAsync(string clientTenantId, string serviceTenantId)
-        {
-            // Whilst we're saying "client tenant", the client here could itself be a delegated tenant:
-            ITenant client = await this.GetTenantOfTypeAsync(clientTenantId, MarainTenantType.Client, MarainTenantType.Delegated).ConfigureAwait(false);
-
-            // This method will throw if there is no delegated tenant.
-            string delegatedTenantId = client.GetDelegatedTenantIdForServiceId(serviceTenantId);
-            return await this.GetDelegatedTenantAsync(delegatedTenantId).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc/>
         public async Task InitialiseTenancyProviderAsync(bool force = false)
         {
             ITenant? existingClientTenantParent = null;
@@ -186,61 +163,6 @@ namespace Marain.TenantManagement.Internal
                     WellKnownTenantIds.ServiceTenantParentGuid,
                     TenantNames.ServiceTenantParent).ConfigureAwait(false);
             }
-        }
-
-        /// <inheritdoc/>
-        public async Task EnrollInServiceAsync(
-            string enrollingTenantId,
-            string serviceTenantId,
-            EnrollmentConfigurationItem[] configurationItems)
-        {
-            if (string.IsNullOrWhiteSpace(enrollingTenantId))
-            {
-                throw new ArgumentException(nameof(enrollingTenantId));
-            }
-
-            if (string.IsNullOrWhiteSpace(serviceTenantId))
-            {
-                throw new ArgumentException(nameof(serviceTenantId));
-            }
-
-            if (configurationItems == null)
-            {
-                throw new ArgumentNullException(nameof(configurationItems));
-            }
-
-            // Enrolling tenant can be either a Client tenant or a Delegated tenant.
-            ITenant enrollingTenant = await this.GetTenantOfTypeAsync(
-                enrollingTenantId,
-                MarainTenantType.Client,
-                MarainTenantType.Delegated).ConfigureAwait(false);
-
-            ITenant serviceTenant = await this.GetServiceTenantAsync(serviceTenantId).ConfigureAwait(false);
-
-            await this.EnrollInServiceAsync(enrollingTenant, serviceTenant, configurationItems).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc/>
-        public async Task EnrollInServiceAsync(
-            ITenant enrollingTenant,
-            string serviceTenantId,
-            EnrollmentConfigurationItem[] configurationItems)
-        {
-            // Enrolling tenant validation will happen when we call through to the next method to do the enrollment, so no
-            // need to do it here as well.
-            if (string.IsNullOrWhiteSpace(serviceTenantId))
-            {
-                throw new ArgumentException(nameof(serviceTenantId));
-            }
-
-            if (configurationItems == null)
-            {
-                throw new ArgumentNullException(nameof(configurationItems));
-            }
-
-            ITenant serviceTenant = await this.GetServiceTenantAsync(serviceTenantId).ConfigureAwait(false);
-
-            await this.EnrollInServiceAsync(enrollingTenant, serviceTenant, configurationItems).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -364,31 +286,14 @@ namespace Marain.TenantManagement.Internal
 
         /// <inheritdoc/>
         public async Task UnenrollFromServiceAsync(
-            string enrolledTenantId,
-            string serviceTenantId)
+            ITenant enrolledTenant,
+            ITenant serviceTenant)
         {
-            if (string.IsNullOrWhiteSpace(enrolledTenantId))
-            {
-                throw new ArgumentException(nameof(enrolledTenantId));
-            }
-
-            ITenant enrolledTenant = await this.GetTenantOfTypeAsync(
-                enrolledTenantId,
-                MarainTenantType.Client,
-                MarainTenantType.Delegated).ConfigureAwait(false);
-
-            if (string.IsNullOrWhiteSpace(serviceTenantId))
-            {
-                throw new ArgumentException(nameof(serviceTenantId));
-            }
-
-            if (!enrolledTenant.IsEnrolledForService(serviceTenantId))
+            if (!enrolledTenant.IsEnrolledForService(serviceTenant.Id))
             {
                 throw new InvalidOperationException(
-                    $"Cannot unenroll tenant '{enrolledTenant.Name}' with Id '{enrolledTenant.Id}' from service with Id '{serviceTenantId}' because it is not currently enrolled");
+                    $"Cannot unenroll tenant '{enrolledTenant.Name}' with Id '{enrolledTenant.Id}' from service with Id '{serviceTenant.Id}' because it is not currently enrolled");
             }
-
-            ITenant serviceTenant = await this.GetServiceTenantAsync(serviceTenantId).ConfigureAwait(false);
 
             this.logger.LogDebug(
                 "Unenrolling tenant '{enrolledTenantName}' with Id '{enrolledTenantId}' from service '{serviceTenantName}' with Id '{serviceTenantId}'",
@@ -468,19 +373,15 @@ namespace Marain.TenantManagement.Internal
         }
 
         /// <inheritdoc/>
-        public async Task<ServiceManifestRequiredConfigurationEntry[]> GetServiceEnrollmentConfigurationRequirementsAsync(string serviceTenantId)
+        public async Task<ITenant> GetTenantOfTypeAsync(string tenantId, params MarainTenantType[] allowableTenantTypes)
         {
-            if (string.IsNullOrWhiteSpace(serviceTenantId))
-            {
-                throw new ArgumentException(nameof(serviceTenantId));
-            }
-
-            ITenant serviceTenant = await this.GetServiceTenantAsync(serviceTenantId).ConfigureAwait(false);
-
-            return await this.GetServiceEnrollmentConfigurationRequirementsAsync(serviceTenant).ConfigureAwait(false);
+            ITenant tenant = await this.tenantProvider.GetTenantAsync(tenantId).ConfigureAwait(false);
+            tenant.EnsureTenantIsOfType(allowableTenantTypes);
+            return tenant;
         }
 
-        private async Task<ServiceManifestRequiredConfigurationEntry[]> GetServiceEnrollmentConfigurationRequirementsAsync(ITenant serviceTenant)
+        /// <inheritdoc/>
+        public async Task<ServiceManifestRequiredConfigurationEntry[]> GetServiceEnrollmentConfigurationRequirementsAsync(ITenant serviceTenant)
         {
             serviceTenant.EnsureTenantIsOfType(MarainTenantType.Service);
 
@@ -518,13 +419,6 @@ namespace Marain.TenantManagement.Internal
                 delegatedTenant.Name,
                 delegatedTenant.Id);
             return delegatedTenant;
-        }
-
-        private async Task<ITenant> GetTenantOfTypeAsync(string tenantId, params MarainTenantType[] allowableTenantTypes)
-        {
-            ITenant tenant = await this.tenantProvider.GetTenantAsync(tenantId).ConfigureAwait(false);
-            tenant.EnsureTenantIsOfType(allowableTenantTypes);
-            return tenant;
         }
 
         private Task<ITenant> GetClientTenantParentAsync() =>
