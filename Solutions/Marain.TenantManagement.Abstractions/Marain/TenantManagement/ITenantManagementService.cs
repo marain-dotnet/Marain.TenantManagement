@@ -110,7 +110,7 @@ namespace Marain.TenantManagement
         /// <param name="serviceTenantId">The Id of the service tenant.</param>
         /// <returns>The service tenant.</returns>
         /// <exception cref="TenantNotFoundException">There is no tenant with the specified Id.</exception>
-        /// <exception cref="ArgumentException">The tenant Id provided is not for a service tenant.</exception>
+        /// <exception cref="InvalidMarainTenantTypeException">The tenant Id provided is not for a service tenant.</exception>
         Task<ITenant> GetServiceTenantAsync(string serviceTenantId);
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Marain.TenantManagement
         /// <param name="clientTenantId">The Id of the client tenant.</param>
         /// <returns>The client tenant.</returns>
         /// <exception cref="TenantNotFoundException">There is no tenant with the specified Id.</exception>
-        /// <exception cref="ArgumentException">The tenant Id provided is not for a client tenant.</exception>
+        /// <exception cref="InvalidMarainTenantTypeException">The tenant Id provided is not for a client tenant.</exception>
         Task<ITenant> GetClientTenantAsync(string clientTenantId);
 
         /// <summary>
@@ -142,10 +142,8 @@ namespace Marain.TenantManagement
         /// </param>
         /// <returns>The client tenant.</returns>
         /// <exception cref="TenantNotFoundException">There is no tenant with the specified client or service tenant Id.</exception>
-        /// <exception cref="ArgumentException">
-        /// The tenant Ids provided do not match the correct types of tenant, or there is no delegated tenant for the
-        /// specified client and service.
-        /// </exception>
+        /// <exception cref="ArgumentException">There is no delegated tenant for the specified client and service.</exception>
+        /// <exception cref="InvalidMarainTenantTypeException">The tenant Ids provided do not match the correct types of tenant.</exception>
         Task<ITenant> GetDelegatedTenantAsync(string clientTenantId, string serviceTenantId);
     }
 }
