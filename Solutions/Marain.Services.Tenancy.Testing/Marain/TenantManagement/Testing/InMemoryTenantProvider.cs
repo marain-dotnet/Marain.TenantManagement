@@ -2,7 +2,7 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-namespace Marain.TenantManagement.Specs.Mocks
+namespace Marain.TenantManagement.Testing
 {
     using System;
     using System.Collections.Generic;
@@ -41,19 +41,27 @@ namespace Marain.TenantManagement.Specs.Mocks
         private readonly List<StoredTenant> allTenants = new List<StoredTenant>();
         private readonly Dictionary<string, List<string>> tenantsByParent = new Dictionary<string, List<string>>();
 
+        /// <summary>
+        /// Creates a new instance of the <see cref="InMemoryTenantProvider"/> class.
+        /// </summary>
+        /// <param name="rootTenant">The root tenant.</param>
+        /// <param name="jsonSerializerSettingsProvider">The serialization settings provider.</param>
         public InMemoryTenantProvider(RootTenant rootTenant, IJsonSerializerSettingsProvider jsonSerializerSettingsProvider)
         {
             this.Root = rootTenant;
             this.jsonSerializerSettingsProvider = jsonSerializerSettingsProvider;
         }
 
+        /// <inheritdoc/>
         public ITenant Root { get; }
 
+        /// <inheritdoc/>
         public Task<ITenant> CreateChildTenantAsync(string parentTenantId, string name)
         {
             return this.CreateWellKnownChildTenantAsync(parentTenantId, Guid.NewGuid(), name);
         }
 
+        /// <inheritdoc/>
         public async Task<ITenant> CreateWellKnownChildTenantAsync(string parentTenantId, Guid wellKnownChildTenantGuid, string name)
         {
             ITenant parent = await this.GetTenantAsync(parentTenantId).ConfigureAwait(false);
@@ -70,6 +78,7 @@ namespace Marain.TenantManagement.Specs.Mocks
             return newTenant;
         }
 
+        /// <inheritdoc/>
         public Task DeleteTenantAsync(string tenantId)
         {
             if (this.tenantsByParent.TryGetValue(tenantId, out List<string>? children) && children.Count > 0)
@@ -88,6 +97,7 @@ namespace Marain.TenantManagement.Specs.Mocks
             return Task.CompletedTask;
         }
 
+        /// <inheritdoc/>
         public async Task<TenantCollectionResult> GetChildrenAsync(string tenantId, int limit = 20, string? continuationToken = null)
         {
             ITenant parent = await this.GetTenantAsync(tenantId).ConfigureAwait(false);
@@ -108,6 +118,7 @@ namespace Marain.TenantManagement.Specs.Mocks
             return new TenantCollectionResult(tenants, continuationToken);
         }
 
+        /// <inheritdoc/>
         public Task<ITenant> GetTenantAsync(string tenantId, string? eTag = null)
         {
             ITenant? tenant = tenantId == this.Root.Id
@@ -122,6 +133,7 @@ namespace Marain.TenantManagement.Specs.Mocks
             return Task.FromResult(tenant);
         }
 
+        /// <inheritdoc/>
         public Task<ITenant> UpdateTenantAsync(ITenant tenant)
         {
             StoredTenant? currentStoredTenant = this.allTenants.Find(x => x.Id == tenant.Id);
@@ -136,11 +148,25 @@ namespace Marain.TenantManagement.Specs.Mocks
             return Task.FromResult(tenant);
         }
 
+        /// <summary>
+        /// Retrieves a tenant by name. This is intended to assist with assertions during testing. Note that if multiple
+        /// tenants with the same name exist, the first matching tenant will be returned.
+        /// </summary>
+        /// <param name="name">The tenant name to search for.</param>
+        /// <returns>The first matching tenant, or null if none was found.</returns>
         public ITenant? GetTenantByName(string name)
         {
             return this.allTenants.Find(x => x.Name == name)?.Tenant;
         }
 
+        /// <summary>
+        /// Gets all children for a tenant. Intended to assist with assertions during testing.
+        /// </summary>
+        /// <param name="parentId">The Id of the tenant to retrieve children for.</param>
+        /// <returns>The list of children, or an empty list if there are none.</returns>
+        /// <remarks>
+        /// This method makes no attempt to validate the supplied parent Id.
+        /// </remarks>
         public List<string> GetChildren(string parentId)
         {
             if (!this.tenantsByParent.TryGetValue(parentId, out List<string>? children))

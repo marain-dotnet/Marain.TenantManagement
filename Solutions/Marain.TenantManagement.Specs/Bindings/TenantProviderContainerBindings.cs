@@ -6,7 +6,6 @@ namespace Marain.TenantManagement.Specs.Bindings
 {
     using Corvus.SpecFlow.Extensions;
     using Corvus.Tenancy;
-    using Marain.TenantManagement.Specs.Mocks;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using TechTalk.SpecFlow;
@@ -36,8 +35,7 @@ namespace Marain.TenantManagement.Specs.Bindings
         {
             ContainerBindings.ConfigureServices(scenarioContext, collection =>
             {
-                collection.AddSingleton<InMemoryTenantProvider>();
-                collection.AddSingleton<ITenantProvider>(sp => sp.GetRequiredService<InMemoryTenantProvider>());
+                collection.AddInMemoryTenantProvider();
             });
         }
     }

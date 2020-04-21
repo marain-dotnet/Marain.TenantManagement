@@ -14,7 +14,7 @@ namespace Marain.TenantManagement.Specs.Steps
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
     using Marain.TenantManagement.EnrollmentConfiguration;
-    using Marain.TenantManagement.Specs.Mocks;
+    using Marain.TenantManagement.Testing;
     using Microsoft.Extensions.DependencyInjection;
     using NUnit.Framework;
     using TechTalk.SpecFlow;
