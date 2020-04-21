@@ -59,6 +59,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Marain.Services.Tenancy.Testing\Marain.Services.Tenancy.Testing.csproj" />
     <ProjectReference Include="..\Marain.TenantManagement.Abstractions\Marain.TenantManagement.Abstractions.csproj" />
   </ItemGroup>
 
