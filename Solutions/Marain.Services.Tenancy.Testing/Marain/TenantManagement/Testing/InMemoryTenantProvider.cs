@@ -5,10 +5,12 @@
 namespace Marain.TenantManagement.Testing
 {
     using System;
+    using System.CodeDom;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Corvus.Extensions.Json;
+    using Corvus.Json;
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
     using Newtonsoft.Json;
@@ -31,29 +33,35 @@ namespace Marain.TenantManagement.Testing
     /// failing when switching to a real implementation. For example, a possible cause of this would be a spec testing an
     /// operation that updates a tenant and later verifying that those changes have been made. If we simply stored the tenant
     /// in memory, it would be possible for the code under test to omit calling
-    /// <see cref="UpdateTenantAsync(ITenant)"/>, but for the test which checks that the updates have been made to still
+    /// <see cref="UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>, but for the test which checks that the updates have been made to still
     /// succeed. By ensuring that a unique <see cref="ITenant"/> is returned each time, we avoid this and similar problems.
     /// </para>
     /// </remarks>
-    public class InMemoryTenantProvider : ITenantProvider
+    public class InMemoryTenantProvider : ITenantStore
     {
         private readonly IJsonSerializerSettingsProvider jsonSerializerSettingsProvider;
         private readonly List<StoredTenant> allTenants = new List<StoredTenant>();
         private readonly Dictionary<string, List<string>> tenantsByParent = new Dictionary<string, List<string>>();
+        private readonly IPropertyBagFactory propertyBagFactory;
 
         /// <summary>
         /// Creates a new instance of the <see cref="InMemoryTenantProvider"/> class.
         /// </summary>
         /// <param name="rootTenant">The root tenant.</param>
         /// <param name="jsonSerializerSettingsProvider">The serialization settings provider.</param>
-        public InMemoryTenantProvider(RootTenant rootTenant, IJsonSerializerSettingsProvider jsonSerializerSettingsProvider)
+        /// <param name="propertyBagFactory">Provides the ability to create and modify property bags.</param>
+        public InMemoryTenantProvider(
+            RootTenant rootTenant,
+            IJsonSerializerSettingsProvider jsonSerializerSettingsProvider,
+            IPropertyBagFactory propertyBagFactory)
         {
             this.Root = rootTenant;
             this.jsonSerializerSettingsProvider = jsonSerializerSettingsProvider;
+            this.propertyBagFactory = propertyBagFactory;
         }
 
         /// <inheritdoc/>
-        public ITenant Root { get; }
+        public RootTenant Root { get; }
 
         /// <inheritdoc/>
         public Task<ITenant> CreateChildTenantAsync(string parentTenantId, string name)
@@ -65,11 +73,10 @@ namespace Marain.TenantManagement.Testing
         public async Task<ITenant> CreateWellKnownChildTenantAsync(string parentTenantId, Guid wellKnownChildTenantGuid, string name)
         {
             ITenant parent = await this.GetTenantAsync(parentTenantId).ConfigureAwait(false);
-            var newTenant = new Tenant(this.jsonSerializerSettingsProvider)
-            {
-                Id = parent.Id.CreateChildId(wellKnownChildTenantGuid),
-                Name = name,
-            };
+            var newTenant = new Tenant(
+                parent.Id.CreateChildId(wellKnownChildTenantGuid),
+                name,
+                this.propertyBagFactory.Create(PropertyBagValues.Empty));
 
             List<string> childrenList = this.GetChildren(parent.Id);
             childrenList.Add(newTenant.Id);
@@ -134,18 +141,32 @@ namespace Marain.TenantManagement.Testing
         }
 
         /// <inheritdoc/>
-        public Task<ITenant> UpdateTenantAsync(ITenant tenant)
+        public Task<ITenant> UpdateTenantAsync(
+            string tenantId,
+            string? name = null,
+            IEnumerable<KeyValuePair<string, object>>? propertiesToSetOrAdd = null,
+            IEnumerable<string>? propertiesToRemove = null)
         {
-            StoredTenant? currentStoredTenant = this.allTenants.Find(x => x.Id == tenant.Id);
+            StoredTenant? currentStoredTenant = this.allTenants.Find(x => x.Id == tenantId);
 
             if (currentStoredTenant == null)
             {
-                throw new TenantNotFoundException($"Cannot update tenant '{tenant.Name}' with Id '{tenant.Id}' because it has not previously been saved.");
+                throw new TenantNotFoundException($"Cannot update tenant with Id '{tenantId}' because it has not previously been saved.");
             }
 
-            currentStoredTenant.Tenant = tenant;
+            bool propertiesChanged = propertiesToSetOrAdd != null || propertiesToRemove == null;
+            IPropertyBag properties = propertiesChanged
+                    ? this.propertyBagFactory.CreateModified(
+                        currentStoredTenant.Tenant.Properties,
+                        propertiesToSetOrAdd,
+                        propertiesToRemove)
+                    : currentStoredTenant.Tenant.Properties;
+            currentStoredTenant.Tenant = new Tenant(
+                tenantId,
+                name ?? currentStoredTenant.Tenant.Name,
+                properties);
 
-            return Task.FromResult(tenant);
+            return Task.FromResult(currentStoredTenant.Tenant);
         }
 
         /// <summary>

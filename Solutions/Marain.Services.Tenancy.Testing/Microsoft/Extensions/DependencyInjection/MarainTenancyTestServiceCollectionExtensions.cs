@@ -22,6 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
             // Add directly and via the interface - some testing code may wish to work with the provider directly because
             // it provides some helpful methods to shortcut tenant lookup.
             serviceCollection.AddSingleton<InMemoryTenantProvider>();
+            serviceCollection.AddSingleton<ITenantStore>(sp => sp.GetRequiredService<InMemoryTenantProvider>());
             serviceCollection.AddSingleton<ITenantProvider>(sp => sp.GetRequiredService<InMemoryTenantProvider>());
 
             return serviceCollection;

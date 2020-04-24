@@ -148,28 +148,49 @@ namespace Marain.TenantManagement
         }
 
         /// <summary>
-        /// Adds the given <see cref="ServiceManifest"/> to the tenant's property bag.
+        /// Creates repository configuration properties to add the given <see cref="ServiceManifest"/> to the tenant's property bag.
         /// </summary>
-        /// <param name="tenant">The tenant to add to.</param>
+        /// <param name="values">Existing configuration values to which to append these.</param>
         /// <param name="manifest">The manifest to add.</param>
-        /// <remarks>This method does not persist the tenant. Calling code should do this once all changes have been made.</remarks>
-        internal static void SetServiceManifest(this ITenant tenant, ServiceManifest manifest)
+        /// <remarks>
+        /// This method does not persist the tenant. Calling code should pass the resulting list to
+        /// <see cref="ITenantStore.UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>.
+        /// </remarks>
+        /// <returns>
+        /// Properties to pass to
+        /// <see cref="ITenantStore.UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>.
+        /// </returns>
+        internal static IEnumerable<KeyValuePair<string, object>> AddServiceManifest(
+            this IEnumerable<KeyValuePair<string, object>> values,
+            ServiceManifest manifest)
         {
             if (manifest == null)
             {
                 throw new ArgumentNullException(nameof(manifest));
             }
 
-            tenant.Properties.Set(TenantPropertyKeys.ServiceManifest, manifest);
+            return values.Append(new KeyValuePair<string, object>(TenantPropertyKeys.ServiceManifest, manifest));
         }
 
         /// <summary>
         /// Adds a service tenant Id to the list of enrollments for the given tenant.
         /// </summary>
+        /// <param name="values">Existing configuration values to which to append these.</param>
         /// <param name="tenant">The tenant being enrolled.</param>
         /// <param name="serviceTenantId">The Service Tenant Id of the service being enrolled in.</param>
         /// <remarks>This method does not persist the tenant. Calling code should do this once all changes have been made.</remarks>
-        internal static void AddServiceEnrollment(this ITenant tenant, string serviceTenantId)
+        /// <remarks>
+        /// This method does not persist the tenant. Calling code should pass the resulting list to
+        /// <see cref="ITenantStore.UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>.
+        /// </remarks>
+        /// <returns>
+        /// Properties to pass to
+        /// <see cref="ITenantStore.UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>.
+        /// </returns>
+        internal static IEnumerable<KeyValuePair<string, object>> AddServiceEnrollment(
+            this IEnumerable<KeyValuePair<string, object>> values,
+            ITenant tenant,
+            string serviceTenantId)
         {
             if (serviceTenantId == null)
             {
@@ -195,7 +216,7 @@ namespace Marain.TenantManagement
 
             enrollments.Add(serviceTenantId);
 
-            tenant.Properties.Set(TenantPropertyKeys.Enrollments, enrollments);
+            return values.Append(new KeyValuePair<string, object>(TenantPropertyKeys.Enrollments, enrollments));
         }
 
         /// <summary>
@@ -203,8 +224,18 @@ namespace Marain.TenantManagement
         /// </summary>
         /// <param name="tenant">The tenant being unenrolled.</param>
         /// <param name="serviceTenantId">The Service Tenant Id of the service being unenrolled from.</param>
-        /// <remarks>This method does not persist the tenant. Calling code should do this once all changes have been made.</remarks>
-        internal static void RemoveServiceEnrollment(this ITenant tenant, string serviceTenantId)
+        /// <remarks>
+        /// This method does not persist the tenant. Calling code should pass the resulting list to
+        /// <see cref="ITenantStore.UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>.
+        /// </remarks>
+        /// <returns>
+        /// A single-entry list of properties that can be passed to
+        /// <see cref="ITenantStore.UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>
+        /// to remove the delegate Id.
+        /// </returns>
+        internal static IEnumerable<KeyValuePair<string, object>> GetPropertyUpdatesToRemoveServiceEnrollment(
+            this ITenant tenant,
+            string serviceTenantId)
         {
             if (serviceTenantId == null)
             {
@@ -222,9 +253,7 @@ namespace Marain.TenantManagement
                 {
                     enrollments.Remove(serviceTenantId);
 
-                    tenant.Properties.Set(TenantPropertyKeys.Enrollments, enrollments);
-
-                    return;
+                    return new[] { new KeyValuePair<string, object>(TenantPropertyKeys.Enrollments, enrollments) };
                 }
             }
 
@@ -235,14 +264,23 @@ namespace Marain.TenantManagement
         /// Stores the Id of a delegated tenant that has been created for a service to use when accessing a dependent service
         /// on the tenant's behalf.
         /// </summary>
+        /// <param name="values">Existing configuration values to which to append these.</param>
         /// <param name="tenant">
         /// The tenant who is able to make calls to the service represented by the specified Service Tenant.
         /// </param>
         /// <param name="serviceTenant">The Service Tenant which will be using the Delegated Tenant.</param>
         /// <param name="delegatedTenant">The tenant that has been created for the service to use.</param>
-        /// <remarks>This method does not persist the tenant. Calling code should do this once all changes have been made.</remarks>
-        internal static void SetDelegatedTenantForService(
-            this ITenant tenant,
+        /// <remarks>
+        /// This method does not persist the tenant. Calling code should pass the resulting list to
+        /// <see cref="ITenantStore.UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>.
+        /// </remarks>
+        /// <returns>
+        /// Properties to pass to
+        /// <see cref="ITenantStore.UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>.
+        /// </returns>
+        internal static IEnumerable<KeyValuePair<string, object>> SetDelegatedTenantForService(
+            this IEnumerable<KeyValuePair<string, object>> values,
+            ITenant tenant,
             ITenant serviceTenant,
             ITenant delegatedTenant)
         {
@@ -262,7 +300,7 @@ namespace Marain.TenantManagement
 
             delegatedTenant.EnsureTenantIsOfType(MarainTenantType.Delegated);
 
-            tenant.Properties.Set(TenantPropertyKeys.DelegatedTenantId(serviceTenant.Id), delegatedTenant.Id);
+            return values.Append(new KeyValuePair<string, object>(TenantPropertyKeys.DelegatedTenantId(serviceTenant.Id), delegatedTenant.Id));
         }
 
         /// <summary>
@@ -272,8 +310,16 @@ namespace Marain.TenantManagement
         /// The tenant who was able to make calls to the service represented by the specified Service Tenant.
         /// </param>
         /// <param name="serviceTenant">The Service Tenant which was using the Delegated Tenant.</param>
-        /// <remarks>This method does not persist the tenant. Calling code should do this once all changes have been made.</remarks>
-        internal static void ClearDelegatedTenantForService(
+        /// <remarks>
+        /// This method does not persist the tenant. Calling code should pass the resulting list to
+        /// <see cref="ITenantStore.UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>.
+        /// </remarks>
+        /// <returns>
+        /// A single-entry list of properties that can be passed to
+        /// <see cref="ITenantStore.UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>
+        /// to remove the delegate Id.
+        /// </returns>
+        internal static IEnumerable<string> GetPropertiesToRemoveDelegatedTenantForService(
             this ITenant tenant,
             ITenant serviceTenant)
         {
@@ -286,18 +332,25 @@ namespace Marain.TenantManagement
 
             serviceTenant.EnsureTenantIsOfType(MarainTenantType.Service);
 
-            tenant.Properties.Set(TenantPropertyKeys.DelegatedTenantId(serviceTenant.Id), string.Empty);
+            return new string[] { TenantPropertyKeys.DelegatedTenantId(serviceTenant.Id) };
         }
 
         /// <summary>
-        /// Sets the Marain tenant type of the tenant.
+        /// Creates repository configuration properties to set the Marain tenant type of the tenant.
         /// </summary>
-        /// <param name="tenant">The tenant to set the type of.</param>
+        /// <param name="values">Existing configuration values to which to append these.</param>
         /// <param name="marainTenantType">The tenant type to set.</param>
-        /// <remarks>This method does not persist the tenant. Calling code should do this once all changes have been made.</remarks>
-        internal static void SetMarainTenantType(this ITenant tenant, MarainTenantType marainTenantType)
-        {
-            tenant.Properties.Set(TenantPropertyKeys.MarainTenantType, marainTenantType);
-        }
+        /// <remarks>
+        /// This method does not persist the tenant. Calling code should pass the resulting list to
+        /// <see cref="ITenantStore.UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>.
+        /// </remarks>
+        /// <returns>
+        /// Properties to pass to
+        /// <see cref="ITenantStore.UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>.
+        /// </returns>
+        internal static IEnumerable<KeyValuePair<string, object>> AddMarainTenantType(
+            this IEnumerable<KeyValuePair<string, object>> values,
+            MarainTenantType marainTenantType) =>
+                values.Append(new KeyValuePair<string, object>(TenantPropertyKeys.MarainTenantType, marainTenantType));
     }
 }
