@@ -49,17 +49,28 @@ namespace Marain.TenantManagement.ServiceManifests
         /// Adds the configuration entry to the given tenant, using the supplied enrollment configuration item to provide the
         /// data.
         /// </summary>
-        /// <param name="tenant">The tenant to add configuration to.</param>
+        /// <param name="existingValues">
+        /// The tenant's existing properties.
+        /// </param>
         /// <param name="enrollmentConfigurationItem">
         /// The configuration item that contains the actual configuration to add to the tenant.
         /// </param>
-        public abstract void AddToTenant(ITenant tenant, EnrollmentConfigurationItem enrollmentConfigurationItem);
+        /// <returns>
+        /// Properties to pass to
+        /// <see cref="ITenantStore.UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>.
+        /// </returns>
+        public abstract IEnumerable<KeyValuePair<string, object>> AddToTenantProperties(IEnumerable<KeyValuePair<string, object>> existingValues, EnrollmentConfigurationItem enrollmentConfigurationItem);
 
         /// <summary>
         /// Removes any data associated with this required configuration entry from the specified tenant.
         /// </summary>
         /// <param name="tenant">The tenant to remove configuration from.</param>
-        public abstract void RemoveFromTenant(ITenant tenant);
+        /// <returns>
+        /// A list of properties that can be passed to
+        /// <see cref="ITenantStore.UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>
+        /// to remove the storage configuration.
+        /// </returns>
+        public abstract IEnumerable<string> GetPropertiesToRemoveFromTenant(ITenant tenant);
 
         /// <summary>
         /// Validates the configuration entry.

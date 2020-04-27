@@ -18,16 +18,16 @@ namespace Marain.TenantManagement
         /// <summary>
         /// Retrieves all children of the specified tenant.
         /// </summary>
-        /// <param name="tenantProvider">The underlying tenant provider to use.</param>
+        /// <param name="tenantStore">The underlying tenant store to use.</param>
         /// <param name="tenantId">The Id of the parent tenant.</param>
         /// <returns>The list of child tenants.</returns>
         /// <remarks>
-        /// This method will make as many calls to <see cref="ITenantProvider.GetChildrenAsync(string, int, string)"/> as
+        /// This method will make as many calls to <see cref="ITenantStore.GetChildrenAsync(string, int, string)"/> as
         /// needed to retrieve all of the child tenants. If there is a possibility that there's a large number of child
         /// tenants and the underlying provider is likely to be making expensive calls to retrieve tenants, this method
         /// should be used with extreme caution.
         /// </remarks>
-        public static IAsyncEnumerable<string> EnumerateAllChildrenAsync(this ITenantProvider tenantProvider, string tenantId)
+        public static IAsyncEnumerable<string> EnumerateAllChildrenAsync(this ITenantStore tenantStore, string tenantId)
         {
             if (tenantId == null)
             {
@@ -39,7 +39,7 @@ namespace Marain.TenantManagement
                 throw new ArgumentException(nameof(tenantId));
             }
 
-            return EnumerateAllChildrenInternalAsync(tenantProvider, tenantId);
+            return EnumerateAllChildrenInternalAsync(tenantStore, tenantId);
         }
 
         /// <summary>
@@ -61,11 +61,11 @@ namespace Marain.TenantManagement
         }
 
         /// <summary>
-        /// Internal method corresponding to <see cref="EnumerateAllChildrenAsync(ITenantProvider, string)"/>. The public method
+        /// Internal method corresponding to <see cref="EnumerateAllChildrenAsync(ITenantStore, string)"/>. The public method
         /// verifies the parameters are valid and this method implements the enumeration.
         /// </summary>
         private static async IAsyncEnumerable<string> EnumerateAllChildrenInternalAsync(
-            ITenantProvider tenantProvider,
+            ITenantStore tenantStore,
             string tenantId)
         {
             string? continuationToken = null;
@@ -73,7 +73,7 @@ namespace Marain.TenantManagement
 
             do
             {
-                TenantCollectionResult results = await tenantProvider.GetChildrenAsync(
+                TenantCollectionResult results = await tenantStore.GetChildrenAsync(
                     tenantId,
                     limit,
                     continuationToken).ConfigureAwait(false);

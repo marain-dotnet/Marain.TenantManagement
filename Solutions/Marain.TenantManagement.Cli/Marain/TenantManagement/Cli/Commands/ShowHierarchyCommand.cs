@@ -17,22 +17,22 @@ namespace Marain.TenantManagement.Cli.Commands
     /// </summary>
     public class ShowHierarchyCommand : Command
     {
-        private readonly ITenantProvider tenantProvider;
+        private readonly ITenantStore tenantStore;
 
         /// <summary>
         /// Creates a new instance of the <see cref="ShowHierarchyCommand"/>.
         /// </summary>
-        /// <param name="tenantProvider">The <see cref="ITenantProvider"/>.</param>
-        public ShowHierarchyCommand(ITenantProvider tenantProvider)
+        /// <param name="tenantStore">The <see cref="ITenantStore"/>.</param>
+        public ShowHierarchyCommand(ITenantStore tenantStore)
             : base("show-hierarchy", "Outputs a visualisation of the current tenancy hierarchy")
         {
-            this.tenantProvider = tenantProvider;
+            this.tenantStore = tenantStore;
             this.Handler = CommandHandler.Create(() => this.HandleCommand());
         }
 
         private async Task HandleCommand()
         {
-            var root = new TenantWithChildren(this.tenantProvider.Root, 0);
+            var root = new TenantWithChildren(this.tenantStore.Root, 0);
             await this.AddChildrenTo(root).ConfigureAwait(false);
 
             this.WriteTenantHierarchy(root);
@@ -40,9 +40,9 @@ namespace Marain.TenantManagement.Cli.Commands
 
         private async Task AddChildrenTo(TenantWithChildren parent)
         {
-            await foreach (string childId in this.tenantProvider.EnumerateAllChildrenAsync(parent.Tenant.Id))
+            await foreach (string childId in this.tenantStore.EnumerateAllChildrenAsync(parent.Tenant.Id))
             {
-                ITenant childTenant = await this.tenantProvider.GetTenantAsync(childId).ConfigureAwait(false);
+                ITenant childTenant = await this.tenantStore.GetTenantAsync(childId).ConfigureAwait(false);
 
                 var childEntry = new TenantWithChildren(childTenant, parent.Depth + 1);
                 await this.AddChildrenTo(childEntry).ConfigureAwait(false);

@@ -89,8 +89,8 @@ namespace Marain.TenantManagement.Specs.Steps
         [Then("the tenancy provider contains (.*) tenants as children of the root tenant")]
         public async Task ThenTheTenancyProviderContainsTenantsAsChildrenOfTheRootTenant(int expectedTenantCount)
         {
-            ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
-            TenantCollectionResult rootTenantChildren = await tenantProvider.GetChildrenAsync(tenantProvider.Root.Id).ConfigureAwait(false);
+            ITenantStore tenantStore = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
+            TenantCollectionResult rootTenantChildren = await tenantStore.GetChildrenAsync(tenantStore.Root.Id).ConfigureAwait(false);
             Assert.AreEqual(expectedTenantCount, rootTenantChildren.Tenants.Count);
         }
 
@@ -137,9 +137,9 @@ namespace Marain.TenantManagement.Specs.Steps
         [Then("there is a tenant called '(.*)' as a child of the root tenant")]
         public async Task ThenANewTenantCalledIsCreatedAsAChildOfTheRootTenant(string tenantName)
         {
-            ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
-            TenantCollectionResult rootTenantChildren = await tenantProvider.GetChildrenAsync(tenantProvider.Root.Id).ConfigureAwait(false);
-            ITenant[] tenants = await Task.WhenAll(rootTenantChildren.Tenants.Select(x => tenantProvider.GetTenantAsync(x))).ConfigureAwait(false);
+            ITenantStore tenantStore = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
+            TenantCollectionResult rootTenantChildren = await tenantStore.GetChildrenAsync(tenantStore.Root.Id).ConfigureAwait(false);
+            ITenant[] tenants = await Task.WhenAll(rootTenantChildren.Tenants.Select(x => tenantStore.GetTenantAsync(x))).ConfigureAwait(false);
             ITenant? matchingTenant = Array.Find(tenants, x => x.Name == tenantName);
 
             Assert.IsNotNull(matchingTenant, $"Could not find a child of the root tenant with the name '{tenantName}'");
@@ -148,9 +148,9 @@ namespace Marain.TenantManagement.Specs.Steps
         [Then("there is no tenant called '(.*)' as a child of the root tenant")]
         public async Task ThenThereIsNoTenantCalledAsAChildOfTheRootTenant(string tenantName)
         {
-            ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
-            TenantCollectionResult rootTenantChildren = await tenantProvider.GetChildrenAsync(tenantProvider.Root.Id).ConfigureAwait(false);
-            ITenant[] tenants = await Task.WhenAll(rootTenantChildren.Tenants.Select(x => tenantProvider.GetTenantAsync(x))).ConfigureAwait(false);
+            ITenantStore tenantStore = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
+            TenantCollectionResult rootTenantChildren = await tenantStore.GetChildrenAsync(tenantStore.Root.Id).ConfigureAwait(false);
+            ITenant[] tenants = await Task.WhenAll(rootTenantChildren.Tenants.Select(x => tenantStore.GetTenantAsync(x))).ConfigureAwait(false);
             ITenant? matchingTenant = Array.Find(tenants, x => x.Name == tenantName);
 
             Assert.IsNull(matchingTenant, $"Could not find a child of the root tenant with the name '{tenantName}'");
@@ -167,10 +167,10 @@ namespace Marain.TenantManagement.Specs.Steps
         [Then("there is a client tenant called '(.*)'")]
         public async Task ThenThereIsAClientTenantCalled(string clientTenantName)
         {
-            ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
-            await foreach (string clientTenantId in tenantProvider.EnumerateAllChildrenAsync(WellKnownTenantIds.ClientTenantParentId))
+            ITenantStore tenantStore = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
+            await foreach (string clientTenantId in tenantStore.EnumerateAllChildrenAsync(WellKnownTenantIds.ClientTenantParentId))
             {
-                ITenant tenant = await tenantProvider.GetTenantAsync(clientTenantId).ConfigureAwait(false);
+                ITenant tenant = await tenantStore.GetTenantAsync(clientTenantId).ConfigureAwait(false);
                 if (tenant.Name == clientTenantName)
                 {
                     return;
@@ -201,13 +201,13 @@ namespace Marain.TenantManagement.Specs.Steps
 
         private async Task<ITenant?> GetChildTenantOfServiceTenant(string childTenantName, string serviceTenantName)
         {
-            ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
+            ITenantStore tenantStore = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
 
-            ITenant serviceTenant = await tenantProvider.GetTenantAsync(this.scenarioContext.Get<string>(serviceTenantName)).ConfigureAwait(false);
+            ITenant serviceTenant = await tenantStore.GetTenantAsync(this.scenarioContext.Get<string>(serviceTenantName)).ConfigureAwait(false);
 
             // Normally would have to care about pagination, but under test we only expect a small number of items.
-            TenantCollectionResult getChildrenResult = await tenantProvider.GetChildrenAsync(serviceTenant.Id).ConfigureAwait(false);
-            ITenant[] children = await tenantProvider.GetTenantsAsync(getChildrenResult.Tenants).ConfigureAwait(false);
+            TenantCollectionResult getChildrenResult = await tenantStore.GetChildrenAsync(serviceTenant.Id).ConfigureAwait(false);
+            ITenant[] children = await tenantStore.GetTenantsAsync(getChildrenResult.Tenants).ConfigureAwait(false);
 
             return Array.Find(children, x => x.Name == childTenantName);
         }

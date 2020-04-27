@@ -35,13 +35,10 @@ namespace Marain.TenantManagement.ServiceManifests
 #nullable restore annotations
 
         /// <inheritdoc/>
-        public override void AddToTenant(ITenant tenant, EnrollmentConfigurationItem enrollmentConfigurationItem)
+        public override IEnumerable<KeyValuePair<string, object>> AddToTenantProperties(
+            IEnumerable<KeyValuePair<string, object>> existingValues,
+            EnrollmentConfigurationItem enrollmentConfigurationItem)
         {
-            if (tenant == null)
-            {
-                throw new ArgumentNullException(nameof(tenant));
-            }
-
             if (enrollmentConfigurationItem == null)
             {
                 throw new ArgumentNullException(nameof(enrollmentConfigurationItem));
@@ -54,13 +51,13 @@ namespace Marain.TenantManagement.ServiceManifests
                     nameof(enrollmentConfigurationItem));
             }
 
-            tenant.SetCosmosConfiguration(this.ContainerDefinition, cosmosConfigurationItem.Configuration);
+            return existingValues.AddCosmosConfiguration(this.ContainerDefinition, cosmosConfigurationItem.Configuration);
         }
 
         /// <inheritdoc/>
-        public override void RemoveFromTenant(ITenant tenant)
+        public override IEnumerable<string> GetPropertiesToRemoveFromTenant(ITenant tenant)
         {
-            tenant.ClearCosmosConfiguration(this.ContainerDefinition);
+            return this.ContainerDefinition.RemoveCosmosConfiguration();
         }
 
         /// <inheritdoc/>

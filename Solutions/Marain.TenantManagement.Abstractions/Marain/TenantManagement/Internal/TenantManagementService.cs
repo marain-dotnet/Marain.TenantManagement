@@ -8,6 +8,7 @@ namespace Marain.TenantManagement.Internal
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Corvus.Json;
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
     using Marain.TenantManagement.EnrollmentConfiguration;
@@ -19,19 +20,19 @@ namespace Marain.TenantManagement.Internal
     /// </summary>
     public class TenantManagementService : ITenantManagementService
     {
-        private readonly ITenantProvider tenantProvider;
+        private readonly ITenantStore tenantStore;
         private readonly ILogger<TenantManagementService> logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TenantManagementService"/> class.
         /// </summary>
-        /// <param name="tenantProvider">The underlying tenant provider used to access tenants.</param>
+        /// <param name="tenantStore">The underlying tenant store used to access tenants.</param>
         /// <param name="logger">The logger.</param>
         public TenantManagementService(
-            ITenantProvider tenantProvider,
+            ITenantStore tenantStore,
             ILogger<TenantManagementService> logger)
         {
-            this.tenantProvider = tenantProvider;
+            this.tenantStore = tenantStore;
             this.logger = logger;
         }
 
@@ -46,15 +47,16 @@ namespace Marain.TenantManagement.Internal
             ITenant parent = await this.GetClientTenantParentAsync().ConfigureAwait(false);
 
             this.logger.LogDebug("Creating new client tenant '{clientName}'", clientName);
-            ITenant newTenant = await this.tenantProvider.CreateChildTenantAsync(parent.Id, clientName).ConfigureAwait(false);
+            ITenant newTenant = await this.tenantStore.CreateChildTenantAsync(parent.Id, clientName).ConfigureAwait(false);
 
             this.logger.LogDebug(
                 "New client tenant '{clientName}' created with Id '{tenantId}'; updating tenant type.",
                 newTenant.Name,
                 newTenant.Id);
 
-            newTenant.SetMarainTenantType(MarainTenantType.Client);
-            await this.tenantProvider.UpdateTenantAsync(newTenant).ConfigureAwait(false);
+            await this.tenantStore.UpdateTenantAsync(
+                newTenant.Id,
+                propertiesToSetOrAdd: PropertyBagValues.Build(p => p.AddMarainTenantType(MarainTenantType.Client))).ConfigureAwait(false);
 
             this.logger.LogInformation(
                 "Created new client tenant '{clientName}' with Id '{tenantId}'.",
@@ -82,7 +84,7 @@ namespace Marain.TenantManagement.Internal
                 manifest.ServiceName,
                 manifest.WellKnownTenantGuid);
 
-            ITenant newTenant = await this.tenantProvider.CreateWellKnownChildTenantAsync(
+            ITenant newTenant = await this.tenantStore.CreateWellKnownChildTenantAsync(
                 parent.Id,
                 manifest.WellKnownTenantGuid,
                 manifest.ServiceName).ConfigureAwait(false);
@@ -92,10 +94,13 @@ namespace Marain.TenantManagement.Internal
                 newTenant.Name,
                 newTenant.Id);
 
-            newTenant.SetServiceManifest(manifest);
-            newTenant.SetMarainTenantType(MarainTenantType.Service);
+            IEnumerable<KeyValuePair<string, object>> properties = PropertyBagValues.Build(p => p
+                .AddServiceManifest(manifest)
+                .AddMarainTenantType(MarainTenantType.Service));
 
-            await this.tenantProvider.UpdateTenantAsync(newTenant).ConfigureAwait(false);
+            await this.tenantStore.UpdateTenantAsync(
+                newTenant.Id,
+                propertiesToSetOrAdd: properties).ConfigureAwait(false);
 
             this.logger.LogInformation(
                 "Created new service tenant '{serviceName}' with Id '{tenantId}'.",
@@ -137,8 +142,8 @@ namespace Marain.TenantManagement.Internal
             // At least one of the parent tenants don't exist. If there are other tenants, we're being asked to initialise
             // into a non-empty tenant provider, which we shouldn't do by default. To check this, we only need to retrieve
             // 2 tenants.
-            TenantCollectionResult existingTopLevelTenantIds = await this.tenantProvider.GetChildrenAsync(
-                this.tenantProvider.Root.Id,
+            TenantCollectionResult existingTopLevelTenantIds = await this.tenantStore.GetChildrenAsync(
+                this.tenantStore.Root.Id,
                 2,
                 null).ConfigureAwait(false);
 
@@ -150,16 +155,16 @@ namespace Marain.TenantManagement.Internal
             // Create the tenants
             if (existingClientTenantParent == null)
             {
-                await this.tenantProvider.CreateWellKnownChildTenantAsync(
-                    this.tenantProvider.Root.Id,
+                await this.tenantStore.CreateWellKnownChildTenantAsync(
+                    this.tenantStore.Root.Id,
                     WellKnownTenantIds.ClientTenantParentGuid,
                     TenantNames.ClientTenantParent).ConfigureAwait(false);
             }
 
             if (existingServiceTenantParent == null)
             {
-                await this.tenantProvider.CreateWellKnownChildTenantAsync(
-                    this.tenantProvider.Root.Id,
+                await this.tenantStore.CreateWellKnownChildTenantAsync(
+                    this.tenantStore.Root.Id,
                     WellKnownTenantIds.ServiceTenantParentGuid,
                     TenantNames.ServiceTenantParent).ConfigureAwait(false);
             }
@@ -220,6 +225,8 @@ namespace Marain.TenantManagement.Internal
                     requiredConfigItem =>
                     (requiredConfigItem, configurationItems.Single(item => item.Key == requiredConfigItem.Key)));
 
+            IEnumerable<KeyValuePair<string, object>> propertiesToAddToEnrollingTenant = PropertyBagValues.Empty;
+
             foreach ((ServiceManifestRequiredConfigurationEntry RequiredConfigurationEntry, EnrollmentConfigurationItem ProvidedConfigurationItem) current in matchedConfigItems)
             {
                 this.logger.LogDebug(
@@ -228,7 +235,8 @@ namespace Marain.TenantManagement.Internal
                     serviceTenant.Name,
                     serviceTenant.Id);
 
-                current.RequiredConfigurationEntry.AddToTenant(enrollingTenant, current.ProvidedConfigurationItem);
+                propertiesToAddToEnrollingTenant = current.RequiredConfigurationEntry.AddToTenantProperties(
+                    propertiesToAddToEnrollingTenant, current.ProvidedConfigurationItem);
             }
 
             // Add an enrollment entry to the tenant.
@@ -237,7 +245,16 @@ namespace Marain.TenantManagement.Internal
                 serviceTenant.Name,
                 serviceTenant.Id);
 
-            enrollingTenant.AddServiceEnrollment(serviceTenant.Id);
+            propertiesToAddToEnrollingTenant = propertiesToAddToEnrollingTenant.AddServiceEnrollment(
+                enrollingTenant, serviceTenant.Id);
+
+            // Update the tenant now, so that the tenant type is correctly set - otherwise
+            // recursive enrollments will fail
+            enrollingTenant = await this.tenantStore.UpdateTenantAsync(
+                enrollingTenant.Id,
+                propertiesToSetOrAdd: propertiesToAddToEnrollingTenant)
+                .ConfigureAwait(false);
+            propertiesToAddToEnrollingTenant = PropertyBagValues.Empty;
 
             // If this service has dependencies, we need to create a new delegated tenant for the service to use when
             // accessing those dependencies.
@@ -266,7 +283,8 @@ namespace Marain.TenantManagement.Internal
                     delegatedTenant.Name,
                     delegatedTenant.Id);
 
-                enrollingTenant.SetDelegatedTenantForService(serviceTenant, delegatedTenant);
+                propertiesToAddToEnrollingTenant = propertiesToAddToEnrollingTenant.SetDelegatedTenantForService(
+                    enrollingTenant, serviceTenant, delegatedTenant);
             }
 
             this.logger.LogDebug(
@@ -274,7 +292,10 @@ namespace Marain.TenantManagement.Internal
                 enrollingTenant.Name,
                 enrollingTenant.Id);
 
-            await this.tenantProvider.UpdateTenantAsync(enrollingTenant).ConfigureAwait(false);
+            await this.tenantStore.UpdateTenantAsync(
+                enrollingTenant.Id,
+                propertiesToSetOrAdd: propertiesToAddToEnrollingTenant)
+                .ConfigureAwait(false);
 
             this.logger.LogInformation(
                 "Successfully enrolled tenant '{enrollingTenantName}' with Id '{enrollingTenant.Id}' for service '{serviceTenantName}' with Id '{serviceTenantId}'",
@@ -302,6 +323,8 @@ namespace Marain.TenantManagement.Internal
                 serviceTenant.Name,
                 serviceTenant.Id);
 
+            var propertiesToRemove = new List<string>();
+
             ServiceManifest manifest = serviceTenant.GetServiceManifest();
 
             // If there are dependencies, we first need to unenroll from each of those and then remove the delegated tenant.
@@ -326,9 +349,9 @@ namespace Marain.TenantManagement.Internal
                 this.logger.LogDebug(
                     "Deleting delegated tenant with Id '{delegatedTenantId}'.",
                     delegatedTenantId);
-                await this.tenantProvider.DeleteTenantAsync(delegatedTenantId).ConfigureAwait(false);
+                await this.tenantStore.DeleteTenantAsync(delegatedTenantId).ConfigureAwait(false);
 
-                enrolledTenant.ClearDelegatedTenantForService(serviceTenant);
+                propertiesToRemove.AddRange(enrolledTenant.GetPropertiesToRemoveDelegatedTenantForService(serviceTenant));
             }
 
             if (manifest.RequiredConfigurationEntries.Count > 0)
@@ -346,7 +369,7 @@ namespace Marain.TenantManagement.Internal
                         current.Key,
                         serviceTenant.Name,
                         enrolledTenant.Name);
-                    current.RemoveFromTenant(enrolledTenant);
+                    propertiesToRemove.AddRange(current.GetPropertiesToRemoveFromTenant(enrolledTenant));
                 }
             }
 
@@ -356,13 +379,17 @@ namespace Marain.TenantManagement.Internal
                 serviceTenant.Name,
                 enrolledTenant.Name);
 
-            enrolledTenant.RemoveServiceEnrollment(serviceTenant.Id);
+            IEnumerable<KeyValuePair<string, object>> propertiesToChange =
+                enrolledTenant.GetPropertyUpdatesToRemoveServiceEnrollment(serviceTenant.Id);
 
             this.logger.LogDebug(
                 "Updating tenant '{enrolledTenantName}'",
                 enrolledTenant.Name);
 
-            await this.tenantProvider.UpdateTenantAsync(enrolledTenant).ConfigureAwait(false);
+            await this.tenantStore.UpdateTenantAsync(
+                enrolledTenant.Id,
+                propertiesToSetOrAdd: propertiesToChange,
+                propertiesToRemove: propertiesToRemove).ConfigureAwait(false);
 
             this.logger.LogInformation(
                 "Successfully unenrolled tenant '{enrolledTenantName}' with Id '{enrolledTenantId}' from service '{serviceTenantName}' with Id '{serviceTenantId}'",
@@ -375,7 +402,7 @@ namespace Marain.TenantManagement.Internal
         /// <inheritdoc/>
         public async Task<ITenant> GetTenantOfTypeAsync(string tenantId, params MarainTenantType[] allowableTenantTypes)
         {
-            ITenant tenant = await this.tenantProvider.GetTenantAsync(tenantId).ConfigureAwait(false);
+            ITenant tenant = await this.tenantStore.GetTenantAsync(tenantId).ConfigureAwait(false);
             tenant.EnsureTenantIsOfType(allowableTenantTypes);
             return tenant;
         }
@@ -404,15 +431,17 @@ namespace Marain.TenantManagement.Internal
             string delegatedTenantName = TenantNames.DelegatedTenant(serviceTenant.Name, accessingTenant.Name);
 
             this.logger.LogDebug("Creating new delegated tenant '{delegatedTenantName}'", delegatedTenantName);
-            ITenant delegatedTenant = await this.tenantProvider.CreateChildTenantAsync(serviceTenant.Id, delegatedTenantName).ConfigureAwait(false);
+            ITenant delegatedTenant = await this.tenantStore.CreateChildTenantAsync(serviceTenant.Id, delegatedTenantName).ConfigureAwait(false);
 
             this.logger.LogDebug(
                 "New delegated tenant '{delegatedTenantName}' created with Id '{tenantId}'; updating tenant type.",
                 delegatedTenant.Name,
                 delegatedTenant.Id);
 
-            delegatedTenant.SetMarainTenantType(MarainTenantType.Delegated);
-            await this.tenantProvider.UpdateTenantAsync(delegatedTenant).ConfigureAwait(false);
+            delegatedTenant = await this.tenantStore.UpdateTenantAsync(
+                delegatedTenant.Id,
+                propertiesToSetOrAdd: PropertyBagValues.Build(p => p.AddMarainTenantType(MarainTenantType.Delegated)))
+                .ConfigureAwait(false);
 
             this.logger.LogInformation(
                 "Created new delegated tenant '{delegatedTenantName}' with Id '{tenantId}'.",
@@ -431,7 +460,7 @@ namespace Marain.TenantManagement.Internal
         {
             try
             {
-                return await this.tenantProvider.GetTenantAsync(parentTenantId).ConfigureAwait(false);
+                return await this.tenantStore.GetTenantAsync(parentTenantId).ConfigureAwait(false);
             }
             catch (TenantNotFoundException)
             {

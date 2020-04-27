@@ -30,11 +30,11 @@ namespace Marain.TenantManagement.Specs.Steps
         [Given("the tenancy provider contains (.*) tenants as children of the root tenant")]
         public async Task GivenTheTenancyProviderContainsTenantsAsChildrenOfTheRootTenant(int tenantCount)
         {
-            ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
+            ITenantStore tenantStore = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
 
             for (int i = 0; i < tenantCount; i++)
             {
-                await tenantProvider.CreateChildTenantAsync(tenantProvider.Root.Id, Guid.NewGuid().ToString()).ConfigureAwait(false);
+                await tenantStore.CreateChildTenantAsync(tenantStore.Root.Id, Guid.NewGuid().ToString()).ConfigureAwait(false);
             }
         }
 

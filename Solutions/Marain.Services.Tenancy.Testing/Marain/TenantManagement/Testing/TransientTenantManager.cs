@@ -27,7 +27,7 @@ namespace Marain.TenantManagement.Testing
     public class TransientTenantManager
     {
         private readonly ITenantManagementService tenantManagementService;
-        private readonly ITenantProvider tenantProvider;
+        private readonly ITenantStore tenantStore;
         private readonly IJsonSerializerSettingsProvider jsonSerializerSettingsProvider;
         private List<ITenant> tenants = new List<ITenant>();
         private List<(string EnrolledTenantId, string ServiceTenantId)> enrollments = new List<(string EnrolledTenant, string ServiceTenant)>();
@@ -35,11 +35,11 @@ namespace Marain.TenantManagement.Testing
 
         private TransientTenantManager(
             ITenantManagementService tenantManagementService,
-            ITenantProvider tenantProvider,
+            ITenantStore tenantStore,
             IJsonSerializerSettingsProvider jsonSerializerSettingsProvider)
         {
             this.tenantManagementService = tenantManagementService;
-            this.tenantProvider = tenantProvider;
+            this.tenantStore = tenantStore;
             this.jsonSerializerSettingsProvider = jsonSerializerSettingsProvider;
         }
 
@@ -80,7 +80,7 @@ namespace Marain.TenantManagement.Testing
 
                 helper = new TransientTenantManager(
                     serviceProvider.GetRequiredService<ITenantManagementService>(),
-                    serviceProvider.GetRequiredService<ITenantProvider>(),
+                    serviceProvider.GetRequiredService<ITenantStore>(),
                     serviceProvider.GetRequiredService<IJsonSerializerSettingsProvider>());
 
                 featureContext.Set(helper);
@@ -220,7 +220,7 @@ namespace Marain.TenantManagement.Testing
 
             await Task.WhenAll(
                 this.tenants.Select(
-                    tenant => this.tenantProvider.DeleteTenantAsync(tenant.Id))).ConfigureAwait(false);
+                    tenant => this.tenantStore.DeleteTenantAsync(tenant.Id))).ConfigureAwait(false);
         }
     }
 }
