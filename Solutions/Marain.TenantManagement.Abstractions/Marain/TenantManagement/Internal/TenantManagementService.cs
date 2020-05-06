@@ -37,7 +37,7 @@ namespace Marain.TenantManagement.Internal
         }
 
         /// <inheritdoc/>
-        public async Task<ITenant> CreateClientTenantAsync(string clientName)
+        public async Task<ITenant> CreateClientTenantWithWellKnownGuidAsync(Guid wellKnownGuid, string clientName)
         {
             if (string.IsNullOrWhiteSpace(clientName))
             {
@@ -46,8 +46,11 @@ namespace Marain.TenantManagement.Internal
 
             ITenant parent = await this.GetClientTenantParentAsync().ConfigureAwait(false);
 
-            this.logger.LogDebug("Creating new client tenant '{clientName}'", clientName);
-            ITenant newTenant = await this.tenantStore.CreateChildTenantAsync(parent.Id, clientName).ConfigureAwait(false);
+            this.logger.LogDebug("Creating new client tenant '{clientName}' with GUID '{wellKnownGuid}'", clientName, wellKnownGuid);
+            ITenant newTenant = await this.tenantStore.CreateWellKnownChildTenantAsync(
+                parent.Id,
+                wellKnownGuid,
+                clientName).ConfigureAwait(false);
 
             this.logger.LogDebug(
                 "New client tenant '{clientName}' created with Id '{tenantId}'; updating tenant type.",

@@ -33,11 +33,12 @@ namespace Marain.TenantManagement
         Task InitialiseTenancyProviderAsync(bool force = false);
 
         /// <summary>
-        /// Creates a new tenant representing a client.
+        /// Creates a new tenant representing a client, using a well known Guid.
         /// </summary>
+        /// <param name="wellKnownGuid">The well known Guid to use when creating the tenant.</param>
         /// <param name="clientName">The name of the new tenant.</param>
         /// <returns>The new tenant.</returns>
-        Task<ITenant> CreateClientTenantAsync(string clientName);
+        Task<ITenant> CreateClientTenantWithWellKnownGuidAsync(Guid wellKnownGuid, string clientName);
 
         /// <summary>
         /// Creates a new tenant representing a Marain service that tenants can enroll to use.

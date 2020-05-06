@@ -18,6 +18,16 @@ namespace Marain.TenantManagement
     public static class TenantManagementServiceExtensions
     {
         /// <summary>
+        /// Creates a new tenant representing a client.
+        /// </summary>
+        /// <param name="tenantManagementService">The <see cref="ITenantManagementService"/>.</param>
+        /// <param name="clientName">The name of the new tenant.</param>
+        /// <returns>The new tenant.</returns>
+        public static Task<ITenant> CreateClientTenantAsync(
+            this ITenantManagementService tenantManagementService,
+            string clientName) => tenantManagementService.CreateClientTenantWithWellKnownGuidAsync(Guid.NewGuid(), clientName);
+
+        /// <summary>
         /// Retrieves the service tenant with the specified Id.
         /// </summary>
         /// <param name="tenantManagementService">The <see cref="ITenantManagementService"/>.</param>
