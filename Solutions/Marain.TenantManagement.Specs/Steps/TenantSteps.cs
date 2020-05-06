@@ -40,6 +40,20 @@ namespace Marain.TenantManagement.Specs.Steps
                 });
         }
 
+        [When(@"I use the tenant management service to create a new client tenant with well known Guid '(.*)' called '(.*)'")]
+        public Task WhenIUseTheTenantManagementServiceToCreateANewClientTenantWithWellKnownGuidCalled(Guid wellKnownGuid, string clientName)
+        {
+            ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
+
+            return CatchException.AndStoreInScenarioContextAsync(
+                this.scenarioContext,
+                async () =>
+                {
+                    ITenant newTenant = await service.CreateClientTenantWithWellKnownGuidAsync(wellKnownGuid, clientName).ConfigureAwait(false);
+                    this.scenarioContext.Set(newTenant.Id, clientName);
+                });
+        }
+
         [Given("I have used the tenant management service to create a new client tenant called '(.*)'")]
         public async Task GivenIHaveUsedTheTenantManagementServiceToCreateANewClientTenantCalled(string clientName)
         {
