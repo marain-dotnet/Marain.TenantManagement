@@ -253,10 +253,16 @@ namespace Marain.TenantManagement.Internal
 
             // Update the tenant now, so that the tenant type is correctly set - otherwise
             // recursive enrollments will fail
+            this.logger.LogDebug(
+                "Updating tenant '{enrollingTenantName}' with Id '{enrollingTenantId}'",
+                enrollingTenant.Name,
+                enrollingTenant.Id);
+
             enrollingTenant = await this.tenantStore.UpdateTenantAsync(
                 enrollingTenant.Id,
                 propertiesToSetOrAdd: propertiesToAddToEnrollingTenant)
                 .ConfigureAwait(false);
+
             propertiesToAddToEnrollingTenant = PropertyBagValues.Empty;
 
             // If this service has dependencies, we need to create a new delegated tenant for the service to use when
@@ -288,17 +294,17 @@ namespace Marain.TenantManagement.Internal
 
                 propertiesToAddToEnrollingTenant = propertiesToAddToEnrollingTenant.SetDelegatedTenantForService(
                     enrollingTenant, serviceTenant, delegatedTenant);
+
+                this.logger.LogDebug(
+                    "Updating tenant '{enrollingTenantName}' with Id '{enrollingTenantId}'",
+                    enrollingTenant.Name,
+                    enrollingTenant.Id);
+
+                await this.tenantStore.UpdateTenantAsync(
+                    enrollingTenant.Id,
+                    propertiesToSetOrAdd: propertiesToAddToEnrollingTenant)
+                    .ConfigureAwait(false);
             }
-
-            this.logger.LogDebug(
-                "Updating tenant '{enrollingTenantName}' with Id '{enrollingTenantId}'",
-                enrollingTenant.Name,
-                enrollingTenant.Id);
-
-            await this.tenantStore.UpdateTenantAsync(
-                enrollingTenant.Id,
-                propertiesToSetOrAdd: propertiesToAddToEnrollingTenant)
-                .ConfigureAwait(false);
 
             this.logger.LogInformation(
                 "Successfully enrolled tenant '{enrollingTenantName}' with Id '{enrollingTenant.Id}' for service '{serviceTenantName}' with Id '{serviceTenantId}'",
