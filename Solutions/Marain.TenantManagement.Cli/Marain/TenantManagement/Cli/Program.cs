@@ -23,7 +23,7 @@ namespace Marain.TenantManagement.Cli
         /// <returns>When complete, an integer representing success (0) or failure (non-0).</returns>
         public static async Task<int> Main(string[] args)
         {
-            ServiceProvider serviceProvider = BuildServiceProvider();
+            ServiceProvider serviceProvider = BuildServiceProvider(args);
             Parser parser = BuildParser(serviceProvider);
 
             return await parser.InvokeAsync(args).ConfigureAwait(false);
@@ -41,11 +41,13 @@ namespace Marain.TenantManagement.Cli
             return commandLineBuilder.UseDefaults().Build();
         }
 
-        private static ServiceProvider BuildServiceProvider()
+        private static ServiceProvider BuildServiceProvider(string[] args)
         {
             var services = new ServiceCollection();
             IConfigurationRoot config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables()
+                .AddJsonFile("appsettings.json", optional: true)
+                .AddCommandLine(args)
                 .Build();
 
             services.AddSingleton<IConfiguration>(config);
