@@ -29,13 +29,13 @@ namespace Marain.TenantManagement.Cli.Commands
             };
             var parentId = new Option<string>("--parentId")
             {
-                Description = "[Optional] The ID of the parent Client Tenant.",
+                Description = "The ID of the parent Client Tenant.",
             };
 
             this.AddArgument(clientName);
             this.AddOption(parentId);
 
-            this.Handler = CommandHandler.Create((string name, string parentId) => this.HandleCommand(name, parentId));
+            this.Handler = CommandHandler.Create((string name, string? parentId) => this.HandleCommand(name, parentId));
             this.tenantManagementService = tenantManagementService;
         }
 

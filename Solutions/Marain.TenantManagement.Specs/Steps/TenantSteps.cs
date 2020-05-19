@@ -40,20 +40,20 @@ namespace Marain.TenantManagement.Specs.Steps
                 });
         }
 
-        [Given(@"I have an existing client tenant with a well known Guid '(.*)' called '(.*)'")]
-        [When(@"I use the tenant management service to create a new client tenant with well known Guid '(.*)' called '(.*)'")]
+        [Given("I have an existing client tenant with a well known Guid '(.*)' called '(.*)'")]
+        [When("I use the tenant management service to create a new client tenant with well known Guid '(.*)' called '(.*)'")]
         public Task WhenIUseTheTenantManagementServiceToCreateANewClientTenantWithWellKnownGuidCalled(Guid wellKnownGuid, string clientName)
         {
             return this.CreateTenant(wellKnownGuid, clientName);
         }
 
-        [Given(@"the client tenant '(.*)' does not exist")]
+        [Given("the client tenant '(.*)' does not exist")]
         public void GivenTheClientTenantDoesNotExist(string parentClientName)
         {
             this.scenarioContext.Set("FakeId", parentClientName);
         }
 
-        [When(@"I use the tenant management service to create a new child client tenant of the '(.*)' client tenant with well known Guid '(.*)' called '(.*)'")]
+        [When("I use the tenant management service to create a new child client tenant of the '(.*)' client tenant with well known Guid '(.*)' called '(.*)'")]
         public Task WhenIUseTheTenantManagementServiceToCreateANewChildClientTenantOfTheClientTenantWithWellKnownGuidCalled(string parentClientName, Guid wellKnownGuid, string clientName)
         {
             string? parentId = this.scenarioContext.Get<string>(parentClientName);
@@ -80,7 +80,7 @@ namespace Marain.TenantManagement.Specs.Steps
             this.scenarioContext.Set(newTenant.Id, manifest.ServiceName);
         }
 
-        [Given(@"I have an existing service tenant with manifest '(.*)'")]
+        [Given("I have an existing service tenant with manifest '(.*)'")]
         [When("I use the tenant management service to create a new service tenant with manifest '(.*)'")]
         public Task WhenIUseTheTenantManagementServiceToCreateANewServiceTenantWithManifest(string manifestName)
         {
@@ -156,7 +156,7 @@ namespace Marain.TenantManagement.Specs.Steps
             Assert.AreEqual(expectedTenantName, tenant.Name);
         }
 
-        [Then(@"the tenant with Id '(.*)' has a parent with Id '(.*)'")]
+        [Then("the tenant with Id '(.*)' has a parent with Id '(.*)'")]
         public async Task ThenTheTenantWithIdHasAParentWithIdAsync(string tenantId, string expectedParentId)
         {
             ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();

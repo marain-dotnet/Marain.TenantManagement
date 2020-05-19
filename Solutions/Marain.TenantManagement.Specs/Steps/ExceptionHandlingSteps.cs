@@ -19,6 +19,7 @@ namespace Marain.TenantManagement.Specs.Steps
             this.scenarioContext = scenarioContext;
         }
 
+        [Then("a '(.*)' is thrown")]
         [Then("an '(.*)' is thrown")]
         public void ThenAnIsThrown(string exceptionTypeName)
         {

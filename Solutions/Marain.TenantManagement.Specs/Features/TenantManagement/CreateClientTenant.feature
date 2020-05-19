@@ -31,7 +31,7 @@ Scenario: Create a new child client tenant of a client tenant which does not exi
 	Given the tenancy provider has been initialised for use with Marain
 	And the client tenant 'Fabrikam' does not exist
 	When I use the tenant management service to create a new child client tenant of the 'Fabrikam' client tenant with well known Guid 'd620a845-de25-4b88-b5a1-27d6b1104f82' called 'Litware'
-	Then an 'TenantNotFoundException' is thrown
+	Then a 'TenantNotFoundException' is thrown
 
 Scenario: Create a new child client tenant of a service tenant with a well known GUID
 	Given I have a service manifest called 'Operations Manifest' for a service called 'Operations v1'
