@@ -37,8 +37,9 @@ namespace Marain.TenantManagement
         /// </summary>
         /// <param name="wellKnownGuid">The well known Guid to use when creating the tenant.</param>
         /// <param name="clientName">The name of the new tenant.</param>
+        /// <param name="parentId">Optional ID of parent Client tenant.</param>
         /// <returns>The new tenant.</returns>
-        Task<ITenant> CreateClientTenantWithWellKnownGuidAsync(Guid wellKnownGuid, string clientName);
+        Task<ITenant> CreateClientTenantWithWellKnownGuidAsync(Guid wellKnownGuid, string clientName, string? parentId = null);
 
         /// <summary>
         /// Creates a new tenant representing a Marain service that tenants can enroll to use.

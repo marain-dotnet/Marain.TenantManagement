@@ -40,18 +40,25 @@ namespace Marain.TenantManagement.Specs.Steps
                 });
         }
 
-        [When(@"I use the tenant management service to create a new client tenant with well known Guid '(.*)' called '(.*)'")]
+        [Given("I have an existing client tenant with a well known Guid '(.*)' called '(.*)'")]
+        [When("I use the tenant management service to create a new client tenant with well known Guid '(.*)' called '(.*)'")]
         public Task WhenIUseTheTenantManagementServiceToCreateANewClientTenantWithWellKnownGuidCalled(Guid wellKnownGuid, string clientName)
         {
-            ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
+            return this.CreateTenant(wellKnownGuid, clientName);
+        }
 
-            return CatchException.AndStoreInScenarioContextAsync(
-                this.scenarioContext,
-                async () =>
-                {
-                    ITenant newTenant = await service.CreateClientTenantWithWellKnownGuidAsync(wellKnownGuid, clientName).ConfigureAwait(false);
-                    this.scenarioContext.Set(newTenant.Id, clientName);
-                });
+        [Given("the client tenant '(.*)' does not exist")]
+        public void GivenTheClientTenantDoesNotExist(string parentClientName)
+        {
+            this.scenarioContext.Set("FakeId", parentClientName);
+        }
+
+        [When("I use the tenant management service to create a new child client tenant of the '(.*)' client tenant with well known Guid '(.*)' called '(.*)'")]
+        public Task WhenIUseTheTenantManagementServiceToCreateANewChildClientTenantOfTheClientTenantWithWellKnownGuidCalled(string parentClientName, Guid wellKnownGuid, string clientName)
+        {
+            string? parentId = this.scenarioContext.Get<string>(parentClientName);
+
+            return this.CreateTenant(wellKnownGuid, clientName, parentId);
         }
 
         [Given("I have used the tenant management service to create a new client tenant called '(.*)'")]
@@ -73,6 +80,7 @@ namespace Marain.TenantManagement.Specs.Steps
             this.scenarioContext.Set(newTenant.Id, manifest.ServiceName);
         }
 
+        [Given("I have an existing service tenant with manifest '(.*)'")]
         [When("I use the tenant management service to create a new service tenant with manifest '(.*)'")]
         public Task WhenIUseTheTenantManagementServiceToCreateANewServiceTenantWithManifest(string manifestName)
         {
@@ -146,6 +154,14 @@ namespace Marain.TenantManagement.Specs.Steps
             ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
             ITenant tenant = await tenantProvider.GetTenantAsync(tenantId).ConfigureAwait(false);
             Assert.AreEqual(expectedTenantName, tenant.Name);
+        }
+
+        [Then("the tenant with Id '(.*)' has a parent with Id '(.*)'")]
+        public async Task ThenTheTenantWithIdHasAParentWithIdAsync(string tenantId, string expectedParentId)
+        {
+            ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
+            ITenant tenant = await tenantProvider.GetTenantAsync(tenantId).ConfigureAwait(false);
+            Assert.AreEqual(expectedParentId, tenant.GetParentId());
         }
 
         [Then("there is a tenant called '(.*)' as a child of the root tenant")]
@@ -224,6 +240,19 @@ namespace Marain.TenantManagement.Specs.Steps
             ITenant[] children = await tenantStore.GetTenantsAsync(getChildrenResult.Tenants).ConfigureAwait(false);
 
             return Array.Find(children, x => x.Name == childTenantName);
+        }
+
+        private Task CreateTenant(Guid wellKnownGuid, string clientName, string? parentId = null)
+        {
+            ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
+
+            return CatchException.AndStoreInScenarioContextAsync(
+                this.scenarioContext,
+                async () =>
+                {
+                    ITenant newTenant = await service.CreateClientTenantWithWellKnownGuidAsync(wellKnownGuid, clientName, parentId).ConfigureAwait(false);
+                    this.scenarioContext.Set(newTenant.Id, clientName);
+                });
         }
     }
 }
