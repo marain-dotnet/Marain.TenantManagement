@@ -27,16 +27,21 @@ namespace Marain.TenantManagement.Cli.Commands
                 Description = "The name of the new client.",
                 Arity = ArgumentArity.ExactlyOne,
             };
+            var parentId = new Option<string>("--parentId")
+            {
+                Description = "The ID of the parent Client Tenant.",
+            };
 
             this.AddArgument(clientName);
+            this.AddOption(parentId);
 
-            this.Handler = CommandHandler.Create((string name) => this.HandleCommand(name));
+            this.Handler = CommandHandler.Create((string name, string? parentId) => this.HandleCommand(name, parentId));
             this.tenantManagementService = tenantManagementService;
         }
 
-        private Task HandleCommand(string name)
+        private Task HandleCommand(string name, string? parentId)
         {
-            return this.tenantManagementService.CreateClientTenantAsync(name);
+            return this.tenantManagementService.CreateClientTenantAsync(name, parentId);
         }
     }
 }

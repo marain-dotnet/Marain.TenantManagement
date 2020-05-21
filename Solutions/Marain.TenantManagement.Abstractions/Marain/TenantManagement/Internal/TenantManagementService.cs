@@ -37,14 +37,23 @@ namespace Marain.TenantManagement.Internal
         }
 
         /// <inheritdoc/>
-        public async Task<ITenant> CreateClientTenantWithWellKnownGuidAsync(Guid wellKnownGuid, string clientName)
+        public async Task<ITenant> CreateClientTenantWithWellKnownGuidAsync(Guid wellKnownGuid, string clientName, string? parentId = null)
         {
             if (string.IsNullOrWhiteSpace(clientName))
             {
                 throw new ArgumentException(nameof(clientName));
             }
 
-            ITenant parent = await this.GetClientTenantParentAsync().ConfigureAwait(false);
+            ITenant parent;
+
+            if (!string.IsNullOrEmpty(parentId))
+            {
+                parent = await this.GetTenantOfTypeAsync(parentId, MarainTenantType.Client).ConfigureAwait(false);
+            }
+            else
+            {
+                parent = await this.GetClientTenantParentAsync().ConfigureAwait(false);
+            }
 
             this.logger.LogDebug("Creating new client tenant '{clientName}' with GUID '{wellKnownGuid}'", clientName, wellKnownGuid);
             ITenant newTenant = await this.tenantStore.CreateWellKnownChildTenantAsync(
