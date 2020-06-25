@@ -34,7 +34,7 @@ namespace Marain.TenantManagement.Cli.Commands
             };
             var wellKnownGuid = new Option<Guid>("--wellKnownGuid")
             {
-                Description = "If specified, with create the new tenant with the provided well-known GUID as the client ID.",
+                Description = "If specified, will create the new tenant with the provided well-known GUID as the client ID.",
             };
 
             this.AddArgument(clientName);
