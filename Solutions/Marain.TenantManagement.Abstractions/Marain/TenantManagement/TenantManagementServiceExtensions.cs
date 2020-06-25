@@ -23,11 +23,13 @@ namespace Marain.TenantManagement
         /// <param name="tenantManagementService">The <see cref="ITenantManagementService"/>.</param>
         /// <param name="clientName">The name of the new tenant.</param>
         /// <param name="parentId">Optional ID of parent Client tenant.</param>
+        /// <param name="wellKnownGuid">Optional well-known GUID to use as the client ID for the new tenant.</param>
         /// <returns>The new tenant.</returns>
         public static Task<ITenant> CreateClientTenantAsync(
             this ITenantManagementService tenantManagementService,
             string clientName,
-            string? parentId = null) => tenantManagementService.CreateClientTenantWithWellKnownGuidAsync(Guid.NewGuid(), clientName, parentId);
+            string? parentId = null,
+            Guid? wellKnownGuid = null) => tenantManagementService.CreateClientTenantWithWellKnownGuidAsync(wellKnownGuid ?? Guid.NewGuid(), clientName, parentId);
 
         /// <summary>
         /// Retrieves the service tenant with the specified Id.
