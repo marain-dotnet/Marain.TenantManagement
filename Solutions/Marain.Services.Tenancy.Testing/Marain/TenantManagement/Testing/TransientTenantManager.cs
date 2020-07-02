@@ -24,13 +24,13 @@ namespace Marain.TenantManagement.Testing
     /// Helper methods for creating transient client and service tenants. Tenants and enrollments
     /// are tracked and then can be cleaned up via a call to <see cref="CleanupAsync"/>.
     /// </summary>
-    public class TransientTenantManager
+    public sealed class TransientTenantManager
     {
         private readonly ITenantManagementService tenantManagementService;
         private readonly ITenantStore tenantStore;
         private readonly IJsonSerializerSettingsProvider jsonSerializerSettingsProvider;
-        private List<ITenant> tenants = new List<ITenant>();
-        private List<(string EnrolledTenantId, string ServiceTenantId)> enrollments = new List<(string EnrolledTenant, string ServiceTenant)>();
+        private readonly List<ITenant> tenants = new List<ITenant>();
+        private readonly List<(string EnrolledTenantId, string ServiceTenantId)> enrollments = new List<(string EnrolledTenant, string ServiceTenant)>();
         private ITenant? primaryTransientClient;
 
         private TransientTenantManager(
