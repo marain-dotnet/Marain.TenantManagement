@@ -37,9 +37,11 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             factory.RegisterTransientContent<ServiceManifest>();
             factory.RegisterTransientContent<ServiceManifestBlobStorageConfigurationEntry>();
+            factory.RegisterTransientContent<ServiceManifestTableStorageConfigurationEntry>();
             factory.RegisterTransientContent<ServiceManifestCosmosDbConfigurationEntry>();
 
             factory.RegisterTransientContent<EnrollmentBlobStorageConfigurationItem>();
+            factory.RegisterTransientContent<EnrollmentTableStorageConfigurationItem>();
             factory.RegisterTransientContent<EnrollmentCosmosConfigurationItem>();
         }
     }

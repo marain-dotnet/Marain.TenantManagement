@@ -34,9 +34,10 @@ Scenario: Manifest with multiple configuration items
 	Then the resulting manifest should have the service name 'Manifest with multiple configuration items'
 	And the resulting manifest should have a well known service GUID of 'ba80b530-20c6-4c78-ab18-8ac70cb4db9e'
 	And the resulting manifest should not have any dependencies
-	And the resulting manifest should have 2 required configuration entries
+	And the resulting manifest should have 3 required configuration entries
 	And the configuration item with index 0 should be of type 'ServiceManifestBlobStorageConfigurationEntry'
 	And the configuration item with index 1 should be of type 'ServiceManifestCosmosDbConfigurationEntry'
+	And the configuration item with index 2 should be of type 'ServiceManifestTableStorageConfigurationEntry'
 
 Scenario: Manifest with a configuration item that has an unknown content type
 	When I deserialize the manifest called 'ManifestWithConfigurationWithUnknownContentType'
