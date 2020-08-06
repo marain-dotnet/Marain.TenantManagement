@@ -275,7 +275,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("the resulting manifest should not have any dependencies", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 37
- testRunner.And("the resulting manifest should have 2 required configuration entries", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("the resulting manifest should have 3 required configuration entries", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 38
  testRunner.And("the configuration item with index 0 should be of type \'ServiceManifestBlobStorage" +
@@ -284,6 +284,10 @@ this.ScenarioInitialize(scenarioInfo);
 #line 39
  testRunner.And("the configuration item with index 1 should be of type \'ServiceManifestCosmosDbCon" +
                         "figurationEntry\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 40
+ testRunner.And("the configuration item with index 2 should be of type \'ServiceManifestTableStorag" +
+                        "eConfigurationEntry\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -296,7 +300,7 @@ this.ScenarioInitialize(scenarioInfo);
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Manifest with a configuration item that has an unknown content type", null, tagsOfScenario, argumentsOfScenario);
-#line 41
+#line 42
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -316,11 +320,11 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 42
+#line 43
  testRunner.When("I deserialize the manifest called \'ManifestWithConfigurationWithUnknownContentTyp" +
                         "e\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 43
+#line 44
  testRunner.Then("an \'InvalidOperationException\' is thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }

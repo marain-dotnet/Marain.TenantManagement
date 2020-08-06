@@ -117,6 +117,22 @@ Scenario Outline: Invalid required configuration items - Blob storage
 	| Missing container    | key | description |                | 1                    |
 	| Missing everything   |     |             |                | 3                    |
 
+Scenario Outline: Invalid required configuration items - Table storage
+	Given I have a service manifest called 'Workflow Manifest' for a service called 'Workflow v1'
+	And the service manifest called 'Workflow Manifest' has the following Azure Table Storage configuration entries
+	| Key   | Description   | Table Name   |
+	| <Key> | <Description> | <Table Name> |
+	When I validate the service manifest called 'Workflow Manifest'
+	Then an 'InvalidServiceManifestException' is thrown
+	And the list of errors attached to the InvalidServiceManifestException contains <Expected Error Count> entries
+
+	Examples:
+	| Scenario Description | Key | Description | Table Name | Expected Error Count |
+	| Missing key          |     | description | table          | 1                    |
+	| Missing description  | key |             | table          | 1                    |
+	| Missing table        | key | description |                | 1                    |
+	| Missing everything   |     |             |                | 3                    |
+
 Scenario Outline: Invalid required configuration items - CosmosDb storage
 	Given I have a service manifest called 'Workflow Manifest' for a service called 'Workflow v1'
 	And the service manifest called 'Workflow Manifest' has the following Azure CosmosDb Storage configuration entries
