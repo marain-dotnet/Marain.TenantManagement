@@ -128,10 +128,10 @@ Scenario Outline: Invalid required configuration items - Table storage
 
 	Examples:
 	| Scenario Description | Key | Description | Table Name | Expected Error Count |
-	| Missing key          |     | description | table          | 1                    |
-	| Missing description  | key |             | table          | 1                    |
-	| Missing table        | key | description |                | 1                    |
-	| Missing everything   |     |             |                | 3                    |
+	| Missing key          |     | description | table      | 1                    |
+	| Missing description  | key |             | table      | 1                    |
+	| Missing table        | key | description |            | 1                    |
+	| Missing everything   |     |             |            | 3                    |
 
 Scenario Outline: Invalid required configuration items - CosmosDb storage
 	Given I have a service manifest called 'Workflow Manifest' for a service called 'Workflow v1'
