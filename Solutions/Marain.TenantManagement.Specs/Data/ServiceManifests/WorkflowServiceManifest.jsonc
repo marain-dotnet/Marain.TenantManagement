@@ -27,6 +27,15 @@
         "containerName": "instances"
       },
       "description": "Workflow instances"
+    },
+    {
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azuretablestorage",
+      "type": "azureTableConfiguration",
+      "key": "auditStore",
+      "containerDefinition": {
+        "tableName": "audit"
+      },
+      "description": "Stores audit logs"
     }
   ]
 }

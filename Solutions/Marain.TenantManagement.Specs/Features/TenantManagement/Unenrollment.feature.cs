@@ -246,17 +246,17 @@ this.FeatureBackground();
 #line 32
  testRunner.Given("I have enrollment configuration called \'FooBar config\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-                TechTalk.SpecFlow.Table table18 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table21 = new TechTalk.SpecFlow.Table(new string[] {
                             "Key",
                             "Account Name",
                             "Container"});
-                table18.AddRow(new string[] {
+                table21.AddRow(new string[] {
                             "fooBarStore",
                             "blobaccount",
                             "blobcontainer"});
 #line 33
  testRunner.And("the enrollment configuration called \'FooBar config\' contains the following Blob S" +
-                        "torage configuration items", ((string)(null)), table18, "And ");
+                        "torage configuration items", ((string)(null)), table21, "And ");
 #line hidden
 #line 36
  testRunner.And("I have used the tenant management service with the enrollment configuration calle" +
@@ -314,59 +314,59 @@ this.FeatureBackground();
 #line 104
  testRunner.Given("I have enrollment configuration called \'Workflow config\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-                TechTalk.SpecFlow.Table table19 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table22 = new TechTalk.SpecFlow.Table(new string[] {
                             "Key",
                             "Account Name",
                             "Container"});
-                table19.AddRow(new string[] {
+                table22.AddRow(new string[] {
                             "fooBarStore",
                             "fbblobaccount",
                             "fbblobcontainer"});
-                table19.AddRow(new string[] {
+                table22.AddRow(new string[] {
                             "operationsStore",
                             "opsblobaccount",
                             "opsblobcontainer"});
 #line 105
  testRunner.And("the enrollment configuration called \'Workflow config\' contains the following Blob" +
-                        " Storage configuration items", ((string)(null)), table19, "And ");
+                        " Storage configuration items", ((string)(null)), table22, "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table20 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table23 = new TechTalk.SpecFlow.Table(new string[] {
                             "Key",
                             "Account Uri",
                             "Database Name",
                             "Container Name"});
-                table20.AddRow(new string[] {
+                table23.AddRow(new string[] {
                             "workflowStore",
                             "wfaccount",
                             "wfdb",
                             "wfcontainer"});
-                table20.AddRow(new string[] {
+                table23.AddRow(new string[] {
                             "workflowInstanceStore",
                             "wfaccount",
                             "wfdb",
                             "wfinstancecontainer"});
 #line 109
  testRunner.And("the enrollment configuration called \'Workflow config\' contains the following Cosm" +
-                        "os configuration items", ((string)(null)), table20, "And ");
+                        "os configuration items", ((string)(null)), table23, "And ");
 #line hidden
 #line 113
  testRunner.And("I have enrollment configuration called \'Operations config\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table21 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table24 = new TechTalk.SpecFlow.Table(new string[] {
                             "Key",
                             "Account Name",
                             "Container"});
-                table21.AddRow(new string[] {
+                table24.AddRow(new string[] {
                             "fooBarStore",
                             "fbblobaccount2",
                             "fbblobcontainer2"});
-                table21.AddRow(new string[] {
+                table24.AddRow(new string[] {
                             "operationsStore",
                             "opsblobaccount2",
                             "opsblobcontainer2"});
 #line 114
  testRunner.And("the enrollment configuration called \'Operations config\' contains the following Bl" +
-                        "ob Storage configuration items", ((string)(null)), table21, "And ");
+                        "ob Storage configuration items", ((string)(null)), table24, "And ");
 #line hidden
 #line 118
  testRunner.And("I have used the tenant management service with the enrollment configuration calle" +

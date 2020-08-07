@@ -164,6 +164,9 @@ Scenario: Enrollment with multiple levels of dependency
 	| Key                   | Account Uri | Database Name | Container Name      |
 	| workflowStore         | wfaccount   | wfdb          | wfcontainer         |
 	| workflowInstanceStore | wfaccount   | wfdb          | wfinstancecontainer |
+	And the enrollment configuration called 'Workflow config' contains the following Table Storage configuration items
+	| Key        | Account Name   | Table   |
+	| auditStore | fbtableaccount | fbtable |
 	When I use the tenant management service with the enrollment configuration called 'Workflow config' to enroll the tenant called 'Litware' in the service called 'Workflow v1'
 	Then the tenant called 'Litware' should have the id of the tenant called 'Workflow v1' added to its enrollments
 	And the tenant called 'Litware' should contain Cosmos configuration for a Cosmos container definition with database name 'workflow' and container name 'definitions'
@@ -231,6 +234,9 @@ Scenario: Enrollment with multiple levels of dependency and with the client tena
 	| Key                   | Account Uri | Database Name | Container Name      |
 	| workflowStore         | wfaccount   | wfdb          | wfcontainer         |
 	| workflowInstanceStore | wfaccount   | wfdb          | wfinstancecontainer |
+	And the enrollment configuration called 'Workflow config' contains the following Table Storage configuration items
+	| Key        | Account Name   | Table   |
+	| auditStore | fbtableaccount | fbtable |
 	And I have enrollment configuration called 'Operations config'
 	And the enrollment configuration called 'Operations config' contains the following Blob Storage configuration items
 	| Key             | Account Name    | Container         |
