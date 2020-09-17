@@ -181,6 +181,19 @@ namespace Marain.TenantManagement.Specs.Steps
             });
         }
 
+        [Given("the service manifest called '(.*)' has the following Azure Table Storage configuration entries")]
+        public void GivenTheServiceManifestCalledHasTheFollowingAzureTableStorageConfigurationEntries(string manifestName, Table table)
+        {
+            ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>(manifestName);
+
+            manifest.RequiredConfigurationEntries.Add(new ServiceManifestTableStorageConfigurationEntry
+            {
+                Key = table.Rows[0]["Key"],
+                Description = table.Rows[0]["Description"],
+                ContainerDefinition = new TableStorageTableDefinition(table.Rows[0]["Table Name"]),
+            });
+        }
+
         [Given("the service manifest called '(.*)' has the following Azure CosmosDb Storage configuration entries")]
         public void GivenTheServiceManifestCalledHasTheFollowingAzureCosmosDbStorageConfigurationEntries(string manifestName, Table table)
         {

@@ -19,6 +19,14 @@
         "containerName": "definitions"
       },
       "description": "Workflow definitions"
+    },
+    {
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azuretablestorage",
+      "key": "auditStore",
+      "containerDefinition": {
+        "tableName": "audit"
+      },
+      "description": "Stores audit logs"
     }
   ]
 }

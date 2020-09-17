@@ -56,6 +56,27 @@ namespace Marain.TenantManagement.Specs.Steps
                     }));
         }
 
+        [Given("the enrollment configuration called '(.*)' contains the following Table Storage configuration items")]
+        public void GivenTheEnrollmentConfigurationCalledContainsTheFollowingTableStorageConfigurationItems(
+            string enrollmentConfigurationName,
+            Table configurationEntries)
+        {
+            List<EnrollmentConfigurationItem> enrollmentConfiguration =
+                this.scenarioContext.Get<List<EnrollmentConfigurationItem>>(enrollmentConfigurationName);
+
+            enrollmentConfiguration.AddRange(
+                configurationEntries.Rows.Select(
+                    row => new EnrollmentTableStorageConfigurationItem
+                    {
+                        Key = row["Key"],
+                        Configuration = new TableStorageConfiguration
+                        {
+                            AccountName = row["Account Name"],
+                            TableName = row["Table"],
+                        },
+                    }));
+        }
+
         [Given("the enrollment configuration called '(.*)' contains the following Cosmos configuration items")]
         public void GivenTheEnrollmentConfigurationCalledContainsTheFollowingCosmosConfigurationItems(
             string enrollmentConfigurationName,

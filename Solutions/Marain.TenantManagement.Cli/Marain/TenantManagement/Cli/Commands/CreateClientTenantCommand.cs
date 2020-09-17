@@ -4,6 +4,7 @@
 
 namespace Marain.TenantManagement.Cli.Commands
 {
+    using System;
     using System.CommandLine;
     using System.CommandLine.Invocation;
     using System.Threading.Tasks;
@@ -31,17 +32,22 @@ namespace Marain.TenantManagement.Cli.Commands
             {
                 Description = "The ID of the parent Client Tenant.",
             };
+            var wellKnownGuid = new Option<Guid>("--wellKnownGuid")
+            {
+                Description = "If specified, will create the new tenant with the provided well-known GUID as the client ID.",
+            };
 
             this.AddArgument(clientName);
             this.AddOption(parentId);
+            this.AddOption(wellKnownGuid);
 
-            this.Handler = CommandHandler.Create((string name, string? parentId) => this.HandleCommand(name, parentId));
+            this.Handler = CommandHandler.Create((string name, string? parentId, Guid? wellKnownGuid) => this.HandleCommand(name, parentId, wellKnownGuid));
             this.tenantManagementService = tenantManagementService;
         }
 
-        private Task HandleCommand(string name, string? parentId)
+        private Task HandleCommand(string name, string? parentId, Guid? wellKnownGuid)
         {
-            return this.tenantManagementService.CreateClientTenantAsync(name, parentId);
+            return this.tenantManagementService.CreateClientTenantAsync(name, parentId, wellKnownGuid);
         }
     }
 }
