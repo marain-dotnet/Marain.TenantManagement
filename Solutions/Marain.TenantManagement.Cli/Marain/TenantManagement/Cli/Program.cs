@@ -45,7 +45,8 @@ namespace Marain.TenantManagement.Cli
         {
             var services = new ServiceCollection();
             IConfigurationRoot config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables()
+                .AddJsonFile("appsettings.json", optional: true)
                 .Build();
 
             services.AddSingleton<IConfiguration>(config);
