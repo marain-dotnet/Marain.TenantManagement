@@ -7,11 +7,14 @@ namespace Marain.TenantManagement.Specs.Steps
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using Corvus.Azure.Cosmos.Tenancy;
+    using Corvus.Azure.Storage.Tenancy;
     using Corvus.SpecFlow.Extensions;
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
     using Marain.TenantManagement;
     using Marain.TenantManagement.ServiceManifests;
+    using Marain.TenantManagement.Testing;
     using Microsoft.Extensions.DependencyInjection;
     using NUnit.Framework;
     using TechTalk.SpecFlow;
@@ -227,6 +230,118 @@ namespace Marain.TenantManagement.Specs.Steps
                 await this.GetChildTenantOfServiceTenant(childTenantName, serviceTenantName).ConfigureAwait(false);
 
             Assert.IsNull(matchingChild, $"The service tenant '{serviceTenantName}' contains a child tenant called '{childTenantName}'");
+        }
+
+        [Then("the tenant called '(.*)' should contain blob storage configuration for a blob storage container definition with container name '(.*)'")]
+        public void ThenTheTenantCalledShouldContainBlobStorageConfigurationForABlobStorageContainerDefinitionWithContainerName(
+            string tenantName,
+            string containerName)
+        {
+            InMemoryTenantProvider tenantProvider =
+                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<InMemoryTenantProvider>();
+
+            ITenant tenant = tenantProvider.GetTenantByName(tenantName)
+                ?? throw new TenantNotFoundException($"Could not find tenant with name '{tenantName}'");
+
+            var containerDefinition = new BlobStorageContainerDefinition(containerName);
+
+            BlobStorageConfiguration tenantConfigItem = tenant.GetBlobStorageConfiguration(containerDefinition);
+
+            // GetBlobStorageConfiguration would have thrown an exception if the config didn't exist, but we'll do a
+            // not null assertion anyway...
+            Assert.IsNotNull(tenantConfigItem);
+        }
+
+        [Then("the tenant called '(.*)' should contain table storage configuration for a table storage table definition with table name '(.*)'")]
+        public void ThenTheTenantCalledShouldContainTableStorageConfigurationForATableStorageTableDefinitionWithTableName(
+            string tenantName,
+            string tableName)
+        {
+            InMemoryTenantProvider tenantProvider =
+                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<InMemoryTenantProvider>();
+
+            ITenant tenant = tenantProvider.GetTenantByName(tenantName)
+                ?? throw new TenantNotFoundException($"Could not find tenant with name '{tenantName}'");
+
+            var tableDefinition = new TableStorageTableDefinition(tableName);
+
+            TableStorageConfiguration tenantConfigItem = tenant.GetTableStorageConfiguration(tableDefinition);
+
+            // GetTableStorageConfiguration would have thrown an exception if the config didn't exist, but we'll do a
+            // not null assertion anyway...
+            Assert.IsNotNull(tenantConfigItem);
+        }
+
+        [Then("the tenant called '(.*)' should contain Cosmos configuration for a Cosmos container definition with database name '(.*)' and container name '(.*)'")]
+        public void ThenTheTenantCalledShouldContainCosmosConfigurationForACosmosContainerDefinitionWithDatabaseNameAndContainerName(
+            string tenantName,
+            string databaseName,
+            string containerName)
+        {
+            InMemoryTenantProvider tenantProvider =
+                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<InMemoryTenantProvider>();
+
+            ITenant tenant = tenantProvider.GetTenantByName(tenantName)
+                ?? throw new TenantNotFoundException($"Could not find tenant with name '{tenantName}'");
+
+            var containerDefinition = new CosmosContainerDefinition(databaseName, containerName, null);
+
+            CosmosConfiguration tenantConfigItem = tenant.GetCosmosConfiguration(containerDefinition);
+
+            // GetCosmosStorageConfiguration would have thrown an exception if the config didn't exist, but we'll do a
+            // not null assertion anyway...
+            Assert.IsNotNull(tenantConfigItem);
+        }
+
+        [Then("the tenant called '(.*)' should not contain blob storage configuration for a blob storage container definition with container name '(.*)'")]
+        public void ThenTheTenantCalledShouldNotContainBlobStorageConfigurationForABlobStorageContainerDefinitionWithContainerName(
+            string tenantName,
+            string containerName)
+        {
+            InMemoryTenantProvider tenantProvider =
+                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<InMemoryTenantProvider>();
+
+            ITenant enrolledTenant = tenantProvider.GetTenantByName(tenantName)
+                ?? throw new TenantNotFoundException($"Could not find tenant with name '{tenantName}'");
+
+            var containerDefinition = new BlobStorageContainerDefinition(containerName);
+
+            try
+            {
+                // This should throw. If it doesn't, then the config exists and the test fails.
+                enrolledTenant.GetBlobStorageConfiguration(containerDefinition);
+                Assert.Fail($"Did not expect to find blob storage configuration in tenant '{tenantName}' for container definition with container name '{containerName}', but it was present.");
+            }
+            catch (ArgumentException)
+            {
+                // This is what's expected - all is well.
+            }
+        }
+
+        [Then("the tenant called '(.*)' should not contain Cosmos configuration for a Cosmos container definition with database name '(.*)' and container name '(.*)'")]
+        public void ThenTheTenantCalledShouldNotContainCosmosConfigurationForACosmosContainerDefinitionWithDatabaseNameAndContainerName(
+            string tenantName,
+            string databaseName,
+            string containerName)
+        {
+            InMemoryTenantProvider tenantProvider =
+                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<InMemoryTenantProvider>();
+
+            ITenant enrolledTenant = tenantProvider.GetTenantByName(tenantName)
+                ?? throw new TenantNotFoundException($"Could not find tenant with name '{tenantName}'");
+
+            var containerDefinition = new CosmosContainerDefinition(databaseName, containerName, null);
+
+            try
+            {
+                // This should throw. If it doesn't, then the config exists and the test fails.
+                enrolledTenant.GetCosmosConfiguration(containerDefinition);
+                Assert.Fail($"Did not expect to find Cosmos configuration in tenant '{tenantName}' for container definition with database name '{databaseName}' and container name '{containerName}', but it was present.");
+            }
+            catch (ArgumentException)
+            {
+                // This is what's expected - all is well.
+            }
         }
 
         private async Task<ITenant?> GetChildTenantOfServiceTenant(string childTenantName, string serviceTenantName)

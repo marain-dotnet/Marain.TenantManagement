@@ -11,6 +11,7 @@ namespace Marain.TenantManagement.Internal
     using Corvus.Json;
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
+    using Marain.TenantManagement.Configuration;
     using Marain.TenantManagement.EnrollmentConfiguration;
     using Marain.TenantManagement.ServiceManifests;
     using Microsoft.Extensions.Logging;
@@ -442,6 +443,12 @@ namespace Marain.TenantManagement.Internal
             requirements.AddRange(dependentServicesConfigRequirements.SelectMany(x => x));
 
             return requirements.ToArray();
+        }
+
+        /// <inheritdoc/>
+        public Task AddConfigurationAsync(ITenant tenant, ConfigurationItem[] configurationItems)
+        {
+            throw new NotImplementedException();
         }
 
         private async Task<ITenant> CreateDelegatedTenant(ITenant accessingTenant, ITenant serviceTenant)

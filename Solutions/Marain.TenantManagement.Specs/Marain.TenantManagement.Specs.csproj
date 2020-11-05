@@ -28,6 +28,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <SpecFlowObsoleteCodeBehindFiles Remove="Features\TenantManagement\Enrollment - Copy.feature.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Data\ServiceManifests\ManifestWithConfigurationWithUnknownContentType.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\ManifestWithMultipleConfigurationItems.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\ManifestWithConfiguration.jsonc" />
@@ -64,9 +68,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Features\TenantManagement\AddConfiguration.feature.cs">
+      <DependentUpon>AddConfiguration.feature</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="specflow.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <SpecFlowFeatureFiles Update="Features\TenantManagement\AddConfiguration.feature">
+      <Visible>$(UsingMicrosoftNETSdk)</Visible>
+      <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+    </SpecFlowFeatureFiles>
   </ItemGroup>
 
 </Project>
