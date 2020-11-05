@@ -38,13 +38,13 @@ namespace Marain.TenantManagement.Cli.Commands
             this.tenantManagementService = tenantManagementService;
             this.serializerSettingsProvider = serializerSettingsProvider;
 
-            var clientTenantId = new Argument<string>("clientTenantId")
+            var tenantId = new Argument<string>("tenantId")
             {
-                Description = "The Id of the client tenant.",
+                Description = "The Id of the tenant.",
                 Arity = ArgumentArity.ExactlyOne,
             };
 
-            this.AddArgument(clientTenantId);
+            this.AddArgument(tenantId);
 
             var configFile = new Option<FileInfo>("--config")
             {
@@ -55,7 +55,7 @@ namespace Marain.TenantManagement.Cli.Commands
             this.AddOption(configFile);
 
             this.Handler = CommandHandler.Create(
-                (string clientTenantId, string serviceTenantId, FileInfo configFile) => this.HandleCommand(clientTenantId, configFile));
+                (string tenantId, FileInfo configFile) => this.HandleCommand(tenantId, configFile));
         }
 
         private async Task<int> HandleCommand(string tenantId, FileInfo configFile)
