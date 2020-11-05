@@ -4,6 +4,8 @@
 
 namespace Marain.TenantManagement.Configuration
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Base class for the different types of configuration item that can be provided with a service enrollment.
     /// </summary>
@@ -25,5 +27,18 @@ namespace Marain.TenantManagement.Configuration
 #nullable disable annotations
         public string Key { get; set; }
 #nullable restore annotations
+
+        /// <summary>
+        /// Validates the configuration item.
+        /// </summary>
+        /// <returns>A list of validation errors. An empty list means that the item is valid.</returns>
+        public abstract IList<string> Validate();
+
+        /// <summary>
+        /// Adds the configuration to a property set.
+        /// </summary>
+        /// <param name="values">The property set.</param>
+        /// <returns>The updated property set.</returns>
+        public abstract IEnumerable<KeyValuePair<string, object>> AddConfiguration(IEnumerable<KeyValuePair<string, object>> values);
     }
 }

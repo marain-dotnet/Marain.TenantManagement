@@ -16,7 +16,7 @@ Scenario: Add blob storage configuration
 	| Key         | Account Name | Container     |
 	| fooBarStore | blobaccount  | blobcontainer |
 	When I use the tenant management service with the configuration called 'FooBar config' to add config for the tenant called 'Contoso'
-	Then the tenant called 'Contoso' should contain blob storage configuration for a blob storage container definition with container name 'foobar'
+	Then the tenant called 'Contoso' should contain blob storage configuration for a blob storage container definition with container name 'blobcontainer'
 
 Scenario: Add table storage configuration
 	Given I have configuration called 'FooBar config'

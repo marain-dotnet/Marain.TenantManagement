@@ -144,7 +144,7 @@ this.FeatureBackground();
 #line hidden
 #line 19
  testRunner.Then("the tenant called \'Contoso\' should contain blob storage configuration for a blob " +
-                        "storage container definition with container name \'foobar\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+                        "storage container definition with container name \'blobcontainer\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

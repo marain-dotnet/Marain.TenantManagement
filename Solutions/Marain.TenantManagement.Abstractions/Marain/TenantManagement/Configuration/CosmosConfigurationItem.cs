@@ -4,6 +4,8 @@
 
 namespace Marain.TenantManagement.Configuration
 {
+    using System;
+    using System.Collections.Generic;
     using Corvus.Azure.Cosmos.Tenancy;
 
     /// <summary>
@@ -18,5 +20,26 @@ namespace Marain.TenantManagement.Configuration
 
         /// <inheritdoc/>
         public override string ContentType => RegisteredContentType;
+
+        /// <inheritdoc/>
+        public override IEnumerable<KeyValuePair<string, object>> AddConfiguration(IEnumerable<KeyValuePair<string, object>> values)
+        {
+            if (this.Configuration.DatabaseName == null)
+            {
+                throw new NullReferenceException($"{nameof(this.Configuration.DatabaseName)} cannot be null.");
+            }
+
+            if (this.Configuration.ContainerName == null)
+            {
+                throw new NullReferenceException($"{nameof(this.Configuration.DatabaseName)} cannot be null.");
+            }
+
+            return values.AddCosmosConfiguration(
+                new CosmosContainerDefinition(
+                    this.Configuration.DatabaseName,
+                    this.Configuration.ContainerName,
+                    this.Configuration.PartitionKeyPath),
+                this.Configuration);
+        }
     }
 }

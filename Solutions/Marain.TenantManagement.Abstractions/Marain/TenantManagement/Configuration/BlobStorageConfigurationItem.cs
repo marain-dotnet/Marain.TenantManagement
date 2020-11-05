@@ -4,6 +4,8 @@
 
 namespace Marain.TenantManagement.Configuration
 {
+    using System;
+    using System.Collections.Generic;
     using Corvus.Azure.Storage.Tenancy;
 
     /// <summary>
@@ -18,5 +20,16 @@ namespace Marain.TenantManagement.Configuration
 
         /// <inheritdoc/>
         public override string ContentType => RegisteredContentType;
+
+        /// <inheritdoc/>
+        public override IEnumerable<KeyValuePair<string, object>> AddConfiguration(IEnumerable<KeyValuePair<string, object>> values)
+        {
+            if (this.Configuration.Container == null)
+            {
+                throw new NullReferenceException($"{nameof(this.Configuration.Container)} cannot be null.");
+            }
+
+            return values.AddBlobStorageConfiguration(new BlobStorageContainerDefinition(this.Configuration.Container), this.Configuration);
+        }
     }
 }

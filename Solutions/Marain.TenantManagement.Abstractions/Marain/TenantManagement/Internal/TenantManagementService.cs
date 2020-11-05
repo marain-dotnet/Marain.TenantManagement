@@ -446,9 +446,54 @@ namespace Marain.TenantManagement.Internal
         }
 
         /// <inheritdoc/>
-        public Task AddConfigurationAsync(ITenant tenant, ConfigurationItem[] configurationItems)
+        public async Task AddConfigurationAsync(ITenant tenant, ConfigurationItem[] configurationItems)
         {
-            throw new NotImplementedException();
+            if (tenant == null)
+            {
+                throw new ArgumentNullException(nameof(tenant));
+            }
+
+            tenant.EnsureTenantIsOfType(MarainTenantType.Client, MarainTenantType.Delegated, MarainTenantType.Service);
+
+            if (configurationItems == null)
+            {
+                throw new ArgumentNullException(nameof(configurationItems));
+            }
+
+            this.logger.LogDebug(
+                "Add configuration for tenant '{tenantName}' with Id '{tenantId}'",
+                tenant.Name,
+                tenant.Id);
+
+            configurationItems.ValidateAndThrow();
+
+            IEnumerable<KeyValuePair<string, object>> propertiesToAddToTenant = PropertyBagValues.Empty;
+
+            foreach (ConfigurationItem configurationItem in configurationItems)
+            {
+                this.logger.LogDebug(
+                    "Adding configuration entry '{configurationKey}' to tenant '{tenantName}' with Id '{tenantId}'",
+                    configurationItem.Key,
+                    tenant.Name,
+                    tenant.Id);
+
+                propertiesToAddToTenant = configurationItem.AddConfiguration(propertiesToAddToTenant);
+            }
+
+            this.logger.LogDebug(
+                "Updating tenant '{tenantName}' with Id '{tenantId}'",
+                tenant.Name,
+                tenant.Id);
+
+            tenant = await this.tenantStore.UpdateTenantAsync(
+                tenant.Id,
+                propertiesToSetOrAdd: propertiesToAddToTenant)
+                .ConfigureAwait(false);
+
+            this.logger.LogInformation(
+                "Successfully add configuration to tenant '{tenantName}' with Id '{tenantId}'",
+                tenant.Name,
+                tenant.Id);
         }
 
         private async Task<ITenant> CreateDelegatedTenant(ITenant accessingTenant, ITenant serviceTenant)

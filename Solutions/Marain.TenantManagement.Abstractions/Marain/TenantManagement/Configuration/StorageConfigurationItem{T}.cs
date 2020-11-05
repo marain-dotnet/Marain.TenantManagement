@@ -20,11 +20,8 @@ namespace Marain.TenantManagement.Configuration
         public T Configuration { get; set; }
 #nullable restore annotations
 
-        /// <summary>
-        /// Validates the configuration item.
-        /// </summary>
-        /// <returns>A list of validation errors. An empty list means that the item is valid.</returns>
-        public virtual IList<string> Validate()
+        /// <inheritdoc/>
+        public override IList<string> Validate()
         {
             var errors = new List<string>();
 
