@@ -491,7 +491,7 @@ namespace Marain.TenantManagement.Internal
                 .ConfigureAwait(false);
 
             this.logger.LogInformation(
-                "Successfully add configuration to tenant '{tenantName}' with Id '{tenantId}'",
+                "Successfully added configuration to tenant '{tenantName}' with Id '{tenantId}'",
                 tenant.Name,
                 tenant.Id);
         }

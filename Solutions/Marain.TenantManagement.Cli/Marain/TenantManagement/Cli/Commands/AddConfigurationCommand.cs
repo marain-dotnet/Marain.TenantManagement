@@ -16,7 +16,7 @@ namespace Marain.TenantManagement.Cli.Commands
     using Newtonsoft.Json;
 
     /// <summary>
-    /// Enrolls client tenants to use services.
+    /// Adds arbitrary configuration for a tenant.
     /// </summary>
     public class AddConfigurationCommand : Command
     {
@@ -46,13 +46,13 @@ namespace Marain.TenantManagement.Cli.Commands
 
             this.AddArgument(tenantId);
 
-            var configFile = new Option<FileInfo>("--config")
+            var configFile = new Argument<FileInfo>("configFile")
             {
-                Description = "JSON configuration file.",
-                Required = true,
+                Description = "JSON configuration file path.",
+                Arity = ArgumentArity.ExactlyOne,
             };
 
-            this.AddOption(configFile);
+            this.AddArgument(configFile);
 
             this.Handler = CommandHandler.Create(
                 (string tenantId, FileInfo configFile) => this.HandleCommand(tenantId, configFile));
