@@ -250,9 +250,7 @@ namespace Marain.TenantManagement
 
             ITenant tenant = await tenantManagementService.GetTenantOfTypeAsync(
                 tenantId,
-                MarainTenantType.Client,
-                MarainTenantType.Delegated,
-                MarainTenantType.Service).ConfigureAwait(false);
+                MarainTenantType.Client).ConfigureAwait(false);
 
             await tenantManagementService.AddOrUpdateStorageConfigurationAsync(tenant, configurationItems).ConfigureAwait(false);
         }

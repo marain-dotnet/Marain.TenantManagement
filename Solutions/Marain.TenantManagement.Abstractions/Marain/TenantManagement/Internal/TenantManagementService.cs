@@ -453,7 +453,7 @@ namespace Marain.TenantManagement.Internal
                 throw new ArgumentNullException(nameof(tenant));
             }
 
-            tenant.EnsureTenantIsOfType(MarainTenantType.Client, MarainTenantType.Delegated, MarainTenantType.Service);
+            tenant.EnsureTenantIsOfType(MarainTenantType.Client);
 
             if (configurationItems == null)
             {
