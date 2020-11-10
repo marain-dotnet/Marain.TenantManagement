@@ -21,13 +21,13 @@
             this.scenarioContext = scenarioContext;
         }
 
-        [Given(@"I have configuration called '(.*)'")]
+        [Given("I have configuration called '(.*)'")]
         public void GivenIHaveConfigurationCalled(string configurationName)
         {
             this.scenarioContext.Set(new List<ConfigurationItem>(), configurationName);
         }
 
-        [Given(@"the configuration called '(.*)' contains the following Blob Storage configuration items")]
+        [Given("the configuration called '(.*)' contains the following Blob Storage configuration items")]
         public void GivenTheConfigurationCalledContainsTheFollowingBlobStorageConfigurationItems(string configurationName, Table configurationEntries)
         {
             List<ConfigurationItem> configuration =
@@ -46,7 +46,7 @@
                     }));
         }
 
-        [Given(@"the configuration called '(.*)' contains the following Table Storage configuration items")]
+        [Given("the configuration called '(.*)' contains the following Table Storage configuration items")]
         public void GivenTheConfigurationCalledContainsTheFollowingTableStorageConfigurationItems(string configurationName, Table configurationEntries)
         {
             List<ConfigurationItem> configuration =
@@ -65,7 +65,7 @@
                     }));
         }
 
-        [Given(@"the configuration called '(.*)' contains the following Cosmos configuration items")]
+        [Given("the configuration called '(.*)' contains the following Cosmos configuration items")]
         public void GivenTheConfigurationCalledContainsTheFollowingCosmosConfigurationItems(string configurationName, Table configurationEntries)
         {
             List<ConfigurationItem> configuration =
@@ -85,7 +85,7 @@
                     }));
         }
 
-        [When(@"I use the tenant management service with the configuration called '(.*)' to add config for the tenant called '(.*)'")]
+        [When("I use the tenant management service with the configuration called '(.*)' to add config for the tenant called '(.*)'")]
         public Task WhenIUseTheTenantManagementServiceWithTheConfigurationCalledToAddConfigForTheTenantCalled(string configurationName, string tenantName)
         {
             return this.AddConfiguration(tenantName, configurationName);
