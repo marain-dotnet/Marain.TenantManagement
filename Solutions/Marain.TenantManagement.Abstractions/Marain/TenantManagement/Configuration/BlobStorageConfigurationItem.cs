@@ -24,11 +24,6 @@ namespace Marain.TenantManagement.Configuration
         /// <inheritdoc/>
         public override IEnumerable<KeyValuePair<string, object>> AddConfiguration(IEnumerable<KeyValuePair<string, object>> values)
         {
-            if (this.Configuration.Container == null)
-            {
-                throw new NullReferenceException($"{nameof(this.Configuration.Container)} cannot be null.");
-            }
-
             return values.AddBlobStorageConfiguration(new BlobStorageContainerDefinition(this.Definition.ContainerName), this.Configuration);
         }
     }

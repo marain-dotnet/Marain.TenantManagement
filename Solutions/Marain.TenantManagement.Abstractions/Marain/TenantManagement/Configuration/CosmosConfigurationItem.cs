@@ -24,16 +24,6 @@ namespace Marain.TenantManagement.Configuration
         /// <inheritdoc/>
         public override IEnumerable<KeyValuePair<string, object>> AddConfiguration(IEnumerable<KeyValuePair<string, object>> values)
         {
-            if (this.Configuration.DatabaseName == null)
-            {
-                throw new NullReferenceException($"{nameof(this.Configuration.DatabaseName)} cannot be null.");
-            }
-
-            if (this.Configuration.ContainerName == null)
-            {
-                throw new NullReferenceException($"{nameof(this.Configuration.DatabaseName)} cannot be null.");
-            }
-
             return values.AddCosmosConfiguration(
                 new CosmosContainerDefinition(
                     this.Definition.DatabaseName,

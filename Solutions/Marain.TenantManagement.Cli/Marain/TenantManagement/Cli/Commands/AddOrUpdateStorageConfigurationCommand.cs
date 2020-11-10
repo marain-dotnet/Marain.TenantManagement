@@ -1,4 +1,4 @@
-﻿// <copyright file="AddConfigurationCommand.cs" company="Endjin Limited">
+﻿// <copyright file="AddOrUpdateStorageConfigurationCommand.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
