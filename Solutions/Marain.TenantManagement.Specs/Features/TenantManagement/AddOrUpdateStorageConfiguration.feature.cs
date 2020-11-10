@@ -20,29 +20,33 @@ namespace Marain.TenantManagement.Specs.Features.TenantManagement
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.3.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("Add configuration")]
+    [NUnit.Framework.DescriptionAttribute("Add or update configuration")]
     [NUnit.Framework.CategoryAttribute("perScenarioContainer")]
     [NUnit.Framework.CategoryAttribute("useInMemoryTenantProvider")]
-    public partial class AddConfigurationFeature
+    [NUnit.Framework.CategoryAttribute("useChildObjects")]
+    public partial class AddOrUpdateConfigurationFeature
     {
         
         private TechTalk.SpecFlow.ITestRunner testRunner;
         
         private string[] _featureTags = new string[] {
                 "perScenarioContainer",
-                "useInMemoryTenantProvider"};
+                "useInMemoryTenantProvider",
+                "useChildObjects"};
         
-#line 1 "AddConfiguration.feature"
+#line 1 "AddOrUpdateStorageConfiguration.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Add configuration", "\tIn order to allow a client to be flexible with how they use the tenancy service\r" +
-                    "\n\tAs an administrator\r\n\tI want to add arbitrary configuration for that client", ProgrammingLanguage.CSharp, new string[] {
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Add or update configuration", "\tIn order to allow a client to be flexible with how they use the tenancy service\r" +
+                    "\n\tAs an administrator\r\n\tI want to add/update arbitrary storage configuration for" +
+                    " that client", ProgrammingLanguage.CSharp, new string[] {
                         "perScenarioContainer",
-                        "useInMemoryTenantProvider"});
+                        "useInMemoryTenantProvider",
+                        "useChildObjects"});
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -82,12 +86,12 @@ namespace Marain.TenantManagement.Specs.Features.TenantManagement
         
         public virtual void FeatureBackground()
         {
-#line 9
-#line hidden
 #line 10
- testRunner.Given("the tenancy provider has been initialised for use with Marain", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 11
+ testRunner.Given("the tenancy provider has been initialised for use with Marain", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 12
  testRunner.And("I have used the tenant management service to create a new client tenant called \'C" +
                     "ontoso\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
@@ -100,7 +104,7 @@ namespace Marain.TenantManagement.Specs.Features.TenantManagement
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Add blob storage configuration", null, tagsOfScenario, argumentsOfScenario);
-#line 13
+#line 14
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -120,31 +124,31 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 9
+#line 10
 this.FeatureBackground();
 #line hidden
-#line 14
+#line 15
  testRunner.Given("I have configuration called \'FooBar config\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
                 TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
-                            "Key",
-                            "Account Name",
-                            "Container"});
+                            "Definition - Container",
+                            "Configuration - Account Name",
+                            "Configuration - Container"});
                 table9.AddRow(new string[] {
-                            "fooBarStore",
+                            "foo",
                             "blobaccount",
                             "blobcontainer"});
-#line 15
+#line 16
  testRunner.And("the configuration called \'FooBar config\' contains the following Blob Storage conf" +
                         "iguration items", ((string)(null)), table9, "And ");
 #line hidden
-#line 18
+#line 19
  testRunner.When("I use the tenant management service with the configuration called \'FooBar config\'" +
                         " to add config for the tenant called \'Contoso\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 19
+#line 20
  testRunner.Then("the tenant called \'Contoso\' should contain blob storage configuration for a blob " +
-                        "storage container definition with container name \'blobcontainer\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+                        "storage container definition with container name \'foo\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -157,7 +161,7 @@ this.FeatureBackground();
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Add table storage configuration", null, tagsOfScenario, argumentsOfScenario);
-#line 21
+#line 22
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -177,31 +181,31 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 9
+#line 10
 this.FeatureBackground();
 #line hidden
-#line 22
+#line 23
  testRunner.Given("I have configuration called \'FooBar config\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
                 TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
-                            "Key",
-                            "Account Name",
-                            "Table"});
+                            "Definition - Table",
+                            "Configuration - Account Name",
+                            "Configuration - Table"});
                 table10.AddRow(new string[] {
-                            "fooBarStore",
+                            "foo",
                             "tableaccount",
                             "fbtable"});
-#line 23
+#line 24
  testRunner.And("the configuration called \'FooBar config\' contains the following Table Storage con" +
                         "figuration items", ((string)(null)), table10, "And ");
 #line hidden
-#line 26
+#line 27
  testRunner.When("I use the tenant management service with the configuration called \'FooBar config\'" +
                         " to add config for the tenant called \'Contoso\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 27
+#line 28
  testRunner.Then("the tenant called \'Contoso\' should contain table storage configuration for a tabl" +
-                        "e storage table definition with table name \'fbtable\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+                        "e storage table definition with table name \'foo\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -214,7 +218,7 @@ this.FeatureBackground();
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Add cosmos configuration", null, tagsOfScenario, argumentsOfScenario);
-#line 29
+#line 30
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -234,33 +238,35 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 9
+#line 10
 this.FeatureBackground();
 #line hidden
-#line 30
+#line 31
  testRunner.Given("I have configuration called \'FooBar config\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
                 TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
-                            "Key",
-                            "Account Uri",
-                            "Database Name",
-                            "Container Name"});
+                            "Definition - Database",
+                            "Definition - Container",
+                            "Configuration - Account Uri",
+                            "Configuration - Database",
+                            "Configuration - Container"});
                 table11.AddRow(new string[] {
-                            "fooBarStore",
+                            "foo",
+                            "bar",
                             "cosmosaccount",
                             "db",
                             "container"});
-#line 31
+#line 32
  testRunner.And("the configuration called \'FooBar config\' contains the following Cosmos configurat" +
                         "ion items", ((string)(null)), table11, "And ");
 #line hidden
-#line 34
+#line 35
  testRunner.When("I use the tenant management service with the configuration called \'FooBar config\'" +
                         " to add config for the tenant called \'Contoso\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 35
+#line 36
  testRunner.Then("the tenant called \'Contoso\' should contain Cosmos configuration for a Cosmos cont" +
-                        "ainer definition with database name \'db\' and container name \'container\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+                        "ainer definition with database name \'foo\' and container name \'bar\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

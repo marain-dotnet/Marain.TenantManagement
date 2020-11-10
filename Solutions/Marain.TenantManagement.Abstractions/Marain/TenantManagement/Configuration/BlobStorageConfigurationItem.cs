@@ -11,7 +11,7 @@ namespace Marain.TenantManagement.Configuration
     /// <summary>
     /// Enrollment configuration item for tenanted blob storage config.
     /// </summary>
-    public class BlobStorageConfigurationItem : StorageConfigurationItem<BlobStorageConfiguration>
+    public class BlobStorageConfigurationItem : StorageConfigurationItem<BlobStorageContainerDefinition, BlobStorageConfiguration>
     {
         /// <summary>
         /// The content type of the configuration item.
@@ -29,7 +29,7 @@ namespace Marain.TenantManagement.Configuration
                 throw new NullReferenceException($"{nameof(this.Configuration.Container)} cannot be null.");
             }
 
-            return values.AddBlobStorageConfiguration(new BlobStorageContainerDefinition(this.Configuration.Container), this.Configuration);
+            return values.AddBlobStorageConfiguration(new BlobStorageContainerDefinition(this.Definition.ContainerName), this.Configuration);
         }
     }
 }

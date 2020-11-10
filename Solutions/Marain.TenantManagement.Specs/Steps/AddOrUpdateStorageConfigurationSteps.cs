@@ -12,11 +12,11 @@
     using TechTalk.SpecFlow;
 
     [Binding]
-    public class AddConfigurationSteps
+    public class AddOrUpdateStorageConfigurationSteps
     {
         private readonly ScenarioContext scenarioContext;
 
-        public AddConfigurationSteps(ScenarioContext scenarioContext)
+        public AddOrUpdateStorageConfigurationSteps(ScenarioContext scenarioContext)
         {
             this.scenarioContext = scenarioContext;
         }
@@ -37,11 +37,11 @@
                 configurationEntries.Rows.Select(
                     row => new BlobStorageConfigurationItem
                     {
-                        Key = row["Key"],
+                        Definition = new BlobStorageContainerDefinition(row["Definition - Container"]),
                         Configuration = new BlobStorageConfiguration
                         {
-                            AccountName = row["Account Name"],
-                            Container = row["Container"],
+                            AccountName = row["Configuration - Account Name"],
+                            Container = row["Configuration - Container"],
                         },
                     }));
         }
@@ -56,11 +56,11 @@
                 configurationEntries.Rows.Select(
                     row => new TableStorageConfigurationItem
                     {
-                        Key = row["Key"],
+                        Definition = new TableStorageTableDefinition(row["Definition - Table"]),
                         Configuration = new TableStorageConfiguration
                         {
-                            AccountName = row["Account Name"],
-                            TableName = row["Table"],
+                            AccountName = row["Configuration - Account Name"],
+                            TableName = row["Configuration - Table"],
                         },
                     }));
         }
@@ -75,12 +75,12 @@
                 configurationEntries.Rows.Select(
                     row => new CosmosConfigurationItem
                     {
-                        Key = row["Key"],
+                        Definition = new CosmosContainerDefinition(row["Definition - Database"], row["Definition - Container"], null),
                         Configuration = new CosmosConfiguration
                         {
-                            AccountUri = row["Account Uri"],
-                            DatabaseName = row["Database Name"],
-                            ContainerName = row["Container Name"],
+                            AccountUri = row["Configuration - Account Uri"],
+                            DatabaseName = row["Configuration - Database"],
+                            ContainerName = row["Configuration - Container"],
                         },
                     }));
         }
@@ -105,7 +105,7 @@
 
             await CatchException.AndStoreInScenarioContextAsync(
                 this.scenarioContext,
-                () => managementService.AddConfigurationAsync(
+                () => managementService.AddOrUpdateStorageConfigurationAsync(
                     tenant,
                     configuration.ToArray())).ConfigureAwait(false);
         }

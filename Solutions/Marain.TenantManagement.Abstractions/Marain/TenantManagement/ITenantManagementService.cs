@@ -74,12 +74,12 @@ namespace Marain.TenantManagement
             EnrollmentConfigurationItem[] configurationItems);
 
         /// <summary>
-        /// Adds arbitrary configuration for a tenant.
+        /// Add or updates arbitrary storage configuration for a tenant.
         /// </summary>
         /// <param name="tenant">The tenant to enroll.</param>
         /// <param name="configurationItems">Configuration to add.</param>
         /// <returns>A task which completes when the configuration has been added.</returns>
-        Task AddConfigurationAsync(ITenant tenant, ConfigurationItem[] configurationItems);
+        Task AddOrUpdateStorageConfigurationAsync(ITenant tenant, ConfigurationItem[] configurationItems);
 
         /// <summary>
         /// Unenrolls the specified tenant from the service.

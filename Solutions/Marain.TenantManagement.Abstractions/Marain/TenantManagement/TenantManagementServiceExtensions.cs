@@ -227,13 +227,13 @@ namespace Marain.TenantManagement
         }
 
         /// <summary>
-        /// Adds arbitrary configuration for a tenant.
+        /// Add or updates arbitrary storage configuration for a tenant.
         /// </summary>
         /// <param name="tenantManagementService">The <see cref="ITenantManagementService"/>.</param>
         /// <param name="tenantId">The ID of the tenant to enroll.</param>
         /// <param name="configurationItems">Configuration to add.</param>
         /// <returns>A task which completes when the configuration has been added.</returns>
-        public static async Task AddConfigurationAsync(
+        public static async Task AddOrUpdateStorageConfigurationAsync(
             this ITenantManagementService tenantManagementService,
             string tenantId,
             ConfigurationItem[] configurationItems)
@@ -254,7 +254,7 @@ namespace Marain.TenantManagement
                 MarainTenantType.Delegated,
                 MarainTenantType.Service).ConfigureAwait(false);
 
-            await tenantManagementService.AddConfigurationAsync(tenant, configurationItems).ConfigureAwait(false);
+            await tenantManagementService.AddOrUpdateStorageConfigurationAsync(tenant, configurationItems).ConfigureAwait(false);
         }
     }
 }

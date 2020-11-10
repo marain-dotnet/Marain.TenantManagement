@@ -446,7 +446,7 @@ namespace Marain.TenantManagement.Internal
         }
 
         /// <inheritdoc/>
-        public async Task AddConfigurationAsync(ITenant tenant, ConfigurationItem[] configurationItems)
+        public async Task AddOrUpdateStorageConfigurationAsync(ITenant tenant, ConfigurationItem[] configurationItems)
         {
             if (tenant == null)
             {
@@ -472,8 +472,7 @@ namespace Marain.TenantManagement.Internal
             foreach (ConfigurationItem configurationItem in configurationItems)
             {
                 this.logger.LogDebug(
-                    "Adding configuration entry '{configurationKey}' to tenant '{tenantName}' with Id '{tenantId}'",
-                    configurationItem.Key,
+                    "Adding configuration entry to tenant '{tenantName}' with Id '{tenantId}'",
                     tenant.Name,
                     tenant.Id);
 

@@ -11,7 +11,7 @@ namespace Marain.TenantManagement.Configuration
     /// <summary>
     /// Enrollment configuration item for tenanted cosmos storage config.
     /// </summary>
-    public class CosmosConfigurationItem : StorageConfigurationItem<CosmosConfiguration>
+    public class CosmosConfigurationItem : StorageConfigurationItem<CosmosContainerDefinition, CosmosConfiguration>
     {
         /// <summary>
         /// The content type of the configuration item.
@@ -36,9 +36,9 @@ namespace Marain.TenantManagement.Configuration
 
             return values.AddCosmosConfiguration(
                 new CosmosContainerDefinition(
-                    this.Configuration.DatabaseName,
-                    this.Configuration.ContainerName,
-                    this.Configuration.PartitionKeyPath),
+                    this.Definition.DatabaseName,
+                    this.Definition.ContainerName,
+                    this.Definition.PartitionKeyPath),
                 this.Configuration);
         }
     }

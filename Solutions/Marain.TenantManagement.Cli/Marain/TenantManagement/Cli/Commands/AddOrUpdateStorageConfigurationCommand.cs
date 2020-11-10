@@ -16,21 +16,21 @@ namespace Marain.TenantManagement.Cli.Commands
     using Newtonsoft.Json;
 
     /// <summary>
-    /// Adds arbitrary configuration for a tenant.
+    /// Add or update arbitrary storage configuration for a tenant.
     /// </summary>
-    public class AddConfigurationCommand : Command
+    public class AddOrUpdateStorageConfigurationCommand : Command
     {
         private readonly ITenantManagementService tenantManagementService;
         private readonly IJsonSerializerSettingsProvider serializerSettingsProvider;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="AddConfigurationCommand"/> class.
+        /// Creates a new instance of the <see cref="AddOrUpdateStorageConfigurationCommand"/> class.
         /// </summary>
         /// <param name="tenantManagementService">The tenant management services.</param>
         /// <param name="serializerSettingsProvider">
         /// The <see cref="IJsonSerializerSettingsProvider"/> to use when reading manifest files.
         /// </param>
-        public AddConfigurationCommand(
+        public AddOrUpdateStorageConfigurationCommand(
             ITenantManagementService tenantManagementService,
             IJsonSerializerSettingsProvider serializerSettingsProvider)
             : base("add-config", "Adds arbitrary configuration for the client.")
@@ -65,7 +65,7 @@ namespace Marain.TenantManagement.Cli.Commands
 
             try
             {
-                await this.tenantManagementService.AddConfigurationAsync(
+                await this.tenantManagementService.AddOrUpdateStorageConfigurationAsync(
                     tenantId,
                     config).ConfigureAwait(false);
 

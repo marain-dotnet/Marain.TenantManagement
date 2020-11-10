@@ -11,7 +11,7 @@ namespace Marain.TenantManagement.Configuration
     /// <summary>
     /// Enrollment configuration item for tenanted table storage config.
     /// </summary>
-    public class TableStorageConfigurationItem : StorageConfigurationItem<TableStorageConfiguration>
+    public class TableStorageConfigurationItem : StorageConfigurationItem<TableStorageTableDefinition, TableStorageConfiguration>
     {
         /// <summary>
         /// The content type of the configuration item.
@@ -29,7 +29,7 @@ namespace Marain.TenantManagement.Configuration
                 throw new NullReferenceException($"{nameof(this.Configuration.TableName)} cannot be null.");
             }
 
-            return values.AddTableStorageConfiguration(new TableStorageTableDefinition(this.Configuration.TableName), this.Configuration);
+            return values.AddTableStorageConfiguration(new TableStorageTableDefinition(this.Definition.TableName), this.Configuration);
         }
     }
 }
