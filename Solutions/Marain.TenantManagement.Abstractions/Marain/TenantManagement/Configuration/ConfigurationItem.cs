@@ -30,6 +30,12 @@ namespace Marain.TenantManagement.Configuration
         /// <summary>
         /// Adds the configuration to a property set.
         /// </summary>
+        /// <remarks>
+        /// This is called by the tenant management service when adding configuration to the tenant.
+        /// The implementations of this method are expected to update <paramref name="values"/> with the
+        /// required key/value pair for this configuration item, then return the updated <paramref name="values"/>
+        /// object.
+        /// </remarks>
         /// <param name="values">The property set.</param>
         /// <returns>The updated property set.</returns>
         public abstract IEnumerable<KeyValuePair<string, object>> AddConfiguration(IEnumerable<KeyValuePair<string, object>> values);
