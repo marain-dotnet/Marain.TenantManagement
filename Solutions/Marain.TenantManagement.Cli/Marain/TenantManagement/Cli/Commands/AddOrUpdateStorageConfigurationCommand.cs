@@ -33,7 +33,7 @@ namespace Marain.TenantManagement.Cli.Commands
         public AddOrUpdateStorageConfigurationCommand(
             ITenantManagementService tenantManagementService,
             IJsonSerializerSettingsProvider serializerSettingsProvider)
-            : base("add-config", "Adds arbitrary configuration for the client.")
+            : base("add-storage-config", "Adds arbitrary storage configuration for the client.")
         {
             this.tenantManagementService = tenantManagementService;
             this.serializerSettingsProvider = serializerSettingsProvider;
