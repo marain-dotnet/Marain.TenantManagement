@@ -21,7 +21,7 @@ namespace Marain.TenantManagement.Configuration
         /// <param name="configurationItems">The configuration items to validate.</param>
         /// <exception cref="InvalidConfigurationException">The configuration items contain one or more errors.</exception>
         public static void ValidateAndThrow(
-            this ConfigurationItem[] configurationItems)
+            this IEnumerable<ConfigurationItem> configurationItems)
         {
             var errors = new List<string>();
 
