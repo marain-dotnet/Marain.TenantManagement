@@ -6,6 +6,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     using Corvus.ContentHandling;
     using Marain.TenantManagement;
+    using Marain.TenantManagement.Configuration;
     using Marain.TenantManagement.EnrollmentConfiguration;
     using Marain.TenantManagement.Internal;
     using Marain.TenantManagement.ServiceManifests;
@@ -43,6 +44,10 @@ namespace Microsoft.Extensions.DependencyInjection
             factory.RegisterTransientContent<EnrollmentBlobStorageConfigurationItem>();
             factory.RegisterTransientContent<EnrollmentTableStorageConfigurationItem>();
             factory.RegisterTransientContent<EnrollmentCosmosConfigurationItem>();
+
+            factory.RegisterTransientContent<BlobStorageConfigurationItem>();
+            factory.RegisterTransientContent<TableStorageConfigurationItem>();
+            factory.RegisterTransientContent<CosmosConfigurationItem>();
         }
     }
 }
