@@ -8,6 +8,7 @@ namespace Marain.TenantManagement
     using System.Threading.Tasks;
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
+    using Marain.TenantManagement.Configuration;
     using Marain.TenantManagement.EnrollmentConfiguration;
     using Marain.TenantManagement.Exceptions;
     using Marain.TenantManagement.ServiceManifests;
@@ -223,6 +224,35 @@ namespace Marain.TenantManagement
             ITenant serviceTenant = await tenantManagementService.GetServiceTenantAsync(serviceTenantId).ConfigureAwait(false);
 
             return await tenantManagementService.GetServiceEnrollmentConfigurationRequirementsAsync(serviceTenant).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Add or updates arbitrary storage configuration for a tenant.
+        /// </summary>
+        /// <param name="tenantManagementService">The <see cref="ITenantManagementService"/>.</param>
+        /// <param name="tenantId">The ID of the tenant to enroll.</param>
+        /// <param name="configurationItems">Configuration to add.</param>
+        /// <returns>A task which completes when the configuration has been added.</returns>
+        public static async Task AddOrUpdateStorageConfigurationAsync(
+            this ITenantManagementService tenantManagementService,
+            string tenantId,
+            ConfigurationItem[] configurationItems)
+        {
+            if (string.IsNullOrWhiteSpace(tenantId))
+            {
+                throw new ArgumentException(nameof(tenantId));
+            }
+
+            if (configurationItems == null)
+            {
+                throw new ArgumentNullException(nameof(configurationItems));
+            }
+
+            ITenant tenant = await tenantManagementService.GetTenantOfTypeAsync(
+                tenantId,
+                MarainTenantType.Client).ConfigureAwait(false);
+
+            await tenantManagementService.AddOrUpdateStorageConfigurationAsync(tenant, configurationItems).ConfigureAwait(false);
         }
     }
 }

@@ -8,6 +8,7 @@ namespace Marain.TenantManagement
     using System.Threading.Tasks;
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
+    using Marain.TenantManagement.Configuration;
     using Marain.TenantManagement.EnrollmentConfiguration;
     using Marain.TenantManagement.Exceptions;
     using Marain.TenantManagement.ServiceManifests;
@@ -71,6 +72,14 @@ namespace Marain.TenantManagement
             ITenant enrollingTenant,
             ITenant serviceTenant,
             EnrollmentConfigurationItem[] configurationItems);
+
+        /// <summary>
+        /// Add or updates arbitrary storage configuration for a tenant.
+        /// </summary>
+        /// <param name="tenant">The tenant to enroll.</param>
+        /// <param name="configurationItems">Configuration to add.</param>
+        /// <returns>A task which completes when the configuration has been added.</returns>
+        Task AddOrUpdateStorageConfigurationAsync(ITenant tenant, ConfigurationItem[] configurationItems);
 
         /// <summary>
         /// Unenrolls the specified tenant from the service.

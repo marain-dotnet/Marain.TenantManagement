@@ -11,6 +11,7 @@ namespace Marain.TenantManagement.Internal
     using Corvus.Json;
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
+    using Marain.TenantManagement.Configuration;
     using Marain.TenantManagement.EnrollmentConfiguration;
     using Marain.TenantManagement.ServiceManifests;
     using Microsoft.Extensions.Logging;
@@ -442,6 +443,56 @@ namespace Marain.TenantManagement.Internal
             requirements.AddRange(dependentServicesConfigRequirements.SelectMany(x => x));
 
             return requirements.ToArray();
+        }
+
+        /// <inheritdoc/>
+        public async Task AddOrUpdateStorageConfigurationAsync(ITenant tenant, ConfigurationItem[] configurationItems)
+        {
+            if (tenant == null)
+            {
+                throw new ArgumentNullException(nameof(tenant));
+            }
+
+            tenant.EnsureTenantIsOfType(MarainTenantType.Client);
+
+            if (configurationItems == null)
+            {
+                throw new ArgumentNullException(nameof(configurationItems));
+            }
+
+            this.logger.LogDebug(
+                "Add configuration for tenant '{tenantName}' with Id '{tenantId}'",
+                tenant.Name,
+                tenant.Id);
+
+            configurationItems.ValidateAndThrow();
+
+            IEnumerable<KeyValuePair<string, object>> propertiesToAddToTenant = PropertyBagValues.Empty;
+
+            foreach (ConfigurationItem configurationItem in configurationItems)
+            {
+                this.logger.LogDebug(
+                    "Adding configuration entry to tenant '{tenantName}' with Id '{tenantId}'",
+                    tenant.Name,
+                    tenant.Id);
+
+                propertiesToAddToTenant = configurationItem.AddConfiguration(propertiesToAddToTenant);
+            }
+
+            this.logger.LogDebug(
+                "Updating tenant '{tenantName}' with Id '{tenantId}'",
+                tenant.Name,
+                tenant.Id);
+
+            tenant = await this.tenantStore.UpdateTenantAsync(
+                tenant.Id,
+                propertiesToSetOrAdd: propertiesToAddToTenant)
+                .ConfigureAwait(false);
+
+            this.logger.LogInformation(
+                "Successfully added configuration to tenant '{tenantName}' with Id '{tenantId}'",
+                tenant.Name,
+                tenant.Id);
         }
 
         private async Task<ITenant> CreateDelegatedTenant(ITenant accessingTenant, ITenant serviceTenant)
