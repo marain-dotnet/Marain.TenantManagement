@@ -495,6 +495,14 @@ namespace Marain.TenantManagement.Internal
                 tenant.Id);
         }
 
+        /// <inheritdoc/>
+        public async Task<(IList<ITenant> tenants, string? continuationToken)> GetChildrenAsync(string tenantId, int limit = 20, string? continuationToken = null)
+        {
+            TenantCollectionResult result = await this.tenantStore.GetChildrenAsync(tenantId, limit, continuationToken);
+
+            return (await this.tenantStore.GetTenantsAsync(result.Tenants), result.ContinuationToken);
+        }
+
         private async Task<ITenant> CreateDelegatedTenant(ITenant accessingTenant, ITenant serviceTenant)
         {
             string delegatedTenantName = TenantNames.DelegatedTenant(serviceTenant.Name, accessingTenant.Name);
