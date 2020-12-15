@@ -12,6 +12,7 @@ namespace Marain.TenantManagement.Specs.Steps
     using Corvus.Azure.Storage.Tenancy;
     using Corvus.Extensions.Json;
     using Corvus.SpecFlow.Extensions;
+    using Corvus.Tenancy;
     using Marain.TenantManagement.ServiceManifests;
     using Microsoft.Extensions.DependencyInjection;
     using Newtonsoft.Json;
@@ -76,12 +77,12 @@ namespace Marain.TenantManagement.Specs.Steps
         [When("I validate the service manifest called '(.*)'")]
         public Task WhenIValidateTheServiceManifestCalled(string manifestName)
         {
-            ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
+            ITenantStore store = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
             ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>(manifestName);
 
             return CatchException.AndStoreInScenarioContextAsync(
                 this.scenarioContext,
-                () => manifest.ValidateAndThrowAsync(service));
+                () => manifest.ValidateAndThrowAsync(store));
         }
 
         [When("I deserialize the manifest called '(.*)'")]
