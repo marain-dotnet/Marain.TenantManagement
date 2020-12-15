@@ -101,14 +101,5 @@ namespace Marain.TenantManagement
         /// <exception cref="TenantNotFoundException">There is no tenant with the specified Id.</exception>
         /// <exception cref="InvalidMarainTenantTypeException">The tenant Id provided is not for a tenant with the specified type.</exception>
         Task<ITenant> GetTenantOfTypeAsync(string tenantId, params MarainTenantType[] allowableTenantTypes);
-
-        /// <summary>
-        /// Gets the child tenants for a given tenant.
-        /// </summary>
-        /// <param name="tenantId">The id of the tenant for which to get the direct children.</param>
-        /// <param name="limit">The maximum number of children to get in a single request.</param>
-        /// <param name="continuationToken">A continuation token to continue reading the next batch.</param>
-        /// <returns>The list of tenants who are children of that tenant, and a continuation token if there are more results.</returns>
-        Task<(IList<ITenant> tenants, string? continuationToken)> GetChildrenAsync(string tenantId, int limit = 20, string? continuationToken = null);
     }
 }
