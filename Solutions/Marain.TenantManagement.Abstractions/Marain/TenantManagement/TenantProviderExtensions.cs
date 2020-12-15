@@ -73,7 +73,7 @@ namespace Marain.TenantManagement
 
             do
             {
-                Corvus.Tenancy.TenantCollectionResult results = await tenantStore.GetChildrenAsync(
+                TenantCollectionResult results = await tenantStore.GetChildrenAsync(
                     tenantId,
                     limit,
                     continuationToken).ConfigureAwait(false);
