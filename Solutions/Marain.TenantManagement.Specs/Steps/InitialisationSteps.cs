@@ -38,20 +38,20 @@ namespace Marain.TenantManagement.Specs.Steps
             }
         }
 
-        [When("I use the tenant management service to initialise the tenancy provider")]
-        public Task WhenIUseTheTenantManagementServiceToInitialiseTheTenancyProvider()
+        [When("I use the tenant store to initialise the tenancy provider")]
+        public Task WhenIUseTheTenantStoreToInitialiseTheTenancyProvider()
         {
-            ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
+            ITenantStore service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
 
             return CatchException.AndStoreInScenarioContextAsync(
                 this.scenarioContext,
                 () => service.InitialiseTenancyProviderAsync());
         }
 
-        [When("I use the tenant management service to initialise the tenancy provider using the force option")]
-        public Task WhenIUseTheTenantManagementServiceToInitialiseTheTenancyProviderUsingTheForceOption()
+        [When("I use the tenant store to initialise the tenancy provider using the force option")]
+        public Task WhenIUseTheTenantStoreToInitialiseTheTenancyProviderUsingTheForceOption()
         {
-            ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
+            ITenantStore service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
 
             return CatchException.AndStoreInScenarioContextAsync(
                 this.scenarioContext,
@@ -61,7 +61,7 @@ namespace Marain.TenantManagement.Specs.Steps
         [Given("the tenancy provider has been initialised for use with Marain")]
         public Task GivenTheTenancyProviderHasAlreadyBeenInitialisedForUseWithMarain()
         {
-            ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
+            ITenantStore service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
             return service.InitialiseTenancyProviderAsync();
         }
     }

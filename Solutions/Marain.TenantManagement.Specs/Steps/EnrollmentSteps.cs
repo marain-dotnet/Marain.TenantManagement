@@ -99,18 +99,18 @@ namespace Marain.TenantManagement.Specs.Steps
                     }));
         }
 
-        [Given("I have used the tenant management service to enroll the tenant called '(.*)' in the service called '(.*)'")]
-        [When("I use the tenant management service to enroll the tenant called '(.*)' in the service called '(.*)'")]
-        public Task WhenIUseTheTenantManagementServiceToEnrollTheClientTenantCalledInTheServiceCalled(
+        [Given("I have used the tenant store to enroll the tenant called '(.*)' in the service called '(.*)'")]
+        [When("I use the tenant store to enroll the tenant called '(.*)' in the service called '(.*)'")]
+        public Task WhenIUseTheTenantStoreToEnrollTheClientTenantCalledInTheServiceCalled(
             string enrollingTenantName,
             string serviceTenantName)
         {
             return this.EnrollTenantForService(enrollingTenantName, serviceTenantName);
         }
 
-        [Given("I have used the tenant management service with the enrollment configuration called '(.*)' to enroll the tenant called '(.*)' in the service called '(.*)'")]
-        [When("I use the tenant management service with the enrollment configuration called '(.*)' to enroll the tenant called '(.*)' in the service called '(.*)'")]
-        public Task WhenIUseTheTenantManagementServiceToEnrollTheClientTenantCalledInTheServiceCalled(
+        [Given("I have used the tenant store with the enrollment configuration called '(.*)' to enroll the tenant called '(.*)' in the service called '(.*)'")]
+        [When("I use the tenant store with the enrollment configuration called '(.*)' to enroll the tenant called '(.*)' in the service called '(.*)'")]
+        public Task WhenIUseTheTenantStoreToEnrollTheClientTenantCalledInTheServiceCalled(
             string enrollmentConfigurationName,
             string enrollingTenantName,
             string serviceTenantName)
@@ -118,13 +118,13 @@ namespace Marain.TenantManagement.Specs.Steps
             return this.EnrollTenantForService(enrollingTenantName, serviceTenantName, enrollmentConfigurationName);
         }
 
-        [When("I use the tenant management service to unenroll the tenant called '(.*)' from the service called '(.*)'")]
-        public async Task WhenIUseTheTenantManagementServiceToUnenrollTheTenantCalledFromTheServiceCalled(
+        [When("I use the tenant store to unenroll the tenant called '(.*)' from the service called '(.*)'")]
+        public async Task WhenIUseTheTenantStoreToUnenrollTheTenantCalledFromTheServiceCalled(
             string unenrollingTenantName,
             string serviceTenantName)
         {
-            ITenantManagementService managementService =
-                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
+            ITenantStore tenantStore =
+                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
             ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
 
             ITenant unenrollingTenant = await tenantProvider.GetTenantAsync(this.scenarioContext.Get<string>(unenrollingTenantName)).ConfigureAwait(false);
@@ -132,7 +132,7 @@ namespace Marain.TenantManagement.Specs.Steps
 
             await CatchException.AndStoreInScenarioContextAsync(
                 this.scenarioContext,
-                () => managementService.UnenrollFromServiceAsync(
+                () => tenantStore.UnenrollFromServiceAsync(
                     unenrollingTenant.Id,
                     serviceTenant.Id)).ConfigureAwait(false);
         }
@@ -219,8 +219,8 @@ namespace Marain.TenantManagement.Specs.Steps
             string serviceTenantName,
             string? enrollmentConfigurationName = null)
         {
-            ITenantManagementService managementService =
-                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
+            ITenantStore managementService =
+                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
             ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
 
             ITenant enrollingTenant = await tenantProvider.GetTenantAsync(this.scenarioContext.Get<string>(enrollingTenantName)).ConfigureAwait(false);

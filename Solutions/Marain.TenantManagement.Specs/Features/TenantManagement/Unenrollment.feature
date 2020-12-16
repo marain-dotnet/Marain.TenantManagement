@@ -9,23 +9,23 @@ Feature: Unenrollment
 Background:
 	Given the tenancy provider has been initialised for use with Marain
 	And I have loaded the manifest called 'SimpleManifestWithNoDependenciesOrConfiguration'
-	And I have used the tenant management service to create a service tenant with manifest 'SimpleManifestWithNoDependenciesOrConfiguration'
+	And I have used the tenant store to create a service tenant with manifest 'SimpleManifestWithNoDependenciesOrConfiguration'
 	And I have loaded the manifest called 'FooBarServiceManifest'
-	And I have used the tenant management service to create a service tenant with manifest 'FooBarServiceManifest'
+	And I have used the tenant store to create a service tenant with manifest 'FooBarServiceManifest'
 	And I have loaded the manifest called 'OperationsServiceManifest'
-	And I have used the tenant management service to create a service tenant with manifest 'OperationsServiceManifest'
+	And I have used the tenant store to create a service tenant with manifest 'OperationsServiceManifest'
 	And I have loaded the manifest called 'WorkflowServiceManifest'
-	And I have used the tenant management service to create a service tenant with manifest 'WorkflowServiceManifest'
-	And I have used the tenant management service to create a new client tenant called 'Litware'
-	And I have used the tenant management service to create a new client tenant called 'Contoso'
+	And I have used the tenant store to create a service tenant with manifest 'WorkflowServiceManifest'
+	And I have used the tenant store to create a new client tenant called 'Litware'
+	And I have used the tenant store to create a new client tenant called 'Contoso'
 
 Scenario: Unenroll from a service that the client has not previously enrolled in
-	When I use the tenant management service to unenroll the tenant called 'Litware' from the service called 'Simple manifest with no dependencies or configuration'
+	When I use the tenant store to unenroll the tenant called 'Litware' from the service called 'Simple manifest with no dependencies or configuration'
 	Then an 'InvalidOperationException' is thrown
 
 Scenario: Basic unenrollment with no dependencies or configuration
-	Given I have used the tenant management service to enroll the tenant called 'Litware' in the service called 'Simple manifest with no dependencies or configuration'
-	When I use the tenant management service to unenroll the tenant called 'Litware' from the service called 'Simple manifest with no dependencies or configuration'
+	Given I have used the tenant store to enroll the tenant called 'Litware' in the service called 'Simple manifest with no dependencies or configuration'
+	When I use the tenant store to unenroll the tenant called 'Litware' from the service called 'Simple manifest with no dependencies or configuration'
 	Then the tenant called 'Litware' should not have the id of the tenant called 'Simple manifest with no dependencies or configuration' in its enrollments
 
 Scenario: Basic unenrollment with configuration
@@ -33,8 +33,8 @@ Scenario: Basic unenrollment with configuration
 	And the enrollment configuration called 'FooBar config' contains the following Blob Storage configuration items
 	| Key         | Account Name | Container     |
 	| fooBarStore | blobaccount  | blobcontainer |
-	And I have used the tenant management service with the enrollment configuration called 'FooBar config' to enroll the tenant called 'Litware' in the service called 'FooBar v1'
-	When I use the tenant management service to unenroll the tenant called 'Litware' from the service called 'FooBar v1'
+	And I have used the tenant store with the enrollment configuration called 'FooBar config' to enroll the tenant called 'Litware' in the service called 'FooBar v1'
+	When I use the tenant store to unenroll the tenant called 'Litware' from the service called 'FooBar v1'
 	Then the tenant called 'Litware' should not have the id of the tenant called 'FooBar v1' in its enrollments
 	And the tenant called 'Litware' should not contain blob storage configuration for a blob storage container definition with container name 'foobar'
 
@@ -115,9 +115,9 @@ Scenario: Unenrollment with multiple levels of dependency and with the client te
 	| Key             | Account Name    | Container         |
 	| fooBarStore     | fbblobaccount2  | fbblobcontainer2  |
 	| operationsStore | opsblobaccount2 | opsblobcontainer2 |
-	And I have used the tenant management service with the enrollment configuration called 'Workflow config' to enroll the tenant called 'Litware' in the service called 'Workflow v1'
-	And I have used the tenant management service with the enrollment configuration called 'Operations config' to enroll the tenant called 'Litware' in the service called 'Operations v1'
-	When I use the tenant management service to unenroll the tenant called 'Litware' from the service called 'Workflow v1'
+	And I have used the tenant store with the enrollment configuration called 'Workflow config' to enroll the tenant called 'Litware' in the service called 'Workflow v1'
+	And I have used the tenant store with the enrollment configuration called 'Operations config' to enroll the tenant called 'Litware' in the service called 'Operations v1'
+	When I use the tenant store to unenroll the tenant called 'Litware' from the service called 'Workflow v1'
 	Then the tenant called 'Litware' should not have the id of the tenant called 'Workflow v1' in its enrollments
 	And the tenant called 'Litware' should not contain Cosmos configuration for a Cosmos container definition with database name 'workflow' and container name 'definitions'
 	And the tenant called 'Litware' should not contain Cosmos configuration for a Cosmos container definition with database name 'workflow' and container name 'instances'

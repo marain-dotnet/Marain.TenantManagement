@@ -9,6 +9,7 @@ namespace Marain.TenantManagement.Cli.Commands
     using System.CommandLine.Invocation;
     using System.Threading.Tasks;
     using ConsoleTables;
+    using Corvus.Tenancy;
     using Marain.TenantManagement.ServiceManifests;
 
     /// <summary>
@@ -16,16 +17,16 @@ namespace Marain.TenantManagement.Cli.Commands
     /// </summary>
     public class ListRequiredConfigurationForServiceCommand : Command
     {
-        private readonly ITenantManagementService tenantManagementService;
+        private readonly ITenantStore tenantStore;
 
         /// <summary>
         /// Creates a new instance of the <see cref="ListRequiredConfigurationForServiceCommand"/> class.
         /// </summary>
-        /// <param name="tenantManagementService">The tenant management services.</param>
-        public ListRequiredConfigurationForServiceCommand(ITenantManagementService tenantManagementService)
+        /// <param name="tenantStore">The tenant store.</param>
+        public ListRequiredConfigurationForServiceCommand(ITenantStore tenantStore)
             : base("list-required-config", "Lists configuration requirements to enroll a client tenant in a service.")
         {
-            this.tenantManagementService = tenantManagementService;
+            this.tenantStore = tenantStore;
 
             var serviceName = new Argument<string>("serviceTenantId")
             {
@@ -41,7 +42,7 @@ namespace Marain.TenantManagement.Cli.Commands
         private async Task HandleCommand(string serviceTenantId)
         {
             ServiceManifestRequiredConfigurationEntry[] configRequirements =
-                await this.tenantManagementService.GetServiceEnrollmentConfigurationRequirementsAsync(serviceTenantId).ConfigureAwait(false);
+                await this.tenantStore.GetServiceEnrollmentConfigurationRequirementsAsync(serviceTenantId).ConfigureAwait(false);
 
             if (configRequirements.Length == 0)
             {

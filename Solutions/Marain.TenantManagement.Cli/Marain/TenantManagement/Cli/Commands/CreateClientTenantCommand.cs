@@ -8,19 +8,20 @@ namespace Marain.TenantManagement.Cli.Commands
     using System.CommandLine;
     using System.CommandLine.Invocation;
     using System.Threading.Tasks;
+    using Corvus.Tenancy;
 
     /// <summary>
     /// Creates new client tenants.
     /// </summary>
     public class CreateClientTenantCommand : Command
     {
-        private readonly ITenantManagementService tenantManagementService;
+        private readonly ITenantStore tenantStore;
 
         /// <summary>
         /// Creates a new instance of the <see cref="CreateClientTenantCommand"/> class.
         /// </summary>
-        /// <param name="tenantManagementService">The tenant management services.</param>
-        public CreateClientTenantCommand(ITenantManagementService tenantManagementService)
+        /// <param name="tenantStore">The tenant store.</param>
+        public CreateClientTenantCommand(ITenantStore tenantStore)
             : base("create-client", "Initialises the tenancy provider for use with Marain.")
         {
             var clientName = new Argument<string>("name")
@@ -42,12 +43,12 @@ namespace Marain.TenantManagement.Cli.Commands
             this.AddOption(wellKnownGuid);
 
             this.Handler = CommandHandler.Create((string name, string? parentId, Guid? wellKnownGuid) => this.HandleCommand(name, parentId, wellKnownGuid));
-            this.tenantManagementService = tenantManagementService;
+            this.tenantStore = tenantStore;
         }
 
         private Task HandleCommand(string name, string? parentId, Guid? wellKnownGuid)
         {
-            return this.tenantManagementService.CreateClientTenantAsync(name, parentId, wellKnownGuid);
+            return this.tenantStore.CreateClientTenantAsync(name, parentId, wellKnownGuid);
         }
     }
 }

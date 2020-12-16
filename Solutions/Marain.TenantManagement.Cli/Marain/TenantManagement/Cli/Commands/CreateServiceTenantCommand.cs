@@ -10,6 +10,7 @@ namespace Marain.TenantManagement.Cli.Commands
     using System.IO;
     using System.Threading.Tasks;
     using Corvus.Extensions.Json;
+    using Corvus.Tenancy;
     using Marain.TenantManagement.Exceptions;
     using Marain.TenantManagement.ServiceManifests;
     using Newtonsoft.Json;
@@ -19,18 +20,18 @@ namespace Marain.TenantManagement.Cli.Commands
     /// </summary>
     public class CreateServiceTenantCommand : Command
     {
-        private readonly ITenantManagementService tenantManagementService;
+        private readonly ITenantStore tenantStore;
         private readonly IJsonSerializerSettingsProvider serializerSettingsProvider;
 
         /// <summary>
         /// Creates a new instance of the <see cref="CreateServiceTenantCommand"/> class.
         /// </summary>
-        /// <param name="tenantManagementService">The tenant management services.</param>
+        /// <param name="tenantStore">The tenant store.</param>
         /// <param name="serializerSettingsProvider">
         /// The <see cref="IJsonSerializerSettingsProvider"/> to use when reading manifest files.
         /// </param>
         public CreateServiceTenantCommand(
-            ITenantManagementService tenantManagementService,
+            ITenantStore tenantStore,
             IJsonSerializerSettingsProvider serializerSettingsProvider)
             : base("create-service", "Initialises the tenancy provider for use with Marain.")
         {
@@ -45,7 +46,7 @@ namespace Marain.TenantManagement.Cli.Commands
             this.AddArgument(manifestFile);
 
             this.Handler = CommandHandler.Create((FileInfo manifest) => this.HandleCommand(manifest));
-            this.tenantManagementService = tenantManagementService;
+            this.tenantStore = tenantStore;
             this.serializerSettingsProvider = serializerSettingsProvider;
         }
 
@@ -62,7 +63,7 @@ namespace Marain.TenantManagement.Cli.Commands
 
             try
             {
-                await this.tenantManagementService.CreateServiceTenantAsync(manifest).ConfigureAwait(false);
+                await this.tenantStore.CreateServiceTenantAsync(manifest).ConfigureAwait(false);
             }
             catch (InvalidServiceManifestException ex)
             {
