@@ -29,10 +29,10 @@ namespace Marain.TenantManagement.Specs.Steps
             this.scenarioContext = scenarioContext;
         }
 
-        [When("I use the tenant management service to create a new client tenant called '(.*)'")]
-        public Task WhenIUseTheTenantManagementServiceToCreateANewClientTenantCalled(string clientName)
+        [When("I use the tenant store to create a new client tenant called '(.*)'")]
+        public Task WhenIUseTheTenantStoreToCreateANewClientTenantCalled(string clientName)
         {
-            ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
+            ITenantStore service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
 
             return CatchException.AndStoreInScenarioContextAsync(
                 this.scenarioContext,
@@ -44,8 +44,8 @@ namespace Marain.TenantManagement.Specs.Steps
         }
 
         [Given("I have an existing client tenant with a well known Guid '(.*)' called '(.*)'")]
-        [When("I use the tenant management service to create a new client tenant with well known Guid '(.*)' called '(.*)'")]
-        public Task WhenIUseTheTenantManagementServiceToCreateANewClientTenantWithWellKnownGuidCalled(Guid wellKnownGuid, string clientName)
+        [When("I use the tenant store to create a new client tenant with well known Guid '(.*)' called '(.*)'")]
+        public Task WhenIUseTheTenantStoreToCreateANewClientTenantWithWellKnownGuidCalled(Guid wellKnownGuid, string clientName)
         {
             return this.CreateTenant(wellKnownGuid, clientName);
         }
@@ -56,51 +56,51 @@ namespace Marain.TenantManagement.Specs.Steps
             this.scenarioContext.Set("FakeId", parentClientName);
         }
 
-        [When("I use the tenant management service to create a new child client tenant of the '(.*)' client tenant with well known Guid '(.*)' called '(.*)'")]
-        public Task WhenIUseTheTenantManagementServiceToCreateANewChildClientTenantOfTheClientTenantWithWellKnownGuidCalled(string parentClientName, Guid wellKnownGuid, string clientName)
+        [When("I use the tenant store to create a new child client tenant of the '(.*)' client tenant with well known Guid '(.*)' called '(.*)'")]
+        public Task WhenIUseTheTenantStoreToCreateANewChildClientTenantOfTheClientTenantWithWellKnownGuidCalled(string parentClientName, Guid wellKnownGuid, string clientName)
         {
             string? parentId = this.scenarioContext.Get<string>(parentClientName);
 
             return this.CreateTenant(wellKnownGuid, clientName, parentId);
         }
 
-        [Given("I have used the tenant management service to create a new client tenant called '(.*)'")]
-        public async Task GivenIHaveUsedTheTenantManagementServiceToCreateANewClientTenantCalled(string clientName)
+        [Given("I have used the tenant store to create a new client tenant called '(.*)'")]
+        public async Task GivenIHaveUsedTheTenantStoreToCreateANewClientTenantCalled(string clientName)
         {
-            ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
+            ITenantStore service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
             ITenant newTenant = await service.CreateClientTenantAsync(clientName).ConfigureAwait(false);
             this.scenarioContext.Set(newTenant.Id, clientName);
         }
 
-        [Given("I have used the tenant management service to create a service tenant with manifest '(.*)'")]
-        public async Task GivenIHaveUsedTheTenantManagementServiceToCreateAServiceTenantWithManifest(string manifestName)
+        [Given("I have used the tenant store to create a service tenant with manifest '(.*)'")]
+        public async Task GivenIHaveUsedTheTenantStoreToCreateAServiceTenantWithManifest(string manifestName)
         {
             ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>(manifestName);
 
-            ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
+            ITenantStore service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
 
             ITenant newTenant = await service.CreateServiceTenantAsync(manifest).ConfigureAwait(false);
             this.scenarioContext.Set(newTenant.Id, manifest.ServiceName);
         }
 
         [Given("I have an existing service tenant with manifest '(.*)'")]
-        [When("I use the tenant management service to create a new service tenant with manifest '(.*)'")]
-        public Task WhenIUseTheTenantManagementServiceToCreateANewServiceTenantWithManifest(string manifestName)
+        [When("I use the tenant store to create a new service tenant with manifest '(.*)'")]
+        public Task WhenIUseTheTenantStoreToCreateANewServiceTenantWithManifest(string manifestName)
         {
             ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>(manifestName);
 
             return this.CreateServiceTenantWithExceptionHandlingAsync(manifest);
         }
 
-        [When("I use the tenant management service to create a new service tenant without supplying a manifest")]
-        public Task WhenIUseTheTenantManagementServiceToCreateANewServiceTenantWithoutSupplyingAManifest()
+        [When("I use the tenant store to create a new service tenant without supplying a manifest")]
+        public Task WhenIUseTheTenantStoreToCreateANewServiceTenantWithoutSupplyingAManifest()
         {
             return this.CreateServiceTenantWithExceptionHandlingAsync(null!);
         }
 
         public Task CreateServiceTenantWithExceptionHandlingAsync(ServiceManifest manifest)
         {
-            ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
+            ITenantStore service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
 
             return CatchException.AndStoreInScenarioContextAsync(
                 this.scenarioContext,
@@ -359,7 +359,7 @@ namespace Marain.TenantManagement.Specs.Steps
 
         private Task CreateTenant(Guid wellKnownGuid, string clientName, string? parentId = null)
         {
-            ITenantManagementService service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
+            ITenantStore service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
 
             return CatchException.AndStoreInScenarioContextAsync(
                 this.scenarioContext,

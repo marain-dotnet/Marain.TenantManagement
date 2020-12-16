@@ -33,10 +33,10 @@ namespace Marain.TenantManagement.ServiceManifests
         public string? ExpectedName { get; set; }
 
         /// <summary>
-        /// Validates the dependency using the supplied <see cref="ITenantManagementService"/>.
+        /// Validates the dependency using the supplied <see cref="ITenantStore"/>.
         /// </summary>
-        /// <param name="tenantManagementService">
-        /// The <see cref="ITenantManagementService"/> that will be used to retrieve and check dependencies.
+        /// <param name="tenantStore">
+        /// The <see cref="ITenantStore"/> that will be used to retrieve and check dependencies.
         /// </param>
         /// <param name="messagePrefix">
         /// A prefix to add to all error messages. This can be used to identify the dependency within a list.
@@ -45,12 +45,12 @@ namespace Marain.TenantManagement.ServiceManifests
         /// A list of validation errors detected. If there are no errors, the list will be empty.
         /// </returns>
         public async Task<IList<string>> ValidateAsync(
-            ITenantManagementService tenantManagementService,
+            ITenantStore tenantStore,
             string messagePrefix)
         {
-            if (tenantManagementService == null)
+            if (tenantStore == null)
             {
-                throw new ArgumentNullException(nameof(tenantManagementService));
+                throw new ArgumentNullException(nameof(tenantStore));
             }
 
             var errors = new List<string>();
@@ -64,7 +64,7 @@ namespace Marain.TenantManagement.ServiceManifests
 
             try
             {
-                dependentTenant = await tenantManagementService.GetServiceTenantAsync(this.Id).ConfigureAwait(false);
+                dependentTenant = await tenantStore.GetServiceTenantAsync(this.Id).ConfigureAwait(false);
 
                 if (!string.IsNullOrEmpty(this.ExpectedName) && dependentTenant.Name != this.ExpectedName)
                 {

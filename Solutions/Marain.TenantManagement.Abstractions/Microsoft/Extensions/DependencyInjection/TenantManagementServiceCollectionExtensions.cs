@@ -5,10 +5,9 @@
 namespace Microsoft.Extensions.DependencyInjection
 {
     using Corvus.ContentHandling;
-    using Marain.TenantManagement;
+    using Corvus.Tenancy;
     using Marain.TenantManagement.Configuration;
     using Marain.TenantManagement.EnrollmentConfiguration;
-    using Marain.TenantManagement.Internal;
     using Marain.TenantManagement.ServiceManifests;
 
     /// <summary>
@@ -17,12 +16,12 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class TenantManagementServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds an implementation of <see cref="ITenantManagementService"/> to the supplied service collection.
+        /// Adds required dependencies to use management extensions for <see cref="ITenantStore"/>.
         /// </summary>
         /// <param name="serviceCollection">The service collection to add to.</param>
         /// <returns>The modified service collection, for chaining.</returns>
         /// <remarks>
-        /// In order to support the <see cref="ITenantManagementService"/>, you should ensure that an implementation of
+        /// You should ensure that an implementation of
         /// <c>ITenantProvider</c> has also been added to the service collection.
         /// </remarks>
         public static IServiceCollection AddMarainTenantManagement(this IServiceCollection serviceCollection)
@@ -30,7 +29,6 @@ namespace Microsoft.Extensions.DependencyInjection
             serviceCollection.AddContentSerialization();
             serviceCollection.AddContent(AddTenantManagementContentTypes);
             serviceCollection.AddJsonSerializerSettings();
-            serviceCollection.AddSingleton<ITenantManagementService, TenantManagementService>();
             return serviceCollection;
         }
 

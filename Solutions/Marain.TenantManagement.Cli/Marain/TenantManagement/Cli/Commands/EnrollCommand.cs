@@ -10,6 +10,7 @@ namespace Marain.TenantManagement.Cli.Commands
     using System.IO;
     using System.Threading.Tasks;
     using Corvus.Extensions.Json;
+    using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
     using Marain.TenantManagement.EnrollmentConfiguration;
     using Marain.TenantManagement.Exceptions;
@@ -20,22 +21,22 @@ namespace Marain.TenantManagement.Cli.Commands
     /// </summary>
     public class EnrollCommand : Command
     {
-        private readonly ITenantManagementService tenantManagementService;
+        private readonly ITenantStore tenantStore;
         private readonly IJsonSerializerSettingsProvider serializerSettingsProvider;
 
         /// <summary>
         /// Creates a new instance of the <see cref="EnrollCommand"/> class.
         /// </summary>
-        /// <param name="tenantManagementService">The tenant management services.</param>
+        /// <param name="tenantStore">The tenant store.</param>
         /// <param name="serializerSettingsProvider">
         /// The <see cref="IJsonSerializerSettingsProvider"/> to use when reading manifest files.
         /// </param>
         public EnrollCommand(
-            ITenantManagementService tenantManagementService,
+            ITenantStore tenantStore,
             IJsonSerializerSettingsProvider serializerSettingsProvider)
             : base("enroll", "Enrolls the specified client for the service.")
         {
-            this.tenantManagementService = tenantManagementService;
+            this.tenantStore = tenantStore;
             this.serializerSettingsProvider = serializerSettingsProvider;
 
             var clientTenantId = new Argument<string>("clientTenantId")
@@ -78,7 +79,7 @@ namespace Marain.TenantManagement.Cli.Commands
 
             try
             {
-                await this.tenantManagementService.EnrollInServiceAsync(
+                await this.tenantStore.EnrollInServiceAsync(
                     enrollingTenantId,
                     serviceTenantId,
                     enrollmentConfig).ConfigureAwait(false);
