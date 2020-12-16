@@ -50,20 +50,20 @@ namespace Marain.TenantManagement.ServiceManifests
         public IList<ServiceManifestRequiredConfigurationEntry> RequiredConfigurationEntries { get; } = new List<ServiceManifestRequiredConfigurationEntry>();
 
         /// <summary>
-        /// Validates the manifest using the supplied <see cref="ITenantManagementService"/>.
+        /// Validates the manifest using the supplied <see cref="ITenantStore"/>.
         /// </summary>
-        /// <param name="tenantManagementService">
-        /// The <see cref="ITenantManagementService"/> that will be used to validate names and dependencies.
+        /// <param name="tenantStore">
+        /// The <see cref="ITenantStore"/> that will be used to validate names and dependencies.
         /// </param>
         /// <returns>
         /// A list of validation errors detected. If there are no errors, the list will be empty.
         /// </returns>
         public async Task<IList<string>> ValidateAsync(
-            ITenantManagementService tenantManagementService)
+            ITenantStore tenantStore)
         {
-            if (tenantManagementService == null)
+            if (tenantStore == null)
             {
-                throw new ArgumentNullException(nameof(tenantManagementService));
+                throw new ArgumentNullException(nameof(tenantStore));
             }
 
             var errors = new ConcurrentBag<string>();
@@ -74,8 +74,8 @@ namespace Marain.TenantManagement.ServiceManifests
             }
 
             await Task.WhenAll(
-                this.ValidateWellKnownTenantId(tenantManagementService, errors),
-                this.VerifyDependenciesAsync(tenantManagementService, errors)).ConfigureAwait(false);
+                this.ValidateWellKnownTenantId(tenantStore, errors),
+                this.VerifyDependenciesAsync(tenantStore, errors)).ConfigureAwait(false);
 
             // TODO: Ensure there aren't multiple items with the same key.
             IEnumerable<string> configErrors = this.RequiredConfigurationEntries.SelectMany((c, i) => c.Validate($"RequiredConfigurationEntries[{i}]"));
@@ -88,7 +88,7 @@ namespace Marain.TenantManagement.ServiceManifests
         }
 
         private async Task ValidateWellKnownTenantId(
-            ITenantManagementService tenantManagementService,
+            ITenantStore tenantStore,
             ConcurrentBag<string> errors)
         {
             if (this.WellKnownTenantGuid == Guid.Empty)
@@ -101,7 +101,7 @@ namespace Marain.TenantManagement.ServiceManifests
             try
             {
                 // See if the tenant already exists...
-                ITenant existingTenant = await tenantManagementService.GetServiceTenantAsync(expectedChildTenantId).ConfigureAwait(false);
+                ITenant existingTenant = await tenantStore.GetServiceTenantAsync(expectedChildTenantId).ConfigureAwait(false);
 
                 errors.Add($"A service tenant with well-known GUID '{this.WellKnownTenantGuid}' (resulting in Id '{expectedChildTenantId}') called '{existingTenant.Name}' already exists. All tenants must have unique well-known tenant GUIDs/IDs.");
             }
@@ -112,7 +112,7 @@ namespace Marain.TenantManagement.ServiceManifests
         }
 
         private async Task VerifyDependenciesAsync(
-            ITenantManagementService tenantManagementService,
+            ITenantStore tenantStore,
             ConcurrentBag<string> errors)
         {
             if (this.DependsOnServiceTenants.Count == 0)
@@ -131,7 +131,7 @@ namespace Marain.TenantManagement.ServiceManifests
 
             IList<string>[] dependencyErrors = await Task.WhenAll(
                 this.DependsOnServiceTenants.Select(
-                    (dependency, index) => dependency.ValidateAsync(tenantManagementService, $"DependsOnServiceTenants[{index}]"))).ConfigureAwait(false);
+                    (dependency, index) => dependency.ValidateAsync(tenantStore, $"DependsOnServiceTenants[{index}]"))).ConfigureAwait(false);
 
             foreach (string dependencyError in dependencyErrors.SelectMany(x => x))
             {

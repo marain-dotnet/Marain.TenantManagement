@@ -10,6 +10,7 @@ namespace Marain.TenantManagement.Cli.Commands
     using System.IO;
     using System.Threading.Tasks;
     using Corvus.Extensions.Json;
+    using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
     using Marain.TenantManagement.Configuration;
     using Marain.TenantManagement.Exceptions;
@@ -20,22 +21,22 @@ namespace Marain.TenantManagement.Cli.Commands
     /// </summary>
     public class AddOrUpdateStorageConfigurationCommand : Command
     {
-        private readonly ITenantManagementService tenantManagementService;
+        private readonly ITenantStore tenantStore;
         private readonly IJsonSerializerSettingsProvider serializerSettingsProvider;
 
         /// <summary>
         /// Creates a new instance of the <see cref="AddOrUpdateStorageConfigurationCommand"/> class.
         /// </summary>
-        /// <param name="tenantManagementService">The tenant management services.</param>
+        /// <param name="tenantStore">The tenant store.</param>
         /// <param name="serializerSettingsProvider">
         /// The <see cref="IJsonSerializerSettingsProvider"/> to use when reading manifest files.
         /// </param>
         public AddOrUpdateStorageConfigurationCommand(
-            ITenantManagementService tenantManagementService,
+            ITenantStore tenantStore,
             IJsonSerializerSettingsProvider serializerSettingsProvider)
             : base("add-storage-config", "Adds arbitrary storage configuration for the client.")
         {
-            this.tenantManagementService = tenantManagementService;
+            this.tenantStore = tenantStore;
             this.serializerSettingsProvider = serializerSettingsProvider;
 
             var tenantId = new Argument<string>("tenantId")
@@ -65,7 +66,7 @@ namespace Marain.TenantManagement.Cli.Commands
 
             try
             {
-                await this.tenantManagementService.AddOrUpdateStorageConfigurationAsync(
+                await this.tenantStore.AddOrUpdateStorageConfigurationAsync(
                     tenantId,
                     config).ConfigureAwait(false);
 

@@ -85,8 +85,8 @@
                     }));
         }
 
-        [When("I use the tenant management service with the configuration called '(.*)' to add config for the tenant called '(.*)'")]
-        public Task WhenIUseTheTenantManagementServiceWithTheConfigurationCalledToAddConfigForTheTenantCalled(string configurationName, string tenantName)
+        [When("I use the tenant store with the configuration called '(.*)' to add config for the tenant called '(.*)'")]
+        public Task WhenIUseTheTenantStoreWithTheConfigurationCalledToAddConfigForTheTenantCalled(string configurationName, string tenantName)
         {
             return this.AddConfiguration(tenantName, configurationName);
         }
@@ -95,8 +95,8 @@
             string tenantName,
             string configurationName)
         {
-            ITenantManagementService managementService =
-                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantManagementService>();
+            ITenantStore tenantStore =
+                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
             ITenantProvider tenantProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantProvider>();
 
             ITenant tenant = await tenantProvider.GetTenantAsync(this.scenarioContext.Get<string>(tenantName)).ConfigureAwait(false);
@@ -105,7 +105,7 @@
 
             await CatchException.AndStoreInScenarioContextAsync(
                 this.scenarioContext,
-                () => managementService.AddOrUpdateStorageConfigurationAsync(
+                () => tenantStore.AddOrUpdateStorageConfigurationAsync(
                     tenant,
                     configuration.ToArray())).ConfigureAwait(false);
         }

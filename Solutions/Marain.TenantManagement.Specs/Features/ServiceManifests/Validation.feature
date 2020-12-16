@@ -25,7 +25,7 @@ Scenario: Well known tenant GUID is already in use
 	And the well-known tenant Guid for the manifest called 'Operations Manifest' is '085f50fa-5006-4fca-aac1-cf1f74b0198e'
 	Given I have a service manifest called 'Operations Manifest 2' for a service called 'Operations v2'
 	And the well-known tenant Guid for the manifest called 'Operations Manifest 2' is '085f50fa-5006-4fca-aac1-cf1f74b0198e'
-	And I have used the tenant management service to create a service tenant with manifest 'Operations Manifest'
+	And I have used the tenant store to create a service tenant with manifest 'Operations Manifest'
 	When I validate the service manifest called 'Operations Manifest 2'
 	Then an 'InvalidServiceManifestException' is thrown
 
@@ -43,7 +43,7 @@ Scenario Outline: Creating a manifest with invalid service names
 Scenario: Duplicate service names are allowed as long as the well known tenant GUIDs are unique
 	Given I have a service manifest called 'Operations Manifest' for a service called 'Operations'
 	Given I have a service manifest called 'Operations Manifest 2' for a service called 'Operations'
-	And I have used the tenant management service to create a service tenant with manifest 'Operations Manifest'
+	And I have used the tenant store to create a service tenant with manifest 'Operations Manifest'
 	When I validate the service manifest called 'Operations Manifest 2'
 	Then no exception is thrown
 
@@ -58,7 +58,7 @@ Scenario: Dependent service does not exist
 Scenario: Dependent service without an expected name is valid
 	Given I have a service manifest called 'Operations Manifest' for a service called 'Operations v1'
 	And the well-known tenant Guid for the manifest called 'Operations Manifest' is '4f522924-b6e7-48cc-a265-a307407ec858'
-	And I have used the tenant management service to create a service tenant with manifest 'Operations Manifest'
+	And I have used the tenant store to create a service tenant with manifest 'Operations Manifest'
 	And I have a service manifest called 'Workflow Manifest' for a service called 'Workflow v1'
 	And the service manifest called 'Workflow Manifest' has the following dependencies
 	| Service Id                                                       | Expected Name |
@@ -69,7 +69,7 @@ Scenario: Dependent service without an expected name is valid
 Scenario: Dependent service with an expected name that matches the service name is valid
 	Given I have a service manifest called 'Operations Manifest' for a service called 'Operations v1'
 	And the well-known tenant Guid for the manifest called 'Operations Manifest' is '4f522924-b6e7-48cc-a265-a307407ec858'
-	And I have used the tenant management service to create a service tenant with manifest 'Operations Manifest'
+	And I have used the tenant store to create a service tenant with manifest 'Operations Manifest'
 	And I have a service manifest called 'Workflow Manifest' for a service called 'Workflow v1'
 	And the service manifest called 'Workflow Manifest' has the following dependencies
 	| Service Id                                                       | Expected Name |
@@ -80,7 +80,7 @@ Scenario: Dependent service with an expected name that matches the service name 
 Scenario: Dependent service with an expected name that does not match the service name is invalid
 	Given I have a service manifest called 'Operations Manifest' for a service called 'Operations v1'
 	And the well-known tenant Guid for the manifest called 'Operations Manifest' is '4f522924-b6e7-48cc-a265-a307407ec858'
-	And I have used the tenant management service to create a service tenant with manifest 'Operations Manifest'
+	And I have used the tenant store to create a service tenant with manifest 'Operations Manifest'
 	And I have a service manifest called 'Workflow Manifest' for a service called 'Workflow v1'
 	And the service manifest called 'Workflow Manifest' has the following dependencies
 	| Service Id                                                       | Expected Name |
@@ -91,7 +91,7 @@ Scenario: Dependent service with an expected name that does not match the servic
 Scenario: Duplicate Ids in list of dependencies (regardless of expected names)
 	Given I have a service manifest called 'Operations Manifest' for a service called 'Operations v1'
 	And the well-known tenant Guid for the manifest called 'Operations Manifest' is '4f522924-b6e7-48cc-a265-a307407ec858'
-	And I have used the tenant management service to create a service tenant with manifest 'Operations Manifest'
+	And I have used the tenant store to create a service tenant with manifest 'Operations Manifest'
 	And I have a service manifest called 'Workflow Manifest' for a service called 'Workflow v1'
 	And the service manifest called 'Workflow Manifest' has the following dependencies
 	| Service Id                                                       | Expected Name |

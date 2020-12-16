@@ -31,7 +31,7 @@ namespace Marain.TenantManagement.Configuration
         /// Adds the configuration to a property set.
         /// </summary>
         /// <remarks>
-        /// This is called by the tenant management service when adding configuration to the tenant.
+        /// This is called by the tenant store when adding configuration to the tenant.
         /// The implementations of this method are expected to update <paramref name="values"/> with the
         /// required key/value pair for this configuration item, then return the updated <paramref name="values"/>
         /// object.

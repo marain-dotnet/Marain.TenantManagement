@@ -26,7 +26,6 @@ namespace Marain.TenantManagement.Testing
     /// </summary>
     public sealed class TransientTenantManager
     {
-        private readonly ITenantManagementService tenantManagementService;
         private readonly ITenantStore tenantStore;
         private readonly IJsonSerializerSettingsProvider jsonSerializerSettingsProvider;
         private readonly List<ITenant> tenants = new List<ITenant>();
@@ -34,11 +33,9 @@ namespace Marain.TenantManagement.Testing
         private ITenant? primaryTransientClient;
 
         private TransientTenantManager(
-            ITenantManagementService tenantManagementService,
             ITenantStore tenantStore,
             IJsonSerializerSettingsProvider jsonSerializerSettingsProvider)
         {
-            this.tenantManagementService = tenantManagementService;
             this.tenantStore = tenantStore;
             this.jsonSerializerSettingsProvider = jsonSerializerSettingsProvider;
         }
@@ -65,11 +62,10 @@ namespace Marain.TenantManagement.Testing
         /// When this is called for the first time, the service provider will be retrieved from the
         /// <see cref="FeatureContext"/> and used to obtain instances of:
         /// <list type="bullet">
-        ///     <item><see cref="ITenantManagementService"/></item>
         ///     <item><see cref="ITenantProvider"/></item>
         ///     <item><see cref="IJsonSerializerSettingsProvider"/></item>
         /// </list>
-        /// The <see cref="ITenantManagementService"/> must already be initialised for use with
+        /// The <see cref="ITenantStore"/> must already be initialised for use with
         /// Marain.
         /// </remarks>
         public static TransientTenantManager GetInstance(FeatureContext featureContext)
@@ -79,7 +75,6 @@ namespace Marain.TenantManagement.Testing
                 IServiceProvider serviceProvider = ContainerBindings.GetServiceProvider(featureContext);
 
                 helper = new TransientTenantManager(
-                    serviceProvider.GetRequiredService<ITenantManagementService>(),
                     serviceProvider.GetRequiredService<ITenantStore>(),
                     serviceProvider.GetRequiredService<IJsonSerializerSettingsProvider>());
 
@@ -90,13 +85,13 @@ namespace Marain.TenantManagement.Testing
         }
 
         /// <summary>
-        /// Ensures that the underlying <see cref="ITenantManagementService"/> is initialised for use with
+        /// Ensures that the underlying <see cref="ITenantStore"/> is initialised for use with
         /// Marain.
         /// </summary>
         /// <returns>A task which completes when the operation is finished.</returns>
         public Task EnsureInitialised()
         {
-            return this.tenantManagementService.InitialiseTenancyProviderAsync();
+            return this.tenantStore.InitialiseTenancyProviderAsync();
         }
 
         /// <summary>
@@ -158,7 +153,7 @@ namespace Marain.TenantManagement.Testing
             manifest.ServiceName = $"{manifest.ServiceName} - {manifest.WellKnownTenantGuid}";
 
             ITenant serviceTenant =
-                await this.tenantManagementService.CreateServiceTenantAsync(manifest).ConfigureAwait(false);
+                await this.tenantStore.CreateServiceTenantAsync(manifest).ConfigureAwait(false);
 
             this.tenants.Add(serviceTenant);
 
@@ -178,7 +173,7 @@ namespace Marain.TenantManagement.Testing
             string serviceTenantId,
             EnrollmentConfigurationItem[] configurationItems)
         {
-            await this.tenantManagementService.EnrollInServiceAsync(
+            await this.tenantStore.EnrollInServiceAsync(
                 enrollingTenantId,
                 serviceTenantId,
                 configurationItems).ConfigureAwait(false);
@@ -193,7 +188,7 @@ namespace Marain.TenantManagement.Testing
         public async Task<ITenant> CreateTransientClientTenantAsync()
         {
             ITenant tenant =
-                await this.tenantManagementService.CreateClientTenantAsync(
+                await this.tenantStore.CreateClientTenantAsync(
                     Guid.NewGuid().ToString()).ConfigureAwait(false);
 
             this.tenants.Add(tenant);
@@ -214,7 +209,7 @@ namespace Marain.TenantManagement.Testing
         {
             await Task.WhenAll(
                 this.enrollments.Select(
-                    enrollment => this.tenantManagementService.UnenrollFromServiceAsync(
+                    enrollment => this.tenantStore.UnenrollFromServiceAsync(
                         enrollment.EnrolledTenantId,
                         enrollment.ServiceTenantId))).ConfigureAwait(false);
 

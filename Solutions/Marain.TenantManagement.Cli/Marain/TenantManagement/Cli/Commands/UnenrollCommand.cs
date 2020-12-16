@@ -9,6 +9,7 @@ namespace Marain.TenantManagement.Cli.Commands
     using System.CommandLine.Invocation;
     using System.Threading.Tasks;
     using Corvus.Extensions.Json;
+    using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
 
     /// <summary>
@@ -16,22 +17,22 @@ namespace Marain.TenantManagement.Cli.Commands
     /// </summary>
     public class UnenrollCommand : Command
     {
-        private readonly ITenantManagementService tenantManagementService;
+        private readonly ITenantStore tenantStore;
         private readonly IJsonSerializerSettingsProvider serializerSettingsProvider;
 
         /// <summary>
         /// Creates a new instance of the <see cref="EnrollCommand"/> class.
         /// </summary>
-        /// <param name="tenantManagementService">The tenant management services.</param>
+        /// <param name="tenantStore">The tenant store.</param>
         /// <param name="serializerSettingsProvider">
         /// The <see cref="IJsonSerializerSettingsProvider"/> to use when reading manifest files.
         /// </param>
         public UnenrollCommand(
-            ITenantManagementService tenantManagementService,
+            ITenantStore tenantStore,
             IJsonSerializerSettingsProvider serializerSettingsProvider)
             : base("unenroll", "Unenrolls the specified client from the service.")
         {
-            this.tenantManagementService = tenantManagementService;
+            this.tenantStore = tenantStore;
             this.serializerSettingsProvider = serializerSettingsProvider;
 
             var clientTenantId = new Argument<string>("clientTenantId")
@@ -58,7 +59,7 @@ namespace Marain.TenantManagement.Cli.Commands
         {
             try
             {
-                await this.tenantManagementService.UnenrollFromServiceAsync(
+                await this.tenantStore.UnenrollFromServiceAsync(
                     enrollingTenantId,
                     serviceTenantId).ConfigureAwait(false);
 
