@@ -4,8 +4,7 @@
 
 namespace Marain.TenantManagement.Specs.Bindings
 {
-    using Corvus.SpecFlow.Extensions;
-    using Corvus.Tenancy;
+    using Corvus.Testing.SpecFlow;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using TechTalk.SpecFlow;
@@ -33,10 +32,7 @@ namespace Marain.TenantManagement.Specs.Bindings
         [BeforeScenario("useInMemoryTenantProvider", Order = ContainerBeforeScenarioOrder.PopulateServiceCollection)]
         public static void UseInMemoryTenantProvider(ScenarioContext scenarioContext)
         {
-            ContainerBindings.ConfigureServices(scenarioContext, collection =>
-            {
-                collection.AddInMemoryTenantProvider();
-            });
+            ContainerBindings.ConfigureServices(scenarioContext, collection => collection.AddInMemoryTenantProvider());
         }
     }
 }

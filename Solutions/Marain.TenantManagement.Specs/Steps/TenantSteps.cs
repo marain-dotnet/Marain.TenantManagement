@@ -9,12 +9,12 @@ namespace Marain.TenantManagement.Specs.Steps
     using System.Threading.Tasks;
     using Corvus.Azure.Cosmos.Tenancy;
     using Corvus.Azure.Storage.Tenancy;
-    using Corvus.SpecFlow.Extensions;
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
     using Marain.TenantManagement;
     using Marain.TenantManagement.ServiceManifests;
     using Marain.TenantManagement.Testing;
+    using Corvus.Testing.SpecFlow;
     using Microsoft.Extensions.DependencyInjection;
     using NUnit.Framework;
     using TechTalk.SpecFlow;

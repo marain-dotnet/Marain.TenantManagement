@@ -11,8 +11,8 @@ namespace Marain.TenantManagement.Testing
     using System.Reflection;
     using System.Threading.Tasks;
     using Corvus.Extensions.Json;
-    using Corvus.SpecFlow.Extensions;
     using Corvus.Tenancy;
+    using Corvus.Testing.SpecFlow;
     using Marain.TenantManagement;
     using Marain.TenantManagement.EnrollmentConfiguration;
     using Marain.TenantManagement.ServiceManifests;

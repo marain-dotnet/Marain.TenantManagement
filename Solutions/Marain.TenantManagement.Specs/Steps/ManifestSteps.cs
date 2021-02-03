@@ -11,9 +11,9 @@ namespace Marain.TenantManagement.Specs.Steps
     using Corvus.Azure.Cosmos.Tenancy;
     using Corvus.Azure.Storage.Tenancy;
     using Corvus.Extensions.Json;
-    using Corvus.SpecFlow.Extensions;
     using Corvus.Tenancy;
     using Marain.TenantManagement.ServiceManifests;
+    using Corvus.Testing.SpecFlow;
     using Microsoft.Extensions.DependencyInjection;
     using Newtonsoft.Json;
     using NUnit.Framework;
