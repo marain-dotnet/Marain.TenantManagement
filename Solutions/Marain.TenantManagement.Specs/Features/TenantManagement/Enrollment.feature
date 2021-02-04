@@ -84,6 +84,7 @@ Scenario: Enrollment with a dependency
 	And a new child tenant called 'Operations v1\Litware' of the service tenant called 'Operations v1' has been created
 	And the tenant called 'Operations v1\Litware' should have the id of the tenant called 'FooBar v1' added to its enrollments
 	And the tenant called 'Operations v1\Litware' should contain blob storage configuration for a blob storage container definition with container name 'foobar'
+	And the tenant called 'Operations v1\Litware` should have its on-behalf-of tenant Id set to the id of the tenant called 'Litware'
 	And the tenant called 'Litware' should have the id of the tenant called 'Operations v1\Litware' set as the delegated tenant for the service called 'Operations v1'
 
 Scenario: Enrollment with a dependency without supplying configuration for the dependency service
@@ -174,10 +175,12 @@ Scenario: Enrollment with multiple levels of dependency
 	And a new child tenant called 'Workflow v1\Litware' of the service tenant called 'Workflow v1' has been created
 	And the tenant called 'Workflow v1\Litware' should have the id of the tenant called 'Operations v1' added to its enrollments
 	And the tenant called 'Workflow v1\Litware' should contain blob storage configuration for a blob storage container definition with container name 'operations'
+	And the tenant called 'Workflow v1\Litware` should have its on-behalf-of tenant Id set to the id of the tenant called 'Litware'
 	And the tenant called 'Litware' should have the id of the tenant called 'Workflow v1\Litware' set as the delegated tenant for the service called 'Workflow v1'
 	And a new child tenant called 'Operations v1\Workflow v1\Litware' of the service tenant called 'Operations v1' has been created
 	And the tenant called 'Operations v1\Workflow v1\Litware' should have the id of the tenant called 'FooBar v1' added to its enrollments
 	And the tenant called 'Operations v1\Workflow v1\Litware' should contain blob storage configuration for a blob storage container definition with container name 'foobar'
+	And the tenant called 'Operations v1\Workflow v1\Litware` should have its on-behalf-of tenant Id set to the id of the tenant called 'Workflow v1\Litware'
 	And the tenant called 'Workflow v1\Litware' should have the id of the tenant called 'Operations v1\Workflow v1\Litware' set as the delegated tenant for the service called 'Operations v1'
 
 Scenario: Enrollment with multiple levels of dependency and with the client tenant directly enrolled in one of the dependent services
@@ -252,13 +255,16 @@ Scenario: Enrollment with multiple levels of dependency and with the client tena
 	And a new child tenant called 'Workflow v1\Litware' of the service tenant called 'Workflow v1' has been created
 	And the tenant called 'Workflow v1\Litware' should have the id of the tenant called 'Operations v1' added to its enrollments
 	And the tenant called 'Workflow v1\Litware' should contain blob storage configuration for a blob storage container definition with container name 'operations'
+	And the tenant called 'Workflow v1\Litware` should have its on-behalf-of tenant Id set to the id of the tenant called 'Litware'
 	And the tenant called 'Litware' should have the id of the tenant called 'Workflow v1\Litware' set as the delegated tenant for the service called 'Workflow v1'
 	And a new child tenant called 'Operations v1\Workflow v1\Litware' of the service tenant called 'Operations v1' has been created
 	And the tenant called 'Operations v1\Workflow v1\Litware' should have the id of the tenant called 'FooBar v1' added to its enrollments
 	And the tenant called 'Operations v1\Workflow v1\Litware' should contain blob storage configuration for a blob storage container definition with container name 'foobar'
+	And the tenant called 'Operations v1\Workflow v1\Litware` should have its on-behalf-of tenant Id set to the id of the tenant called 'Workflow v1\Litware'
 	And the tenant called 'Workflow v1\Litware' should have the id of the tenant called 'Operations v1\Workflow v1\Litware' set as the delegated tenant for the service called 'Operations v1'
 	And a new child tenant called 'Operations v1\Litware' of the service tenant called 'Operations v1' has been created
 	And the tenant called 'Operations v1\Litware' should have the id of the tenant called 'FooBar v1' added to its enrollments
 	And the tenant called 'Operations v1\Litware' should contain blob storage configuration for a blob storage container definition with container name 'foobar'
+	And the tenant called 'Operations v1\Litware` should have its on-behalf-of tenant Id set to the id of the tenant called 'Litware'
 	And the tenant called 'Litware' should have the id of the tenant called 'Operations v1\Litware' set as the delegated tenant for the service called 'Operations v1'
 	

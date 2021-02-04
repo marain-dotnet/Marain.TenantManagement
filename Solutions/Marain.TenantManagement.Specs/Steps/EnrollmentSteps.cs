@@ -153,6 +153,20 @@ namespace Marain.TenantManagement.Specs.Steps
             Assert.IsTrue(enrollingTenant.IsEnrolledForService(serviceTenant.Id));
         }
 
+        [Then("the tenant called '(.*)` should have its on-behalf-of tenant Id set to the id of the tenant called '(.*)'")]
+        public void ThenTheTenantCalledLitware(string delegatedTenantName, string enrollingTenantName)
+        {
+            InMemoryTenantProvider tenantProvider =
+                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<InMemoryTenantProvider>();
+
+            ITenant enrollingTenant = tenantProvider.GetTenantByName(enrollingTenantName)
+                ?? throw new TenantNotFoundException($"Could not find tenant with name '{enrollingTenantName}'");
+            ITenant delegatedTenant = tenantProvider.GetTenantByName(delegatedTenantName)
+                ?? throw new TenantNotFoundException($"Could not find tenant with name '{delegatedTenantName}'");
+
+            Assert.AreEqual(enrollingTenant.Id, delegatedTenant.GetOnBehalfOfTenantIdForDelegatedTenant());
+        }
+
         [Then("the tenant called '(.*)' should not have the id of the tenant called '(.*)' in its enrollments")]
         public void ThenTheTenantCalledShouldNotHaveTheIdOfTheTenantCalledInItsEnrollments(
             string enrolledTenantName,

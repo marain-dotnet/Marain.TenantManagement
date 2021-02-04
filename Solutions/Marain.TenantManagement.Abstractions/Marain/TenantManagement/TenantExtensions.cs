@@ -116,6 +116,27 @@ namespace Marain.TenantManagement
         }
 
         /// <summary>
+        /// Gets the Id of the tenant that the Delegated Tenant was created to act on behalf of. This will either be a
+        /// Client Tenant Id or another Delegated Tenant Id.
+        /// </summary>
+        /// <param name="tenant">The Delegated Tenant to retrieve the on-behalf-of tenant Id for.</param>
+        /// <returns>The Id of the tenant that this Delegated Tenant was created to act on behalf of.</returns>
+        public static string GetOnBehalfOfTenantIdForDelegatedTenant(this ITenant tenant)
+        {
+            tenant.EnsureTenantIsOfType(MarainTenantType.Delegated);
+
+            if (tenant.Properties.TryGet(TenantPropertyKeys.MarainDelegatedTenantOnBehalfOfTenantId, out string onBehalfOfTenantId))
+            {
+                if (!string.IsNullOrEmpty(onBehalfOfTenantId))
+                {
+                    return onBehalfOfTenantId;
+                }
+            }
+
+            throw new ArgumentException($"Tenant '{tenant.Name}' with Id '{tenant.Id}' does not contain an on-behalf-of tenant Id.");
+        }
+
+        /// <summary>
         /// Gets the list of enrollments for the tenant.
         /// </summary>
         /// <param name="tenant">The tenant to get enrollments for.</param>
@@ -301,6 +322,45 @@ namespace Marain.TenantManagement
             delegatedTenant.EnsureTenantIsOfType(MarainTenantType.Delegated);
 
             return values.Append(new KeyValuePair<string, object>(TenantPropertyKeys.DelegatedTenantId(serviceTenant.Id), delegatedTenant.Id));
+        }
+
+        /// <summary>
+        /// Stores the Id of the tenant that a delegated tenant is used to act on behalf of. This will be the Id of a
+        /// client tenant or another delegated tenant.
+        /// </summary>
+        /// <param name="values">Existing configuration values to which to append these.</param>
+        /// <param name="delegatedTenant">The tenant that has been created to act on behalf of the "onBehalfOfTenant".</param>
+        /// <param name="onBehalfOfTenant">The tenant that the delegated tenant has been created for.</param>
+        /// <remarks>
+        /// This method does not persist the tenant. Calling code should pass the resulting list to
+        /// <see cref="ITenantStore.UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>.
+        /// </remarks>
+        /// <returns>
+        /// Properties to pass to
+        /// <see cref="ITenantStore.UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>.
+        /// </returns>
+        internal static IEnumerable<KeyValuePair<string, object>> AddOnBehalfOfTenantIdForDelegatedTenant(
+            this IEnumerable<KeyValuePair<string, object>> values,
+            ITenant delegatedTenant,
+            ITenant onBehalfOfTenant)
+        {
+            if (onBehalfOfTenant == null)
+            {
+                throw new ArgumentNullException(nameof(onBehalfOfTenant));
+            }
+
+            onBehalfOfTenant.EnsureTenantIsOfType(MarainTenantType.Client, MarainTenantType.Delegated);
+
+            if (delegatedTenant == null)
+            {
+                throw new ArgumentNullException(nameof(delegatedTenant));
+            }
+
+            // Normally we'd check the tenant type of the supplied delegated tenant to ensure that it is definitely of
+            // type MarainTenantType.Delegated. However, it's likely that this method will be invoked as part of
+            // creating the delegated tenant, in which case it won't have its tenant type set yet. So we'll just have
+            // to trust the caller.
+            return values.Append(new KeyValuePair<string, object>(TenantPropertyKeys.MarainDelegatedTenantOnBehalfOfTenantId, onBehalfOfTenant.Id));
         }
 
         /// <summary>

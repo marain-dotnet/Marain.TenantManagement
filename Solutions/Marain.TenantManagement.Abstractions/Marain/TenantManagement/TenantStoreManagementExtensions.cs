@@ -802,15 +802,20 @@ namespace Marain.TenantManagement
                 delegatedTenant.Name,
                 delegatedTenant.Id);
 
+            IEnumerable<KeyValuePair<string, object>> propertiesToSetOrAdd = PropertyBagValues.Build(
+                p =>
+                p.AddMarainTenantType(MarainTenantType.Delegated).AddOnBehalfOfTenantIdForDelegatedTenant(delegatedTenant, accessingTenant));
+
             delegatedTenant = await tenantStore.UpdateTenantAsync(
                 delegatedTenant.Id,
-                propertiesToSetOrAdd: PropertyBagValues.Build(p => p.AddMarainTenantType(MarainTenantType.Delegated)))
+                propertiesToSetOrAdd: propertiesToSetOrAdd)
                 .ConfigureAwait(false);
 
             logger?.LogInformation(
                 "Created new delegated tenant '{delegatedTenantName}' with Id '{tenantId}'.",
                 delegatedTenant.Name,
                 delegatedTenant.Id);
+
             return delegatedTenant;
         }
 

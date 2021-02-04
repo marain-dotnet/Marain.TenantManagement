@@ -25,6 +25,11 @@ namespace Marain.TenantManagement.Internal
         public const string MarainTenantType = "Marain:TenantType";
 
         /// <summary>
+        /// Key for storing the Id of the client tenant that a delegate tenant is used to act on behalf of.
+        /// </summary>
+        public const string MarainDelegatedTenantOnBehalfOfTenantId = "Marain:OnBehalfOfTenantId";
+
+        /// <summary>
         /// Builds the key to store the Id of a delegated service tenant that will be used by the specified service.
         /// </summary>
         /// <param name="serviceTenantName">
