@@ -6,8 +6,8 @@ namespace Marain.TenantManagement.Specs.Steps
 {
     using System;
     using System.Threading.Tasks;
-    using Corvus.SpecFlow.Extensions;
     using Corvus.Tenancy;
+    using Corvus.Testing.SpecFlow;
     using Microsoft.Extensions.DependencyInjection;
     using TechTalk.SpecFlow;
 
