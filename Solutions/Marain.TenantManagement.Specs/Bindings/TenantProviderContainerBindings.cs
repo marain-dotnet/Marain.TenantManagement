@@ -7,6 +7,8 @@ namespace Marain.TenantManagement.Specs.Bindings
     using Corvus.Testing.SpecFlow;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
     using TechTalk.SpecFlow;
 
     [Binding]
@@ -23,8 +25,12 @@ namespace Marain.TenantManagement.Specs.Bindings
                     config.AddConsole();
                 });
 
-                collection.AddJsonSerializerSettings();
-                collection.AddRootTenant();
+                collection.AddJsonNetSerializerSettingsProvider();
+                collection.AddJsonNetPropertyBag();
+                collection.AddJsonNetCultureInfoConverter();
+                collection.AddJsonNetDateTimeOffsetToIso8601AndUnixTimeConverter();
+                collection.AddSingleton<JsonConverter>(new StringEnumConverter(true));
+
                 collection.AddMarainTenantManagement();
             });
         }

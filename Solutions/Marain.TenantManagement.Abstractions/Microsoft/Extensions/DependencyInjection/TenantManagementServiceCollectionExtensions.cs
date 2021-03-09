@@ -9,6 +9,8 @@ namespace Microsoft.Extensions.DependencyInjection
     using Marain.TenantManagement.Configuration;
     using Marain.TenantManagement.EnrollmentConfiguration;
     using Marain.TenantManagement.ServiceManifests;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
 
     /// <summary>
     /// Helper methods to add Marain tenant management features to a service collection.
@@ -26,9 +28,14 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </remarks>
         public static IServiceCollection AddMarainTenantManagement(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddContentSerialization();
+            serviceCollection.AddContentTypeBasedSerializationSupport();
             serviceCollection.AddContent(AddTenantManagementContentTypes);
-            serviceCollection.AddJsonSerializerSettings();
+
+            serviceCollection.AddJsonNetSerializerSettingsProvider();
+            serviceCollection.AddJsonNetPropertyBag();
+            serviceCollection.AddJsonNetCultureInfoConverter();
+            serviceCollection.AddJsonNetDateTimeOffsetToIso8601AndUnixTimeConverter();
+            serviceCollection.AddSingleton<JsonConverter>(new StringEnumConverter(true));
             return serviceCollection;
         }
 

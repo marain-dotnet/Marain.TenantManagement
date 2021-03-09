@@ -13,6 +13,8 @@ namespace Microsoft.Extensions.DependencyInjection
     using Marain.TenantManagement.Cli.Commands;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
 
     /// <summary>
     /// Extension methods to configure the DI container used by the CLI.
@@ -61,7 +63,11 @@ namespace Microsoft.Extensions.DependencyInjection
                 config.AddConsole();
             });
 
-            services.AddJsonSerializerSettings();
+            services.AddJsonNetSerializerSettingsProvider();
+            services.AddJsonNetPropertyBag();
+            services.AddJsonNetCultureInfoConverter();
+            services.AddJsonNetDateTimeOffsetToIso8601AndUnixTimeConverter();
+            services.AddSingleton<JsonConverter>(new StringEnumConverter(true));
 
             var msiTokenSourceOptions = new AzureManagedIdentityTokenSourceOptions
             {
