@@ -22,13 +22,13 @@
   <ItemGroup>
     <PackageReference Include="Marain.Tenancy.ClientTenantProvider" Version="1.1.6" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.19" />
-    <PackageReference Include="System.CommandLine.Hosting" Version="0.3.0-alpha.20158.1" />
     <PackageReference Include="Corvus.Identity.ManagedServiceIdentity.ClientAuthentication" Version="1.0.4" />
     <PackageReference Include="Endjin.RecommendedPractices" Version="1.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="ConsoleTables" Version="2.4.2" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.21308.1" />
   </ItemGroup>
 
   <ItemGroup>
