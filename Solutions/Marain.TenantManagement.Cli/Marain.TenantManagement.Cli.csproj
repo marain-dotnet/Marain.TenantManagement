@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="Marain.Tenancy.ClientTenantProvider" Version="1.1.11" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.19" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.20" />
     <PackageReference Include="Corvus.Identity.ManagedServiceIdentity.ClientAuthentication" Version="1.0.7" />
     <PackageReference Include="Endjin.RecommendedPractices" Version="1.2.0">
       <PrivateAssets>all</PrivateAssets>
