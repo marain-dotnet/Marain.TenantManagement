@@ -4,11 +4,11 @@
     ".NETCoreApp,Version=v3.1": {
       "Corvus.Testing.SpecFlow.NUnit": {
         "type": "Direct",
-        "requested": "[1.4.5, )",
-        "resolved": "1.4.5",
-        "contentHash": "rGwqPPBbIyhW0x5LeU+JRjLh3YqnCfBKiy7+wIIFoJZCpR7elcKhwNb6WXYI0YZc/v6mUcPjcvQ/1Px0oEZLyg==",
+        "requested": "[1.4.6, )",
+        "resolved": "1.4.6",
+        "contentHash": "N7Vti+2pxUOFphEAh20JAN/ro8h02+TzLRnZaHoI5fEQysw6DPmCHklzWdMADxTTLSwLQ5DsrhZVKTSd7+LHBw==",
         "dependencies": {
-          "Corvus.Testing.SpecFlow": "1.4.5",
+          "Corvus.Testing.SpecFlow": "1.4.6",
           "Microsoft.NET.Test.Sdk": "[16.10.0, 17.0.0)",
           "Moq": "4.16.1",
           "SpecFlow.NUnit.Runners": "3.9.22",
@@ -78,21 +78,21 @@
       },
       "Corvus.Azure.Cosmos.Tenancy": {
         "type": "Transitive",
-        "resolved": "2.0.11",
-        "contentHash": "jY5QBv1pITN7iVRH2Aem/LHOZRK7k+5eRX4pQ4JoX+RnOGwQpt/OHd962qM6LeVQ3jZUxkHgR+SJIpjKD6Mtkw==",
+        "resolved": "2.0.13",
+        "contentHash": "UgrcpcK/V5VorDvo8qZwlLmffLlpCsWPQrUAA04XMK9N61tNCaXprnKmRF7hACullMLqjbL3D9nztQza+4z5cQ==",
         "dependencies": {
           "Corvus.Extensions.CosmosClient": "2.0.9",
-          "Corvus.Tenancy.Abstractions": "2.0.11",
+          "Corvus.Tenancy.Abstractions": "2.0.13",
           "Microsoft.Extensions.Logging.Abstractions": "3.1.20",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "3.1.20"
         }
       },
       "Corvus.Azure.Storage.Tenancy": {
         "type": "Transitive",
-        "resolved": "2.0.11",
-        "contentHash": "cWRNnWaMETmGAR2k8MvwRHN9JS/CPC9aRvFbseJGLuwwYgfmka4exbmoru1S2hIJC6i/mdDUEBTs092FF/IBxg==",
+        "resolved": "2.0.13",
+        "contentHash": "naqlx/mpp9OXw0DWQCUMZ93mmyLiLDdk+SSxR9iBMdZXgy/76iO331C5L1Ee24pKizqIq8tmibN35sUr9KN8KA==",
         "dependencies": {
-          "Corvus.Tenancy.Abstractions": "2.0.11",
+          "Corvus.Tenancy.Abstractions": "2.0.13",
           "Microsoft.Azure.Cosmos.Table": "1.0.8",
           "Microsoft.Azure.KeyVault": "3.0.5",
           "Microsoft.Azure.Services.AppAuthentication": "1.6.2",
@@ -103,20 +103,20 @@
       },
       "Corvus.ContentHandling": {
         "type": "Transitive",
-        "resolved": "2.0.10",
-        "contentHash": "7mMAdkqmAYtcK00NCdJtfkznrkLXbFbvuxOT0h2io4c+t4OAY+cw7FtdYdMQTjiAzLSExH3W4zYjcz24Y4ydag==",
+        "resolved": "2.0.11",
+        "contentHash": "W4yuYfITGgwPg8KRFlLurwUp9aAsOggedBbtbLPPSmJTJzDK3BMiJnEJh/j0Rc2P37oqv3j8jhf3aOfvn7s5XQ==",
         "dependencies": {
           "Microsoft.CodeAnalysis.CSharp": "3.11.0",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.19",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.20",
           "System.Runtime.Loader": "4.3.0"
         }
       },
       "Corvus.ContentHandling.Json": {
         "type": "Transitive",
-        "resolved": "2.0.10",
-        "contentHash": "y32Qtky0mgBVzh/kgxkiz9K8ka5YQKm81Ogb4FjLD+DAEjbdwzYgDM+RH4FsfKbHfKzr/9m1uNprRyEm1+SgQA==",
+        "resolved": "2.0.11",
+        "contentHash": "aYnqiQB7nCe+Pq4szhsdBYRpaXcdZX0u77JL57YAKg/Jfty9p5xVB+9cwi+O7z6boD/xOyYjkr44qMvt06i/ng==",
         "dependencies": {
-          "Corvus.ContentHandling": "2.0.10",
+          "Corvus.ContentHandling": "2.0.11",
           "Corvus.Extensions.Newtonsoft.Json": "2.0.5",
           "Newtonsoft.Json": "11.0.2"
         }
@@ -165,32 +165,22 @@
       },
       "Corvus.Tenancy.Abstractions": {
         "type": "Transitive",
-        "resolved": "2.0.11",
-        "contentHash": "4iTMVGnbJAMW0h/xkGrwh3wWCIPkm6x6eMf6jQlDtJfheAIm1F0pz4Lq8nrBwp2kOgKJgUvGYTHYEPLbPstEpg==",
+        "resolved": "2.0.13",
+        "contentHash": "uZxeWtTHYmjI580a+MnrwvgW5KLjhXbDA6o0A5Xo1xPRC3cn2xPXXvfO+ClHtJuyh2bzL8gaWjXyj85N4q5oVg==",
         "dependencies": {
-          "Corvus.ContentHandling.Json": "2.0.10",
+          "Corvus.ContentHandling.Json": "2.0.11",
           "Corvus.Extensions": "1.1.4",
           "Microsoft.Extensions.Primitives": "3.1.20"
         }
       },
-      "Corvus.Testing.AzureFunctions": {
-        "type": "Transitive",
-        "resolved": "1.4.5",
-        "contentHash": "cg+Z904qRJr0ZO1zC+kTs4bdJi+HMTFzCNZJB/TR72gZn8nR6HTWUXSsvhjLdtReh3Dc4EKJwq6LErgIXBWlAQ==",
-        "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "3.1.19",
-          "System.Management": "4.7.0"
-        }
-      },
       "Corvus.Testing.SpecFlow": {
         "type": "Transitive",
-        "resolved": "1.4.5",
-        "contentHash": "wECzJlyMgoKZv6fI0y69IDs8oZ20FoZ2vluJqg5uID8shy+HmzN86ZG7rKXxZUyqSmszKoNrF23zNrr4v8545w==",
+        "resolved": "1.4.6",
+        "contentHash": "EmakRYEWtLqOXJXV8vOq4bOikivszKcclnRClM65IULefSCY1Cm+pP5wvJusetZWRQ7xXjvI9Hzp25T1MJmVBQ==",
         "dependencies": {
-          "Corvus.Testing.AzureFunctions": "1.4.5",
-          "Microsoft.Extensions.Configuration.Abstractions": "3.1.19",
-          "Microsoft.Extensions.DependencyInjection": "3.1.19",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.19",
+          "Microsoft.Extensions.Configuration.Abstractions": "3.1.20",
+          "Microsoft.Extensions.DependencyInjection": "3.1.20",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.20",
           "NUnit": "3.13.2",
           "SpecFlow": "3.9.22",
           "System.Management": "4.7.0"
@@ -2153,7 +2143,7 @@
       "marain.services.tenancy.testing": {
         "type": "Project",
         "dependencies": {
-          "Corvus.Testing.SpecFlow": "1.4.5",
+          "Corvus.Testing.SpecFlow": "1.4.6",
           "Marain.TenantManagement.Abstractions": "1.0.0",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.0"
         }
@@ -2161,9 +2151,9 @@
       "marain.tenantmanagement.abstractions": {
         "type": "Project",
         "dependencies": {
-          "Corvus.Azure.Cosmos.Tenancy": "2.0.11",
-          "Corvus.Azure.Storage.Tenancy": "2.0.11",
-          "Corvus.Tenancy.Abstractions": "2.0.11"
+          "Corvus.Azure.Cosmos.Tenancy": "2.0.13",
+          "Corvus.Azure.Storage.Tenancy": "2.0.13",
+          "Corvus.Tenancy.Abstractions": "2.0.13"
         }
       }
     }
