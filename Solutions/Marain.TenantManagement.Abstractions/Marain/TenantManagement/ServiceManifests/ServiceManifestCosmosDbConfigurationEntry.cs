@@ -44,7 +44,7 @@ namespace Marain.TenantManagement.ServiceManifests
                 throw new ArgumentNullException(nameof(enrollmentConfigurationItem));
             }
 
-            if (!(enrollmentConfigurationItem is EnrollmentCosmosConfigurationItem cosmosConfigurationItem))
+            if (enrollmentConfigurationItem is not EnrollmentCosmosConfigurationItem cosmosConfigurationItem)
             {
                 throw new ArgumentException(
                     $"The supplied value must be of type {nameof(EnrollmentCosmosConfigurationItem)}",

@@ -38,10 +38,7 @@ namespace Marain.TenantManagement.Specs.Bindings
         [BeforeScenario("useInMemoryTenantProvider", Order = ContainerBeforeScenarioOrder.PopulateServiceCollection)]
         public static void UseInMemoryTenantProvider(ScenarioContext scenarioContext)
         {
-            ContainerBindings.ConfigureServices(scenarioContext, collection =>
-            {
-                collection.AddInMemoryTenantProvider();
-            });
+            ContainerBindings.ConfigureServices(scenarioContext, collection => collection.AddInMemoryTenantProvider());
         }
     }
 }

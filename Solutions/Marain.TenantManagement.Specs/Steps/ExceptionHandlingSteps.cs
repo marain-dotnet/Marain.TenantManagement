@@ -38,7 +38,7 @@ namespace Marain.TenantManagement.Specs.Steps
         [Then("no exception is thrown")]
         public void ThenNoExceptionIsThrown()
         {
-            if (this.scenarioContext.TryGetValue(out Exception lastException))
+            if (this.scenarioContext.TryGetValue(out Exception _))
             {
                 Assert.Fail("An exception was thrown.");
             }

@@ -11,9 +11,7 @@ namespace Marain.TenantManagement.Exceptions
     /// for the requested operation.
     /// </summary>
     [Serializable]
-#pragma warning disable RCS1194 // Implement exception constructors.
     public class InvalidMarainTenantTypeException : Exception
-#pragma warning restore RCS1194 // Implement exception constructors.
     {
         /// <summary>
         /// Creates a new instance of the <see cref="InvalidMarainTenantTypeException"/>.
