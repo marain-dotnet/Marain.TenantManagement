@@ -15,9 +15,7 @@ namespace Marain.TenantManagement.Exceptions
     /// as part of tenant enrollment.
     /// </summary>
     [Serializable]
-#pragma warning disable RCS1194 // Implement exception constructors.
     public class InvalidEnrollmentConfigurationException : Exception
-#pragma warning restore RCS1194 // Implement exception constructors.
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidEnrollmentConfigurationException"/> class.

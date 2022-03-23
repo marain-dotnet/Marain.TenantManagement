@@ -58,10 +58,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>The service collection, for chaining.</returns>
         public static IServiceCollection AddMarainServices(this IServiceCollection services, IConfiguration config)
         {
-            services.AddLogging(config =>
-            {
-                config.AddConsole();
-            });
+            services.AddLogging(config => config.AddConsole());
 
             services.AddJsonNetSerializerSettingsProvider();
             services.AddJsonNetPropertyBag();

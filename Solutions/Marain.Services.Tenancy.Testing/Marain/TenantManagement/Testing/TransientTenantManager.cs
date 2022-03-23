@@ -28,8 +28,8 @@ namespace Marain.TenantManagement.Testing
     {
         private readonly ITenantStore tenantStore;
         private readonly IJsonSerializerSettingsProvider jsonSerializerSettingsProvider;
-        private readonly List<ITenant> tenants = new List<ITenant>();
-        private readonly List<(string EnrolledTenantId, string ServiceTenantId)> enrollments = new List<(string EnrolledTenant, string ServiceTenant)>();
+        private readonly List<ITenant> tenants = new();
+        private readonly List<(string EnrolledTenantId, string ServiceTenantId)> enrollments = new();
         private ITenant? primaryTransientClient;
 
         private TransientTenantManager(
@@ -100,14 +100,14 @@ namespace Marain.TenantManagement.Testing
         /// <param name="assembly">The assembly containing the manifest JSON resource.</param>
         /// <param name="name">The name of the embedded resource.</param>
         /// <returns>The new transient tenant.</returns>
-        public Task<ITenant> CreateTransientServiceTenantFromEmbeddedResourceAsync(
+        public async Task<ITenant> CreateTransientServiceTenantFromEmbeddedResourceAsync(
             Assembly assembly,
             string name)
         {
             using Stream stream = assembly.GetManifestResourceStream(name)
                 ?? throw new ArgumentException($"Could not find an embedded resource named '{name}'");
 
-            return this.CreateTransientServiceTenantFromManifestStreamAsync(stream);
+            return await this.CreateTransientServiceTenantFromManifestStreamAsync(stream);
         }
 
         /// <summary>
@@ -116,14 +116,14 @@ namespace Marain.TenantManagement.Testing
         /// </summary>
         /// <param name="serviceManifestStream">The stream containing the manifest JSON data.</param>
         /// <returns>The new transient tenant.</returns>
-        public Task<ITenant> CreateTransientServiceTenantFromManifestStreamAsync(
+        public async Task<ITenant> CreateTransientServiceTenantFromManifestStreamAsync(
             Stream serviceManifestStream)
         {
             using var reader = new StreamReader(serviceManifestStream);
 
-            string manifestJson = reader.ReadToEnd();
+            string manifestJson = await reader.ReadToEndAsync();
 
-            return this.CreateTransientServiceTenantAsync(manifestJson);
+            return await this.CreateTransientServiceTenantAsync(manifestJson);
         }
 
         /// <summary>

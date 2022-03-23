@@ -40,8 +40,8 @@ namespace Marain.TenantManagement.Testing
     public class InMemoryTenantProvider : ITenantStore
     {
         private readonly IJsonSerializerSettingsProvider jsonSerializerSettingsProvider;
-        private readonly List<StoredTenant> allTenants = new List<StoredTenant>();
-        private readonly Dictionary<string, List<string>> tenantsByParent = new Dictionary<string, List<string>>();
+        private readonly List<StoredTenant> allTenants = new();
+        private readonly Dictionary<string, List<string>> tenantsByParent = new();
         private readonly IPropertyBagFactory propertyBagFactory;
 
         /// <summary>

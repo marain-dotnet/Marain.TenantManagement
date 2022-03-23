@@ -14,9 +14,7 @@ namespace Marain.TenantManagement.Exceptions
     /// Exception that will be thrown when an invalid <see cref="ServiceManifest"/> is used.
     /// </summary>
     [Serializable]
-#pragma warning disable RCS1194 // Implement exception constructors.
     public class InvalidServiceManifestException : Exception
-#pragma warning restore RCS1194 // Implement exception constructors.
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidServiceManifestException"/> class.

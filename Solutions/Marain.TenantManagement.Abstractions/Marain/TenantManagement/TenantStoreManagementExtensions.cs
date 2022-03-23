@@ -425,6 +425,7 @@ namespace Marain.TenantManagement
                     tenantStore.Root.Id,
                     WellKnownTenantIds.ClientTenantParentGuid,
                     TenantNames.ClientTenantParent).ConfigureAwait(false);
+                logger?.LogInformation("Created well known client tenant parent");
             }
 
             if (existingServiceTenantParent == null)
@@ -433,6 +434,7 @@ namespace Marain.TenantManagement
                     tenantStore.Root.Id,
                     WellKnownTenantIds.ServiceTenantParentGuid,
                     TenantNames.ServiceTenantParent).ConfigureAwait(false);
+                logger?.LogInformation("Created well known service tenant parent");
             }
         }
 

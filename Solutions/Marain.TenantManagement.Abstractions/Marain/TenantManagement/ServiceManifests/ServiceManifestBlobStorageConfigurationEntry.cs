@@ -44,7 +44,7 @@ namespace Marain.TenantManagement.ServiceManifests
                 throw new ArgumentNullException(nameof(enrollmentConfigurationItem));
             }
 
-            if (!(enrollmentConfigurationItem is EnrollmentBlobStorageConfigurationItem blobStorageConfigurationItem))
+            if (enrollmentConfigurationItem is not EnrollmentBlobStorageConfigurationItem blobStorageConfigurationItem)
             {
                 throw new ArgumentException(
                     $"The supplied value must be of type {nameof(EnrollmentBlobStorageConfigurationItem)}",

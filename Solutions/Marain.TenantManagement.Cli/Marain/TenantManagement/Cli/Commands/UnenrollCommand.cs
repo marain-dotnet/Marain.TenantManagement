@@ -18,22 +18,16 @@ namespace Marain.TenantManagement.Cli.Commands
     public class UnenrollCommand : Command
     {
         private readonly ITenantStore tenantStore;
-        private readonly IJsonSerializerSettingsProvider serializerSettingsProvider;
 
         /// <summary>
         /// Creates a new instance of the <see cref="EnrollCommand"/> class.
         /// </summary>
         /// <param name="tenantStore">The tenant store.</param>
-        /// <param name="serializerSettingsProvider">
-        /// The <see cref="IJsonSerializerSettingsProvider"/> to use when reading manifest files.
-        /// </param>
         public UnenrollCommand(
-            ITenantStore tenantStore,
-            IJsonSerializerSettingsProvider serializerSettingsProvider)
+            ITenantStore tenantStore)
             : base("unenroll", "Unenrolls the specified client from the service.")
         {
             this.tenantStore = tenantStore;
-            this.serializerSettingsProvider = serializerSettingsProvider;
 
             var clientTenantId = new Argument<string>("clientTenantId")
             {

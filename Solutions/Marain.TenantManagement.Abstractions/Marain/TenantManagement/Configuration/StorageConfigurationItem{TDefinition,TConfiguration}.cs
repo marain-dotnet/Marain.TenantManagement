@@ -36,12 +36,12 @@ namespace Marain.TenantManagement.Configuration
 
             if (this.Definition == null)
             {
-                errors.Add($"The configuration item does not contain a value for the Definition property.");
+                errors.Add("The configuration item does not contain a value for the Definition property.");
             }
 
             if (this.Configuration == null)
             {
-                errors.Add($"The configuration item does not contain a value for the Configuration property.");
+                errors.Add("The configuration item does not contain a value for the Configuration property.");
             }
 
             return errors;
