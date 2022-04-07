@@ -119,20 +119,19 @@ namespace Marain.TenantManagement
             string serviceTenantId,
             EnrollmentConfigurationItem[] configurationItems)
         {
+            ArgumentNullException.ThrowIfNull(enrollingTenantId);
             if (string.IsNullOrWhiteSpace(enrollingTenantId))
             {
-                throw new ArgumentException(nameof(enrollingTenantId));
+                throw new ArgumentException("Enrolling tenant id must not be empty", nameof(serviceTenantId));
             }
 
+            ArgumentNullException.ThrowIfNull(serviceTenantId);
             if (string.IsNullOrWhiteSpace(serviceTenantId))
             {
-                throw new ArgumentException(nameof(serviceTenantId));
+                throw new ArgumentException("Service tenant id must not be empty", nameof(serviceTenantId));
             }
 
-            if (configurationItems == null)
-            {
-                throw new ArgumentNullException(nameof(configurationItems));
-            }
+            ArgumentNullException.ThrowIfNull(configurationItems);
 
             // Enrolling tenant can be either a Client tenant or a Delegated tenant.
             ITenant enrollingTenant = await tenantStore.GetTenantOfTypeAsync(
@@ -161,15 +160,13 @@ namespace Marain.TenantManagement
         {
             // Enrolling tenant validation will happen when we call through to the next method to do the enrollment, so no
             // need to do it here as well.
+            ArgumentNullException.ThrowIfNull(serviceTenantId);
             if (string.IsNullOrWhiteSpace(serviceTenantId))
             {
-                throw new ArgumentException(nameof(serviceTenantId));
+                throw new ArgumentException("Service tenant id must not be empty", nameof(serviceTenantId));
             }
 
-            if (configurationItems == null)
-            {
-                throw new ArgumentNullException(nameof(configurationItems));
-            }
+            ArgumentNullException.ThrowIfNull(configurationItems);
 
             ITenant serviceTenant = await tenantStore.GetServiceTenantAsync(serviceTenantId).ConfigureAwait(false);
 
@@ -188,9 +185,10 @@ namespace Marain.TenantManagement
             string enrolledTenantId,
             string serviceTenantId)
         {
+            ArgumentNullException.ThrowIfNull(enrolledTenantId);
             if (string.IsNullOrWhiteSpace(enrolledTenantId))
             {
-                throw new ArgumentException(nameof(enrolledTenantId));
+                throw new ArgumentException("Enrolled tenant id must not be empty", nameof(serviceTenantId));
             }
 
             ITenant enrolledTenant = await tenantStore.GetTenantOfTypeAsync(
@@ -198,9 +196,10 @@ namespace Marain.TenantManagement
                 MarainTenantType.Client,
                 MarainTenantType.Delegated).ConfigureAwait(false);
 
+            ArgumentNullException.ThrowIfNull(serviceTenantId);
             if (string.IsNullOrWhiteSpace(serviceTenantId))
             {
-                throw new ArgumentException(nameof(serviceTenantId));
+                throw new ArgumentException("Service tenant id must not be empty", nameof(serviceTenantId));
             }
 
             ITenant serviceTenant = await tenantStore.GetServiceTenantAsync(serviceTenantId).ConfigureAwait(false);
@@ -221,9 +220,10 @@ namespace Marain.TenantManagement
             this ITenantStore tenantStore,
             string serviceTenantId)
         {
+            ArgumentNullException.ThrowIfNull(serviceTenantId);
             if (string.IsNullOrWhiteSpace(serviceTenantId))
             {
-                throw new ArgumentException(nameof(serviceTenantId));
+                throw new ArgumentException("Service tenant id must not be empty", nameof(serviceTenantId));
             }
 
             ITenant serviceTenant = await tenantStore.GetServiceTenantAsync(serviceTenantId).ConfigureAwait(false);
@@ -243,15 +243,13 @@ namespace Marain.TenantManagement
             string tenantId,
             ConfigurationItem[] configurationItems)
         {
+            ArgumentNullException.ThrowIfNull(tenantId);
             if (string.IsNullOrWhiteSpace(tenantId))
             {
-                throw new ArgumentException(nameof(tenantId));
+                throw new ArgumentException("Tenant id must not be empty", nameof(tenantId));
             }
 
-            if (configurationItems == null)
-            {
-                throw new ArgumentNullException(nameof(configurationItems));
-            }
+            ArgumentNullException.ThrowIfNull(configurationItems);
 
             ITenant tenant = await tenantStore.GetTenantOfTypeAsync(
                 tenantId,
@@ -271,9 +269,10 @@ namespace Marain.TenantManagement
         /// <returns>The new tenant.</returns>
         public static async Task<ITenant> CreateClientTenantWithWellKnownGuidAsync(this ITenantStore tenantStore, Guid wellKnownGuid, string clientName, string? parentId = null, ILogger? logger = null)
         {
+            ArgumentNullException.ThrowIfNull(clientName);
             if (string.IsNullOrWhiteSpace(clientName))
             {
-                throw new ArgumentException(nameof(clientName));
+                throw new ArgumentException("Client name must be non-empty", nameof(clientName));
             }
 
             ITenant parent;
@@ -320,10 +319,7 @@ namespace Marain.TenantManagement
         /// <returns>The new tenant.</returns>
         public static async Task<ITenant> CreateServiceTenantAsync(this ITenantStore tenantStore, ServiceManifest manifest, ILogger? logger = null)
         {
-            if (manifest == null)
-            {
-                throw new ArgumentNullException(nameof(manifest));
-            }
+            ArgumentNullException.ThrowIfNull(manifest);
 
             logger?.LogDebug("Validating service manifest for service creation.");
 
@@ -454,24 +450,15 @@ namespace Marain.TenantManagement
             EnrollmentConfigurationItem[] configurationItems,
             ILogger? logger = null)
         {
-            if (enrollingTenant == null)
-            {
-                throw new ArgumentNullException(nameof(enrollingTenant));
-            }
+            ArgumentNullException.ThrowIfNull(enrollingTenant);
 
             enrollingTenant.EnsureTenantIsOfType(MarainTenantType.Client, MarainTenantType.Delegated);
 
-            if (serviceTenant == null)
-            {
-                throw new ArgumentNullException(nameof(serviceTenant));
-            }
+            ArgumentNullException.ThrowIfNull(serviceTenant);
 
             serviceTenant.EnsureTenantIsOfType(MarainTenantType.Service);
 
-            if (configurationItems == null)
-            {
-                throw new ArgumentNullException(nameof(configurationItems));
-            }
+            ArgumentNullException.ThrowIfNull(configurationItems);
 
             logger?.LogDebug(
                 "Enrolling tenant '{enrollingTenantName}' with Id '{enrollingTenantId}' from service '{serviceTenantName}' with Id '{serviceTenantId}'",
@@ -745,17 +732,11 @@ namespace Marain.TenantManagement
         /// <returns>A task which completes when the configuration has been added.</returns>
         public static async Task AddOrUpdateStorageConfigurationAsync(this ITenantStore tenantStore, ITenant tenant, ConfigurationItem[] configurationItems, ILogger? logger = null)
         {
-            if (tenant == null)
-            {
-                throw new ArgumentNullException(nameof(tenant));
-            }
+            ArgumentNullException.ThrowIfNull(tenant);
 
             tenant.EnsureTenantIsOfType(MarainTenantType.Client);
 
-            if (configurationItems == null)
-            {
-                throw new ArgumentNullException(nameof(configurationItems));
-            }
+            ArgumentNullException.ThrowIfNull(configurationItems);
 
             logger?.LogDebug(
                 "Add configuration for tenant '{tenantName}' with Id '{tenantId}'",

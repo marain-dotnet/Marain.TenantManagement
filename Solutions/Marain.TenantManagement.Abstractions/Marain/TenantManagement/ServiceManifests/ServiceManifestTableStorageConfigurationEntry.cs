@@ -39,10 +39,7 @@ namespace Marain.TenantManagement.ServiceManifests
             IEnumerable<KeyValuePair<string, object>> existingValues,
             EnrollmentConfigurationItem enrollmentConfigurationItem)
         {
-            if (enrollmentConfigurationItem == null)
-            {
-                throw new ArgumentNullException(nameof(enrollmentConfigurationItem));
-            }
+            ArgumentNullException.ThrowIfNull(enrollmentConfigurationItem);
 
             if (enrollmentConfigurationItem is not EnrollmentTableStorageConfigurationItem tableStorageConfigurationItem)
             {
@@ -63,13 +60,7 @@ namespace Marain.TenantManagement.ServiceManifests
         /// <inheritdoc/>
         public override IList<string> Validate(string messagePrefix)
         {
-            if (string.IsNullOrEmpty(messagePrefix))
-            {
-                throw new ArgumentException(nameof(messagePrefix));
-            }
-
-            var results = new List<string>();
-            results.AddRange(base.Validate(messagePrefix));
+            IList<string> results = base.Validate(messagePrefix);
 
             if (this.ContainerDefinition == null)
             {

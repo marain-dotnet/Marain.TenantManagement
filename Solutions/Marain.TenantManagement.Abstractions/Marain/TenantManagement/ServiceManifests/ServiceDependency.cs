@@ -48,10 +48,7 @@ namespace Marain.TenantManagement.ServiceManifests
             ITenantStore tenantStore,
             string messagePrefix)
         {
-            if (tenantStore == null)
-            {
-                throw new ArgumentNullException(nameof(tenantStore));
-            }
+            ArgumentNullException.ThrowIfNull(tenantStore);
 
             var errors = new List<string>();
 

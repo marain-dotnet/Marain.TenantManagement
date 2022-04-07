@@ -79,9 +79,10 @@ namespace Marain.TenantManagement.ServiceManifests
         /// <returns>A list of validation errors. If the entry is valid, the list is empty.</returns>
         public virtual IList<string> Validate(string messagePrefix)
         {
+            ArgumentNullException.ThrowIfNull(messagePrefix);
             if (string.IsNullOrEmpty(messagePrefix))
             {
-                throw new ArgumentException(nameof(messagePrefix));
+                throw new ArgumentException("Message prefix must be non-empty", nameof(messagePrefix));
             }
 
             var errors = new List<string>();

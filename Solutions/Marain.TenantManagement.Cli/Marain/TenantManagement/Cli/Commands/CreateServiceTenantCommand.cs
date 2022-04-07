@@ -52,10 +52,7 @@ namespace Marain.TenantManagement.Cli.Commands
 
         private async Task HandleCommand(FileInfo manifestFile)
         {
-            if (manifestFile == null)
-            {
-                throw new ArgumentNullException(nameof(manifestFile));
-            }
+            ArgumentNullException.ThrowIfNull(manifestFile);
 
             string manifestJson = File.ReadAllText(manifestFile.FullName);
             ServiceManifest manifest =

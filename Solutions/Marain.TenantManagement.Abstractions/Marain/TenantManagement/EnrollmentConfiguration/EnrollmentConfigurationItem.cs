@@ -38,10 +38,7 @@ namespace Marain.TenantManagement.EnrollmentConfiguration
         /// <returns>A list of validation errors. An empty list means that the item is valid.</returns>
         public virtual IList<string> Validate(ServiceManifestRequiredConfigurationEntry requiredConfigurationEntry)
         {
-            if (requiredConfigurationEntry == null)
-            {
-                throw new ArgumentNullException(nameof(requiredConfigurationEntry));
-            }
+            ArgumentNullException.ThrowIfNull(requiredConfigurationEntry);
 
             var errors = new List<string>();
 
