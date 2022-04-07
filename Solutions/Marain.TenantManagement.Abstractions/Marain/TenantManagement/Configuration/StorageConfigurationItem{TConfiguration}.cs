@@ -1,4 +1,4 @@
-﻿// <copyright file="StorageConfigurationItem{TDefinition,TConfiguration}.cs" company="Endjin Limited">
+﻿// <copyright file="StorageConfigurationItem{TConfiguration}.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
@@ -9,17 +9,15 @@ namespace Marain.TenantManagement.Configuration
     /// <summary>
     /// Configuration item for tenanted storage config.
     /// </summary>
-    /// <typeparam name="TDefinition">The type of storage definition being used.</typeparam>
     /// <typeparam name="TConfiguration">The type of storage configuration being used.</typeparam>
-    public abstract class StorageConfigurationItem<TDefinition, TConfiguration> : ConfigurationItem
-        where TDefinition : class
+    public abstract class StorageConfigurationItem<TConfiguration> : ConfigurationItem
         where TConfiguration : class
     {
         /// <summary>
-        /// Gets or sets the storage definition.
+        /// Gets or sets the storage definition name.
         /// </summary>
 #nullable disable annotations
-        public TDefinition Definition { get; set; }
+        public string Definition { get; set; }
 #nullable restore annotations
 
         /// <summary>

@@ -15,7 +15,7 @@ namespace Microsoft.Extensions.DependencyInjection
     /// <summary>
     /// Helper methods to add Marain tenant management features to a service collection.
     /// </summary>
-    public static class TenantManagementServiceCollectionExtensions
+    public static class TenantManagementCosmosServiceCollectionExtensions
     {
         /// <summary>
         /// Adds required dependencies to use management extensions for <see cref="ITenantStore"/>.
@@ -26,22 +26,21 @@ namespace Microsoft.Extensions.DependencyInjection
         /// You should ensure that an implementation of
         /// <c>ITenantProvider</c> has also been added to the service collection.
         /// </remarks>
-        public static IServiceCollection AddMarainTenantManagement(this IServiceCollection serviceCollection)
+        public static IServiceCollection AddMarainTenantManagementForCosmosDb(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddContentTypeBasedSerializationSupport();
+            serviceCollection.AddMarainTenantManagement();
             serviceCollection.AddContent(AddTenantManagementContentTypes);
-
-            serviceCollection.AddJsonNetSerializerSettingsProvider();
-            serviceCollection.AddJsonNetPropertyBag();
-            serviceCollection.AddJsonNetCultureInfoConverter();
-            serviceCollection.AddJsonNetDateTimeOffsetToIso8601AndUnixTimeConverter();
-            serviceCollection.AddSingleton<JsonConverter>(new StringEnumConverter(true));
             return serviceCollection;
         }
 
         private static void AddTenantManagementContentTypes(ContentFactory factory)
         {
             factory.RegisterTransientContent<ServiceManifest>();
+            factory.RegisterTransientContent<ServiceManifestCosmosDbConfigurationEntry>();
+
+            factory.RegisterTransientContent<EnrollmentCosmosConfigurationItem>();
+
+            factory.RegisterTransientContent<CosmosConfigurationItem>();
         }
     }
 }

@@ -8,6 +8,8 @@ namespace Microsoft.Extensions.DependencyInjection
     using System.Collections.Generic;
     using System.CommandLine;
     using System.Linq;
+
+    using Corvus.Identity.ClientAuthentication.Azure;
     using Corvus.Identity.ManagedServiceIdentity.ClientAuthentication;
     using Marain.Tenancy.Client;
     using Marain.TenantManagement.Cli.Commands;
@@ -66,12 +68,14 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddJsonNetDateTimeOffsetToIso8601AndUnixTimeConverter();
             services.AddSingleton<JsonConverter>(new StringEnumConverter(true));
 
-            var msiTokenSourceOptions = new AzureManagedIdentityTokenSourceOptions
-            {
-                AzureServicesAuthConnectionString = config["AzureServicesAuthConnectionString"],
-            };
+            LegacyAzureServiceTokenProviderOptions serviceTokenProviderOptions = config.Get<LegacyAzureServiceTokenProviderOptions>();
 
-            services.AddAzureManagedIdentityBasedTokenSource(msiTokenSourceOptions);
+            // 'ServiceIdentityServiceCollectionExtensions.AddAzureManagedIdentityBasedTokenSource(IServiceCollection, AzureManagedIdentityTokenSourceOptions?)' is obsolete:
+            // 'Consider using Corvus.Identity.Azure's
+            // AddServiceIdentityAzureTokenCredentialSourceFromLegacyConnectionString,
+            // optionally with LegacyAzureServiceTokenProviderOptions, or Corvus.Identity.MicrosoftRest's
+            // AddMicrosoftRestAdapterForServiceIdentityAccessTokenSource instead'
+            services.AddServiceIdentityAzureTokenCredentialSourceFromLegacyConnectionString(serviceTokenProviderOptions);
 
             TenancyClientOptions tenancyClientOptions = config.GetSection("TenancyClient").Get<TenancyClientOptions>();
             services.AddSingleton(tenancyClientOptions);

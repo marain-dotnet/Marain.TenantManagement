@@ -1,29 +1,23 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <Import Project="$(EndjinProjectPropsPath)" Condition="$(EndjinProjectPropsPath) != ''" />
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <IsPackable>true</IsPackable>
+    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
-    <PackageDescription>Features to help testing Marain services that rely on tenancy.</PackageDescription>
-    <PackageTags>Marain</PackageTags>
-    <PackageReleaseNotes></PackageReleaseNotes>
-  </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Corvus.Testing.SpecFlow" Version="1.4.11" />
+    <PackageReference Include="Corvus.Storage.Azure.BlobStorage" Version="1.2.0" />
     <PackageReference Include="Endjin.RecommendedPractices.GitHub" Version="2.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Marain.TenantManagement.Abstractions\Marain.TenantManagement.Abstractions.csproj" />
   </ItemGroup>
+
 </Project>
