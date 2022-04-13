@@ -40,6 +40,6 @@ Scenario: Manifest with multiple configuration items
 	And the configuration item with index 2 should be of type 'ServiceManifestTableStorageConfigurationEntry'
 
 Scenario: Manifest with a configuration item that has an unknown content type
-	When I deserialize the manifest called 'ManifestWithConfigurationWithUnknownContentType'
+	When I deserialize the manifest called 'ManifestWithConfigurationWithUnknownContentType' anticipating an exception
 	Then an 'InvalidOperationException' is thrown
 

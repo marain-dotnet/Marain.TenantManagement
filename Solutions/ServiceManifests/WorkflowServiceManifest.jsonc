@@ -11,9 +11,9 @@
   ],
   "requiredConfigurationEntries": [
     {
-      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb",
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb.v3",
       "type": "cosmosContainerConfiguration",
-      "key": "workflowStore",
+      "key": "MarainWorkflow:CosmosContainerConfiguration:Definitions",
       "containerDefinition": {
         "databaseName": "workflow",
         "containerName": "definitions"
@@ -21,9 +21,9 @@
       "description": "Workflow definitions"
     },
     {
-      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb",
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb.v3",
       "type": "cosmosContainerConfiguration",
-      "key": "workflowInstanceStore",
+      "key": "MarainWorkflow:CosmosContainerConfiguration:Instances",
       "containerDefinition": {
         "databaseName": "workflow",
         "containerName": "instances"

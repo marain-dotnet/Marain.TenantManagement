@@ -5,11 +5,10 @@
 namespace Marain.TenantManagement.Specs.Steps
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-    using Corvus.Azure.Cosmos.Tenancy;
-    using Corvus.Azure.Storage.Tenancy;
     using Corvus.Extensions.Json;
     using Corvus.Tenancy;
     using Corvus.Testing.SpecFlow;
@@ -23,11 +22,19 @@ namespace Marain.TenantManagement.Specs.Steps
     public class ManifestSteps
     {
         private readonly ScenarioContext scenarioContext;
+        private readonly Dictionary<string, ServiceManifest> namedManifests = new();
+        private ServiceManifest? manifest;
 
         public ManifestSteps(ScenarioContext scenarioContext)
         {
             this.scenarioContext = scenarioContext;
         }
+
+        public ServiceManifest Manifest => this.manifest ?? throw new InvalidOperationException("This test has not loaded or deserialized an unnamed manifest");
+
+        public ServiceManifest NamedManifest(string name) => this.namedManifests.TryGetValue(name, out ServiceManifest? serviceManifest)
+            ? serviceManifest
+            : throw new InvalidOperationException($"This test has not loaded or deserialized a ServiceManifest called {name}");
 
         [Given("I have a service manifest called '(.*)' with no service name")]
         public void GivenIHaveAServiceManifestCalled(string manifestName)
@@ -49,20 +56,20 @@ namespace Marain.TenantManagement.Specs.Steps
                 ServiceName = serviceName,
             };
 
-            this.scenarioContext.Set(manifest, manifestName);
+            this.namedManifests.Add(manifestName, manifest);
         }
 
         [Given("the well-known tenant Guid for the manifest called '(.*)' is '(.*)'")]
         public void GivenTheWell_KnownTenantGuidForTheManifestCalledIs(string manifestName, Guid wellKnownTenantGuid)
         {
-            ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>(manifestName);
+            ServiceManifest manifest = this.NamedManifest(manifestName);
             manifest.WellKnownTenantGuid = wellKnownTenantGuid;
         }
 
         [Given("the service manifest called '(.*)' has the following dependencies")]
         public void GivenTheServiceManifestCalledHasTheFollowingDependencies(string manifestName, Table dependencyTable)
         {
-            ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>(manifestName);
+            ServiceManifest manifest = this.NamedManifest(manifestName);
 
             foreach (TableRow row in dependencyTable.Rows)
             {
@@ -78,7 +85,7 @@ namespace Marain.TenantManagement.Specs.Steps
         public Task WhenIValidateTheServiceManifestCalled(string manifestName)
         {
             ITenantStore store = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
-            ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>(manifestName);
+            ServiceManifest manifest = this.NamedManifest(manifestName);
 
             return CatchException.AndStoreInScenarioContextAsync(
                 this.scenarioContext,
@@ -88,36 +95,34 @@ namespace Marain.TenantManagement.Specs.Steps
         [When("I deserialize the manifest called '(.*)'")]
         public void WhenIDeserializeTheManifestCalled(string manifestName)
         {
+            this.manifest = this.LoadManifestFile(manifestName);
+        }
+
+        [When("I deserialize the manifest called '(.*)' anticipating an exception")]
+        public void WhenIDeserializeTheManifestCalledAnticipatingException(string manifestName)
+        {
             CatchException.AndStoreInScenarioContext(
                 this.scenarioContext,
-                () =>
-                {
-                    ServiceManifest manifest = this.LoadManifestFile(manifestName);
-                    this.scenarioContext.Set(manifest);
-                });
+                () => this.manifest = this.LoadManifestFile(manifestName));
         }
 
         [Given("I have loaded the manifest called '(.*)'")]
         public void GivenIHaveLoadedTheManifestCalled(string manifestName)
         {
             ServiceManifest manifest = this.LoadManifestFile(manifestName);
-            this.scenarioContext.Set(manifest, manifestName);
+            this.namedManifests.Add(manifestName, manifest);
         }
 
         [Then("the resulting manifest should have the service name '(.*)'")]
         public void ThenTheResultingManifestShouldHaveTheServiceName(string serviceName)
         {
-            ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>();
-
-            Assert.AreEqual(serviceName, manifest.ServiceName);
+            Assert.AreEqual(serviceName, this.Manifest.ServiceName);
         }
 
         [Then("the resulting manifest should have a well known service GUID of '(.*)'")]
         public void ThenTheResultingManifestShouldHaveAWellKnownServiceGUIDOf(Guid expectedWellKnownServiceGuid)
         {
-            ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>();
-
-            Assert.AreEqual(expectedWellKnownServiceGuid, manifest.WellKnownTenantGuid);
+            Assert.AreEqual(expectedWellKnownServiceGuid, this.Manifest.WellKnownTenantGuid);
         }
 
         [Then("the resulting manifest should not have any dependencies")]
@@ -129,34 +134,26 @@ namespace Marain.TenantManagement.Specs.Steps
         [Then("the resulting manifest should not have any required configuration entries")]
         public void ThenTheResultingManifestShouldNotHaveAnyRequiredConfigurationEntries()
         {
-            ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>();
-
-            Assert.IsEmpty(manifest.RequiredConfigurationEntries);
+            Assert.IsEmpty(this.Manifest.RequiredConfigurationEntries);
         }
 
         [Then("the resulting manifest should have (.*) dependencies")]
         public void ThenTheResultingManifestShouldHaveDependencies(int expectedDependencyCount)
         {
-            ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>();
-
-            Assert.AreEqual(expectedDependencyCount, manifest.DependsOnServiceTenants.Count);
+            Assert.AreEqual(expectedDependencyCount, this.Manifest.DependsOnServiceTenants.Count);
         }
 
         [Then("the resulting manifest should have (.*) required configuration entry")]
         [Then("the resulting manifest should have (.*) required configuration entries")]
         public void ThenTheResultingManifestShouldHaveRequiredConfigurationEntry(int expectedConfigurationEntryCount)
         {
-            ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>();
-
-            Assert.AreEqual(expectedConfigurationEntryCount, manifest.RequiredConfigurationEntries.Count);
+            Assert.AreEqual(expectedConfigurationEntryCount, this.Manifest.RequiredConfigurationEntries.Count);
         }
 
         [Then("the configuration item with index (.*) should be of type '(.*)'")]
         public void ThenTheConfigurationItemWithIndexShouldBeOfType(int index, string expectedTypeName)
         {
-            ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>();
-
-            ServiceManifestRequiredConfigurationEntry configurationItem = manifest.RequiredConfigurationEntries[index];
+            ServiceManifestRequiredConfigurationEntry configurationItem = this.Manifest.RequiredConfigurationEntries[index];
 
             Assert.AreEqual(expectedTypeName, configurationItem.GetType().Name);
         }
@@ -164,52 +161,42 @@ namespace Marain.TenantManagement.Specs.Steps
         [Then("the resulting manifest should have a dependency with Id '(.*)'")]
         public void ThenTheResultingManifestShouldHaveADependencyWithId(string expectedDependencyId)
         {
-            ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>();
-
-            Assert.IsTrue(manifest.DependsOnServiceTenants.Any(x => x.Id == expectedDependencyId));
+            Assert.IsTrue(this.Manifest.DependsOnServiceTenants.Any(x => x.Id == expectedDependencyId));
         }
 
         [Given("the service manifest called '(.*)' has the following Azure Blob Storage configuration entries")]
         public void GivenTheServiceManifestCalledHasTheFollowingAzureBlobStorageConfigurationEntries(string manifestName, Table table)
         {
-            ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>(manifestName);
+            ServiceManifest manifest = this.NamedManifest(manifestName);
 
             manifest.RequiredConfigurationEntries.Add(new ServiceManifestBlobStorageConfigurationEntry
             {
                 Key = table.Rows[0]["Key"],
                 Description = table.Rows[0]["Description"],
-                ContainerDefinition = new BlobStorageContainerDefinition(table.Rows[0]["Container Name"]),
             });
         }
 
         [Given("the service manifest called '(.*)' has the following Azure Table Storage configuration entries")]
         public void GivenTheServiceManifestCalledHasTheFollowingAzureTableStorageConfigurationEntries(string manifestName, Table table)
         {
-            ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>(manifestName);
+            ServiceManifest manifest = this.NamedManifest(manifestName);
 
             manifest.RequiredConfigurationEntries.Add(new ServiceManifestTableStorageConfigurationEntry
             {
                 Key = table.Rows[0]["Key"],
                 Description = table.Rows[0]["Description"],
-                ContainerDefinition = new TableStorageTableDefinition(table.Rows[0]["Table Name"]),
             });
         }
 
         [Given("the service manifest called '(.*)' has the following Azure CosmosDb Storage configuration entries")]
         public void GivenTheServiceManifestCalledHasTheFollowingAzureCosmosDbStorageConfigurationEntries(string manifestName, Table table)
         {
-            ServiceManifest manifest = this.scenarioContext.Get<ServiceManifest>(manifestName);
+            ServiceManifest manifest = this.NamedManifest(manifestName);
 
             manifest.RequiredConfigurationEntries.Add(new ServiceManifestCosmosDbConfigurationEntry
             {
                 Key = table.Rows[0]["Key"],
                 Description = table.Rows[0]["Description"],
-                ContainerDefinition = new CosmosContainerDefinition(
-                    table.Rows[0]["Database Name"],
-                    table.Rows[0]["Container Name"],
-                    null,
-                    null,
-                    null),
             });
         }
 

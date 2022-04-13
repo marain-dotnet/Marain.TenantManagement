@@ -10,7 +10,6 @@ namespace Microsoft.Extensions.DependencyInjection
     using System.Linq;
 
     using Corvus.Identity.ClientAuthentication.Azure;
-    using Corvus.Identity.ManagedServiceIdentity.ClientAuthentication;
     using Marain.Tenancy.Client;
     using Marain.TenantManagement.Cli.Commands;
     using Microsoft.Extensions.Configuration;

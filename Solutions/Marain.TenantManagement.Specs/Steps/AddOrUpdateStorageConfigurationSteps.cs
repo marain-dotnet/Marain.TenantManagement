@@ -3,8 +3,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Corvus.Azure.Cosmos.Tenancy;
-    using Corvus.Azure.Storage.Tenancy;
+    using Corvus.Storage.Azure.BlobStorage;
+    using Corvus.Storage.Azure.Cosmos;
+    using Corvus.Storage.Azure.TableStorage;
     using Corvus.Tenancy;
     using Corvus.Testing.SpecFlow;
     using Marain.TenantManagement.Configuration;
@@ -37,8 +38,8 @@
                 configurationEntries.Rows.Select(
                     row => new BlobStorageConfigurationItem
                     {
-                        Definition = new BlobStorageContainerDefinition(row["Definition - Container"]),
-                        Configuration = new BlobStorageConfiguration
+                        ConfigurationKey = row["ConfigurationKey"],
+                        Configuration = new BlobContainerConfiguration
                         {
                             AccountName = row["Configuration - Account Name"],
                             Container = row["Configuration - Container"],
@@ -56,8 +57,8 @@
                 configurationEntries.Rows.Select(
                     row => new TableStorageConfigurationItem
                     {
-                        Definition = new TableStorageTableDefinition(row["Definition - Table"]),
-                        Configuration = new TableStorageConfiguration
+                        ConfigurationKey = row["ConfigurationKey"],
+                        Configuration = new TableConfiguration
                         {
                             AccountName = row["Configuration - Account Name"],
                             TableName = row["Configuration - Table"],
@@ -75,12 +76,12 @@
                 configurationEntries.Rows.Select(
                     row => new CosmosConfigurationItem
                     {
-                        Definition = new CosmosContainerDefinition(row["Definition - Database"], row["Definition - Container"], null),
-                        Configuration = new CosmosConfiguration
+                        ConfigurationKey = row["ConfigurationKey"],
+                        Configuration = new CosmosContainerConfiguration
                         {
                             AccountUri = row["Configuration - Account Uri"],
-                            DatabaseName = row["Configuration - Database"],
-                            ContainerName = row["Configuration - Container"],
+                            Database = row["Configuration - Database"],
+                            Container = row["Configuration - Container"],
                         },
                     }));
         }

@@ -7,6 +7,7 @@ namespace Marain.TenantManagement.Configuration;
 using System.Collections.Generic;
 
 using Corvus.Storage.Azure.TableStorage;
+using Corvus.Storage.Azure.TableStorage.Tenancy;
 
 /// <summary>
 /// Enrollment configuration item for tenanted table storage config.
@@ -24,6 +25,6 @@ public class TableStorageConfigurationItem : StorageConfigurationItem<TableConfi
     /// <inheritdoc/>
     public override IEnumerable<KeyValuePair<string, object>> AddConfiguration(IEnumerable<KeyValuePair<string, object>> values)
     {
-        return values.AddTableStorageConfiguration(new TableStorageTableDefinition(this.Definition.TableName), this.Configuration);
+        return values.AddTableStorageConfiguration(this.ConfigurationKey, this.Configuration);
     }
 }

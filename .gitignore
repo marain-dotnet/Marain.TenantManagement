@@ -338,3 +338,5 @@ local.settings.json
 appsettings.json
 
 **/MsDeploy
+
+*.feature.cs

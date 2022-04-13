@@ -1,7 +1,7 @@
 [
   {
-    "key": "operationsStore",
-    "contentType": "application/vnd.marain.tenancy.enrollment.configurationitem.azureblobstorage",
+    "key": "MarainOperations:BlobContainerConfiguration:operations",
+    "contentType": "application/vnd.marain.tenancy.enrollment.configurationitem.azureblobstorage.v3",
     "configuration": {
       "accountName": "",
       "container": "operations",

@@ -70,7 +70,10 @@ namespace Marain.TenantManagement.ServiceManifests
         /// <see cref="ITenantStore.UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>
         /// to remove the storage configuration.
         /// </returns>
-        public abstract IEnumerable<string> GetPropertiesToRemoveFromTenant(ITenant tenant);
+        public virtual IEnumerable<string> GetPropertiesToRemoveFromTenant(ITenant tenant)
+        {
+            return new[] { this.Key };
+        }
 
         /// <summary>
         /// Validates the configuration entry.

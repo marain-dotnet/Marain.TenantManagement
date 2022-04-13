@@ -20,6 +20,7 @@
       "items": {
         "anyOf": [
           { "$ref": "#/definitions/azureBlobContainerConfigurationEntry" },
+          { "$ref": "#/definitions/azureTableConfigurationEntry" },
           { "$ref": "#/definitions/cosmosContainerConfiguration" }
         ]
       }
@@ -29,32 +30,29 @@
     "azureBlobContainerConfigurationEntry": {
       "type": "object",
       "properties": {
-        "contentType": { "enum": [ "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage" ] },
+        "contentType": { "enum": [ "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage.v3" ] },
         "key": { "type": "string" },
         "name": { "type": "string" },
-        "description": { "type": "string" },
-        "containerDefinition": { "$ref": "#/definitions/blobStorageContainerDefinition" }
+        "description": { "type": "string" }
+      }
+    },
+    "azureTableConfigurationEntry": {
+      "type": "object",
+      "properties": {
+        "contentType": { "enum": [ "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azuretablestorage.v3" ] },
+        "key": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" }
       }
     },
     "cosmosContainerConfiguration": {
       "type": "object",
       "properties": {
-        "contentType": { "enum": [ "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb" ] },
+        "contentType": { "enum": [ "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb.v3" ] },
         "key": { "type": "string" },
         "name": { "type": "string" },
-        "description": { "type": "string" },
-        "containerDefinition": { "$ref": "#/definitions/cosmosContainerDefinition" }
+        "description": { "type": "string" }
       }
-    },
-    "blobStorageContainerDefinition": {
-      "type": "object",
-      "properties": {
-        "containerName": { "type": "string" }
-      }
-    },
-    "cosmosContainerDefinition": {
-      "databaseName": { "type": "string" },
-      "containerName": { "type": "string" }
     }
   }
 }

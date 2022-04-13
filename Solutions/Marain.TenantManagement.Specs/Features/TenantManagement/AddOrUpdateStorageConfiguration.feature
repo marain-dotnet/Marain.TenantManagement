@@ -14,23 +14,23 @@ Background:
 Scenario: Add blob storage configuration
 	Given I have configuration called 'FooBar config'
 	And the configuration called 'FooBar config' contains the following Blob Storage configuration items
-	| Definition - Container | Configuration - Account Name | Configuration - Container |
-	| foo                    | blobaccount                  | blobcontainer             |
+	| ConfigurationKey | Configuration - Account Name | Configuration - Container |
+	| foo              | blobaccount                  | blobcontainer             |
 	When I use the tenant store with the configuration called 'FooBar config' to add config for the tenant called 'Contoso'
-	Then the tenant called 'Contoso' should contain blob storage configuration for a blob storage container definition with container name 'foo'
+	Then the tenant called 'Contoso' should contain blob storage configuration under the key 'foo' for a blob storage container definition with container name 'blobcontainer'
 
 Scenario: Add table storage configuration
 	Given I have configuration called 'FooBar config'
 	And the configuration called 'FooBar config' contains the following Table Storage configuration items
-	| Definition - Table | Configuration - Account Name | Configuration - Table |
-	| foo                | tableaccount                 | fbtable               |
+	| ConfigurationKey | Configuration - Account Name | Configuration - Table |
+	| foo              | tableaccount                 | fbtable               |
 	When I use the tenant store with the configuration called 'FooBar config' to add config for the tenant called 'Contoso'
-	Then the tenant called 'Contoso' should contain table storage configuration for a table storage table definition with table name 'foo'
+	Then the tenant called 'Contoso' should contain table storage configuration under the key 'foo' for a table storage table definition with table name 'fbtable'
 
 Scenario: Add cosmos configuration
 	Given I have configuration called 'FooBar config'
 	And the configuration called 'FooBar config' contains the following Cosmos configuration items
-	| Definition - Database | Definition - Container | Configuration - Account Uri | Configuration - Database | Configuration - Container |
-	| foo                   | bar                    | cosmosaccount               | db                       | container                 |
+	| ConfigurationKey | Configuration - Account Uri | Configuration - Database | Configuration - Container |
+	| foo              | cosmosaccount               | db                       | container                 |
 	When I use the tenant store with the configuration called 'FooBar config' to add config for the tenant called 'Contoso'
-	Then the tenant called 'Contoso' should contain Cosmos configuration for a Cosmos container definition with database name 'foo' and container name 'bar'
+	Then the tenant called 'Contoso' should contain Cosmos configuration under the key 'foo' with database name 'db' and container name 'container'

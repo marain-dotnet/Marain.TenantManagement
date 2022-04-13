@@ -4,17 +4,17 @@
 
 namespace Marain.TenantManagement.EnrollmentConfiguration
 {
-    using Corvus.Azure.Storage.Tenancy;
+    using Corvus.Storage.Azure.BlobStorage;
 
     /// <summary>
     /// Enrollment configuration item for tenanted blob storage config.
     /// </summary>
-    public class EnrollmentBlobStorageConfigurationItem : EnrollmentStorageConfigurationItem<BlobStorageConfiguration>
+    public class EnrollmentBlobStorageConfigurationItem : EnrollmentStorageConfigurationItem<BlobContainerConfiguration>
     {
         /// <summary>
         /// The content type of the configuration item.
         /// </summary>
-        public const string RegisteredContentType = EnrollmentConfigurationItem.BaseContentType + "azureblobstorage";
+        public const string RegisteredContentType = EnrollmentConfigurationItem.BaseContentType + "azureblobstorage.v3";
 
         /// <inheritdoc/>
         public override string ContentType => RegisteredContentType;

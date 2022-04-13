@@ -8,8 +8,9 @@ namespace Marain.TenantManagement.Specs.Steps
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Corvus.Azure.Cosmos.Tenancy;
-    using Corvus.Azure.Storage.Tenancy;
+    using Corvus.Storage.Azure.BlobStorage;
+    using Corvus.Storage.Azure.Cosmos;
+    using Corvus.Storage.Azure.TableStorage;
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
     using Corvus.Testing.SpecFlow;
@@ -48,7 +49,7 @@ namespace Marain.TenantManagement.Specs.Steps
                     row => new EnrollmentBlobStorageConfigurationItem
                     {
                         Key = row["Key"],
-                        Configuration = new BlobStorageConfiguration
+                        Configuration = new BlobContainerConfiguration
                         {
                             AccountName = row["Account Name"],
                             Container = row["Container"],
@@ -69,7 +70,7 @@ namespace Marain.TenantManagement.Specs.Steps
                     row => new EnrollmentTableStorageConfigurationItem
                     {
                         Key = row["Key"],
-                        Configuration = new TableStorageConfiguration
+                        Configuration = new TableConfiguration
                         {
                             AccountName = row["Account Name"],
                             TableName = row["Table"],
@@ -90,17 +91,17 @@ namespace Marain.TenantManagement.Specs.Steps
                     row => new EnrollmentCosmosConfigurationItem
                     {
                         Key = row["Key"],
-                        Configuration = new CosmosConfiguration
+                        Configuration = new CosmosContainerConfiguration
                         {
                             AccountUri = row["Account Uri"],
-                            DatabaseName = row["Database Name"],
-                            ContainerName = row["Container Name"],
+                            Database = row["Database Name"],
+                            Container = row["Container Name"],
                         },
                     }));
         }
 
-        [Given("I have used the tenant store to enroll the tenant called '(.*)' in the service called '(.*)'")]
-        [When("I use the tenant store to enroll the tenant called '(.*)' in the service called '(.*)'")]
+        [Given("I have used the tenant store to enroll the tenant called '([^']*)' in the service called '([^']*)'")]
+        [When("I use the tenant store to enroll the tenant called '([^']*)' in the service called '([^']*)'")]
         public Task WhenIUseTheTenantStoreToEnrollTheClientTenantCalledInTheServiceCalled(
             string enrollingTenantName,
             string serviceTenantName)
@@ -108,14 +109,38 @@ namespace Marain.TenantManagement.Specs.Steps
             return this.EnrollTenantForService(enrollingTenantName, serviceTenantName);
         }
 
-        [Given("I have used the tenant store with the enrollment configuration called '(.*)' to enroll the tenant called '(.*)' in the service called '(.*)'")]
-        [When("I use the tenant store with the enrollment configuration called '(.*)' to enroll the tenant called '(.*)' in the service called '(.*)'")]
+        [When("I use the tenant store to enroll the tenant called '([^']*)' in the service called '([^']*)' anticipating an exception")]
+        public Task WhenIUseTheTenantStoreToEnrollTheTenantCalledInTheServiceCalledAnticipatingAnException(
+            string enrollingTenantName,
+            string serviceTenantName)
+        {
+            return this.EnrollTenantForService(
+                enrollingTenantName,
+                serviceTenantName,
+                catchExceptions: true);
+        }
+
+        [Given("I have used the tenant store with the enrollment configuration called '([^']*)' to enroll the tenant called '([^']*)' in the service called '([^']*)'")]
+        [When("I use the tenant store with the enrollment configuration called '([^']*)' to enroll the tenant called '([^']*)' in the service called '([^']*)'")]
         public Task WhenIUseTheTenantStoreToEnrollTheClientTenantCalledInTheServiceCalled(
             string enrollmentConfigurationName,
             string enrollingTenantName,
             string serviceTenantName)
         {
             return this.EnrollTenantForService(enrollingTenantName, serviceTenantName, enrollmentConfigurationName);
+        }
+
+        [When("I use the tenant store with the enrollment configuration called '([^']*)' to enroll the tenant called '([^']*)' in the service called '([^']*)' anticipating an exception")]
+        public Task WhenIUseTheTenantStoreWithTheEnrollmentConfigurationCalledToEnrollTheTenantCalledInTheServiceCalledAnticipatingAnException(
+            string enrollmentConfigurationName,
+            string enrollingTenantName,
+            string serviceTenantName)
+        {
+            return this.EnrollTenantForService(
+                enrollingTenantName,
+                serviceTenantName,
+                enrollmentConfigurationName,
+                catchExceptions: true);
         }
 
         [When("I use the tenant store to unenroll the tenant called '(.*)' from the service called '(.*)'")]
@@ -150,7 +175,9 @@ namespace Marain.TenantManagement.Specs.Steps
             ITenant serviceTenant = tenantProvider.GetTenantByName(serviceTenantName)
                 ?? throw new TenantNotFoundException($"Could not find tenant with name '{serviceTenantName}'");
 
-            Assert.IsTrue(enrollingTenant.IsEnrolledForService(serviceTenant.Id));
+            Assert.IsTrue(
+                enrollingTenant.IsEnrolledForService(serviceTenant.Id),
+                $"Tenant {enrollingTenant.Id} ('{enrollingTenantName}') should be enrolled for {serviceTenant.Id} ('{serviceTenantName}')");
         }
 
         [Then("the tenant called '(.*)' should not have the id of the tenant called '(.*)' in its enrollments")]
@@ -166,7 +193,9 @@ namespace Marain.TenantManagement.Specs.Steps
             ITenant serviceTenant = tenantProvider.GetTenantByName(serviceTenantName)
                 ?? throw new TenantNotFoundException($"Could not find tenant with name '{serviceTenantName}'");
 
-            Assert.IsFalse(enrollingTenant.IsEnrolledForService(serviceTenant.Id));
+            Assert.IsFalse(
+                enrollingTenant.IsEnrolledForService(serviceTenant.Id),
+                $"Tenant {enrollingTenant.Id} ('{enrolledTenantName}') should not be enrolled for {serviceTenant.Id} ('{serviceTenantName}')");
         }
 
         [Then("the tenant called '(.*)' should have the id of the tenant called '(.*)' set as the delegated tenant for the service called '(.*)'")]
@@ -217,7 +246,8 @@ namespace Marain.TenantManagement.Specs.Steps
         private async Task EnrollTenantForService(
             string enrollingTenantName,
             string serviceTenantName,
-            string? enrollmentConfigurationName = null)
+            string? enrollmentConfigurationName = null,
+            bool catchExceptions = false)
         {
             ITenantStore managementService =
                 ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
@@ -231,12 +261,21 @@ namespace Marain.TenantManagement.Specs.Steps
                 ? new List<EnrollmentConfigurationItem>()
                 : this.scenarioContext.Get<List<EnrollmentConfigurationItem>>(enrollmentConfigurationName);
 
-            await CatchException.AndStoreInScenarioContextAsync(
-                this.scenarioContext,
-                () => managementService.EnrollInServiceAsync(
+            Task Enroll() => managementService.EnrollInServiceAsync(
                     enrollingTenant,
                     serviceTenant,
-                    enrollmentConfiguration.ToArray())).ConfigureAwait(false);
+                    enrollmentConfiguration.ToArray());
+
+            if (catchExceptions)
+            {
+                await CatchException.AndStoreInScenarioContextAsync(
+                    this.scenarioContext,
+                    Enroll).ConfigureAwait(false);
+            }
+            else
+            {
+                await Enroll();
+            }
         }
     }
 }

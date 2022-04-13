@@ -10,16 +10,15 @@ namespace Marain.TenantManagement.Configuration
     /// Configuration item for tenanted storage config.
     /// </summary>
     /// <typeparam name="TConfiguration">The type of storage configuration being used.</typeparam>
+    /// <remarks>
+    /// TODO: Is there a good reason for this to be separate from the base ConfigurationItem? Won't every
+    /// ConfigurationItem have a Configuration property? There's nothing about this that is special
+    /// to storage. (There sort of was back when we had a notion of a container definition, but
+    /// that has now gone.)
+    /// </remarks>
     public abstract class StorageConfigurationItem<TConfiguration> : ConfigurationItem
         where TConfiguration : class
     {
-        /// <summary>
-        /// Gets or sets the storage definition name.
-        /// </summary>
-#nullable disable annotations
-        public string Definition { get; set; }
-#nullable restore annotations
-
         /// <summary>
         /// Gets or sets the storage configuration.
         /// </summary>
@@ -32,9 +31,9 @@ namespace Marain.TenantManagement.Configuration
         {
             var errors = new List<string>();
 
-            if (this.Definition == null)
+            if (this.ConfigurationKey == null)
             {
-                errors.Add("The configuration item does not contain a value for the Definition property.");
+                errors.Add("The configuration item does not contain a value for the ConfigurationKey property.");
             }
 
             if (this.Configuration == null)

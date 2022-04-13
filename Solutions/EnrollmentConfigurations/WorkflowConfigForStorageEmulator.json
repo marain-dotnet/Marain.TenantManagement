@@ -1,7 +1,7 @@
 [
   {
-    "key": "workflowStore",
-    "contentType": "application/vnd.marain.tenancy.enrollment.configurationitem.cosmosdb",
+    "key": "MarainWorkflow:CosmosContainerConfiguration:Definitions",
+    "contentType": "application/vnd.marain.tenancy.enrollment.configurationitem.cosmosdb.v3",
     "configuration": {
       "accountUri": null,
       "databaseName": null,
@@ -10,8 +10,8 @@
     }
   },
   {
-    "key": "workflowInstanceStore",
-    "contentType": "application/vnd.marain.tenancy.enrollment.configurationitem.cosmosdb",
+    "key": "MarainWorkflow:CosmosContainerConfiguration:Instances",
+    "contentType": "application/vnd.marain.tenancy.enrollment.configurationitem.cosmosdb.v3",
     "configuration": {
       "accountUri": null,
       "databaseName": null,
@@ -20,8 +20,8 @@
     }
   },
   {
-    "key": "operationsStore",
-    "contentType": "application/vnd.marain.tenancy.enrollment.configurationitem.azureblobstorage",
+    "key": "MarainOperations:BlobContainerConfiguration:operations",
+    "contentType": "application/vnd.marain.tenancy.enrollment.configurationitem.azureblobstorage.v3",
     "configuration": {
       "accountName": null,
       "container": "operations",

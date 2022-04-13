@@ -1,4 +1,4 @@
-﻿// <copyright file="TenantManagementServiceCollectionExtensions.cs" company="Endjin Limited">
+﻿// <copyright file="TenantManagementCosmosServiceCollectionExtensions.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
@@ -9,8 +9,6 @@ namespace Microsoft.Extensions.DependencyInjection
     using Marain.TenantManagement.Configuration;
     using Marain.TenantManagement.EnrollmentConfiguration;
     using Marain.TenantManagement.ServiceManifests;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
 
     /// <summary>
     /// Helper methods to add Marain tenant management features to a service collection.

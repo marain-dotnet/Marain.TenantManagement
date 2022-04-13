@@ -4,12 +4,12 @@
 
 namespace Marain.TenantManagement.EnrollmentConfiguration
 {
-    using Corvus.Azure.Cosmos.Tenancy;
+    using Corvus.Storage.Azure.Cosmos;
 
     /// <summary>
     /// Enrollment configuration item for tenanted cosmos storage config.
     /// </summary>
-    public class EnrollmentCosmosConfigurationItem : EnrollmentStorageConfigurationItem<CosmosConfiguration>
+    public class EnrollmentCosmosConfigurationItem : EnrollmentStorageConfigurationItem<CosmosContainerConfiguration>
     {
         /// <summary>
         /// The content type of the configuration item.

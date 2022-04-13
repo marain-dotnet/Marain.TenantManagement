@@ -46,6 +46,7 @@
     <None Remove="Data\ServiceManifests\ManifestWithDependencies.jsonc" />
     <None Remove="Data\ServiceManifests\ManifestWithMultipleConfigurationItems.jsonc" />
     <None Remove="Data\ServiceManifests\OperationsServiceManifest.jsonc" />
+    <None Remove="Data\ServiceManifests\OperationsServiceManifestLegacyV2.jsonc" />
     <None Remove="Data\ServiceManifests\SimpleManifestWithNoDependenciesOrConfiguration.jsonc" />
     <None Remove="Data\ServiceManifests\WorkflowServiceManifest.jsonc" />
   </ItemGroup>
@@ -55,6 +56,7 @@
     <EmbeddedResource Include="Data\ServiceManifests\ManifestWithConfiguration.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\ManifestWithDependencies.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\FooBarServiceManifest.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\OperationsServiceManifestLegacyV2.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\OperationsServiceManifest.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\SimpleManifestWithNoDependenciesOrConfiguration.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\WorkflowServiceManifest.jsonc" />
@@ -69,7 +71,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Marain.Services.Tenancy.Testing\Marain.Services.Tenancy.Testing.csproj" />
-    <ProjectReference Include="..\Marain.TenantManagement.Abstractions\Marain.TenantManagement.Abstractions.csproj" />
+    <ProjectReference Include="..\Marain.TenantManagement.Azure.BlobStorage\Marain.TenantManagement.Azure.BlobStorage.csproj" />
+    <ProjectReference Include="..\Marain.TenantManagement.Azure.Cosmos\Marain.TenantManagement.Azure.Cosmos.csproj" />
+    <ProjectReference Include="..\Marain.TenantManagement.Azure.TableStorage\Marain.TenantManagement.Azure.TableStorage.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="specflow.json">

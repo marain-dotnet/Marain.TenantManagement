@@ -7,6 +7,7 @@ namespace Marain.TenantManagement.Configuration;
 using System.Collections.Generic;
 
 using Corvus.Storage.Azure.BlobStorage;
+using Corvus.Storage.Azure.BlobStorage.Tenancy;
 
 /// <summary>
 /// Enrollment configuration item for tenanted blob storage config.
@@ -24,6 +25,6 @@ public class BlobStorageConfigurationItem : StorageConfigurationItem<BlobContain
     /// <inheritdoc/>
     public override IEnumerable<KeyValuePair<string, object>> AddConfiguration(IEnumerable<KeyValuePair<string, object>> values)
     {
-        return values.AddBlobStorageConfiguration(new BlobStorageContainerDefinition(this.Definition.ContainerName), this.Configuration);
+        return values.AddBlobStorageConfiguration(this.ConfigurationKey, this.Configuration);
     }
 }

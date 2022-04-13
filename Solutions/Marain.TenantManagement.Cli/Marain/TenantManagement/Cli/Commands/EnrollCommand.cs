@@ -68,7 +68,7 @@ namespace Marain.TenantManagement.Cli.Commands
 
         private async Task<int> HandleCommand(string enrollingTenantId, string serviceTenantId, FileInfo? config)
         {
-            var enrollmentConfig = Array.Empty<EnrollmentConfigurationItem>();
+            EnrollmentConfigurationItem[] enrollmentConfig = Array.Empty<EnrollmentConfigurationItem>();
 
             if (config != null)
             {

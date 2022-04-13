@@ -1,14 +1,11 @@
 {
-  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest",
+  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest.v3",
   "wellKnownTenantGuid": "910825dd-7aa1-44f1-9fbf-c95e8b43e7e2",
   "serviceName": "Manifest with configuration",
   "requiredConfigurationEntries": [
     {
-      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage",
-      "key": "operationsStore",
-      "containerDefinition": {
-        "containerName": "operations"
-      },
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage.v3",
+      "key": "MarainOperations:BlobContainerConfiguration:operations",
       "description": "Stores the status of all current operations"
     }
   ]
