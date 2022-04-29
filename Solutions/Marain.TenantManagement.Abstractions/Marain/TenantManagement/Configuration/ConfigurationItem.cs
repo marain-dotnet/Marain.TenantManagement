@@ -22,13 +22,6 @@ namespace Marain.TenantManagement.Configuration
         public abstract string ContentType { get; }
 
         /// <summary>
-        /// Gets or sets the key under which this configuration is stored in the tenant properties.
-        /// </summary>
-#nullable disable annotations
-        public string ConfigurationKey { get; set; }
-#nullable restore annotations
-
-        /// <summary>
         /// Validates the configuration item.
         /// </summary>
         /// <returns>A list of validation errors. An empty list means that the item is valid.</returns>

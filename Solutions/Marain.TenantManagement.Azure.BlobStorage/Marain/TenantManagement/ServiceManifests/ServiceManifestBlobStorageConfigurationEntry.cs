@@ -28,6 +28,12 @@ namespace Marain.TenantManagement.ServiceManifests
         public override string ExpectedConfigurationItemContentType =>
             EnrollmentBlobStorageConfigurationItem.RegisteredContentType;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this service supports legacy V2 style
+        /// configuration entries to enable V2 to V3 migration.
+        /// </summary>
+        public bool SupportsLegacyV2Configuration { get; set; }
+
         ///// <summary>
         ///// Gets or sets the container definition that this configuration entry relates to.
         ///// </summary>

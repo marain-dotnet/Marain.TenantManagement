@@ -11,7 +11,7 @@
   ],
   "requiredConfigurationEntries": [
     {
-      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage.v3",
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage",
       "key": "operationsStore",
       "containerDefinition": {
         "containerName": "operations"

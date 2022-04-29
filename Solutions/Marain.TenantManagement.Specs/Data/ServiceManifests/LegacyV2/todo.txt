@@ -1,0 +1,10 @@
+﻿Want:
+
+V2-only service
+V3 service that is able to use V2 config
+
+V2 service with a dependency on
+	V3-only service
+	V3 service with V2 legacy support
+
+V3 service with a dependency on a V2 service

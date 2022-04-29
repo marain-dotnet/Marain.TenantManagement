@@ -340,3 +340,4 @@ appsettings.json
 **/MsDeploy
 
 *.feature.cs
+*.ncrunchsolution

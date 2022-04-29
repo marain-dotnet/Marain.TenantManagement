@@ -15,7 +15,7 @@ namespace Marain.TenantManagement.EnrollmentConfiguration
         where T : class
     {
         /// <summary>
-        /// Gets or sets the storage configueation.
+        /// Gets or sets the storage configuration.
         /// </summary>
 #nullable disable annotations
         public T Configuration { get; set; }

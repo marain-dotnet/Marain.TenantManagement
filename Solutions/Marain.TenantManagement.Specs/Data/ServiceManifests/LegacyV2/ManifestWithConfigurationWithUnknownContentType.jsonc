@@ -1,0 +1,12 @@
+{
+  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest",
+  "wellKnownTenantGuid": "b31b64fd-69a5-4da0-8e30-88812f3a45ba",
+  "serviceName": "Manifest with configuration with unknown content type.",
+  "requiredConfigurationEntries": [
+    {
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.unknown",
+      "key": "unknownThing",
+      "description": "This is here to cause a deserializaton exception."
+    }
+  ]
+}

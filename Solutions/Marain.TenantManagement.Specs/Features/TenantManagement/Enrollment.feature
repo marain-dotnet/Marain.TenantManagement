@@ -6,6 +6,17 @@ Feature: Enrollment
 	As an administrator
 	I want to enroll a tenant to use that service
 
+# TODO:
+# split this into multiple files separating out the various cases
+# add legacy handling
+#	- V2 required config with V2 config supplied
+#	- V3 required config with V3 config supplied
+#	- V3 or V2 required config with V3 config supplied
+#	- V3 or V2 required config with V2 config supplied (do we add the V3 version as well)
+# and disallowed cases:
+#	- V2 required config with V3 supplied
+#	- V3 required config with V2 supplied (or can we auto-upgrade?)
+
 Background:
 	Given the tenancy provider has been initialised for use with Marain
 	And I have loaded the manifest called 'SimpleManifestWithNoDependenciesOrConfiguration'

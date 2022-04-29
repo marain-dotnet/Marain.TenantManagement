@@ -41,22 +41,42 @@
 
   <ItemGroup>
     <None Remove="Data\ServiceManifests\FooBarServiceManifest.jsonc" />
+    <None Remove="Data\ServiceManifests\LegacyV2\FooBarServiceManifest.jsonc" />
+    <None Remove="Data\ServiceManifests\LegacyV2\ManifestWithConfiguration.jsonc" />
+    <None Remove="Data\ServiceManifests\LegacyV2\ManifestWithConfigurationWithUnknownContentType.jsonc" />
+    <None Remove="Data\ServiceManifests\LegacyV2\ManifestWithDependencies.jsonc" />
+    <None Remove="Data\ServiceManifests\LegacyV2\ManifestWithMultipleConfigurationItems.jsonc" />
+    <None Remove="Data\ServiceManifests\LegacyV2\OperationsServiceManifest.jsonc" />
+    <None Remove="Data\ServiceManifests\LegacyV2\SimpleManifestWithNoDependenciesOrConfiguration.jsonc" />
+    <None Remove="Data\ServiceManifests\LegacyV2\V3ServiceWithV2MigrationSupportManifest.jsonc" />
+    <None Remove="Data\ServiceManifests\LegacyV2\WorkflowServiceManifest.jsonc" />
     <None Remove="Data\ServiceManifests\ManifestWithConfiguration.jsonc" />
     <None Remove="Data\ServiceManifests\ManifestWithConfigurationWithUnknownContentType.jsonc" />
     <None Remove="Data\ServiceManifests\ManifestWithDependencies.jsonc" />
     <None Remove="Data\ServiceManifests\ManifestWithMultipleConfigurationItems.jsonc" />
     <None Remove="Data\ServiceManifests\OperationsServiceManifest.jsonc" />
-    <None Remove="Data\ServiceManifests\OperationsServiceManifestLegacyV2.jsonc" />
     <None Remove="Data\ServiceManifests\SimpleManifestWithNoDependenciesOrConfiguration.jsonc" />
     <None Remove="Data\ServiceManifests\WorkflowServiceManifest.jsonc" />
   </ItemGroup>
+
   <ItemGroup>
+    <SpecFlowObsoleteCodeBehindFiles Remove="Features\ServiceManifests\Validation\CommonPropertyValidation - Copy.feature.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\V3ServiceWithV2MigrationSupportManifest.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\FooBarServiceManifest.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\ManifestWithConfiguration.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\ManifestWithConfigurationWithUnknownContentType.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\ManifestWithDependencies.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\ManifestWithMultipleConfigurationItems.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\OperationsServiceManifest.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\SimpleManifestWithNoDependenciesOrConfiguration.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\WorkflowServiceManifest.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\ManifestWithConfigurationWithUnknownContentType.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\ManifestWithMultipleConfigurationItems.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\ManifestWithConfiguration.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\ManifestWithDependencies.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\FooBarServiceManifest.jsonc" />
-    <EmbeddedResource Include="Data\ServiceManifests\OperationsServiceManifestLegacyV2.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\OperationsServiceManifest.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\SimpleManifestWithNoDependenciesOrConfiguration.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\WorkflowServiceManifest.jsonc" />
@@ -79,5 +99,24 @@
     <None Update="specflow.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Features\ServiceManifests\Validation\RequiredLegacyV2ConfigurationValidation.feature.cs">
+      <DependentUpon>RequiredLegacyV2ConfigurationValidation.feature</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <SpecFlowFeatureFiles Update="Features\ServiceManifests\Validation\DependentServiceValidation.feature">
+      <Visible>$(UsingMicrosoftNETSdk)</Visible>
+      <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Update="Features\ServiceManifests\Validation\RequiredLegacyV2ConfigurationValidation.feature">
+      <Visible>$(UsingMicrosoftNETSdk)</Visible>
+      <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Update="Features\ServiceManifests\Validation\RequiredConfigurationValidation.feature">
+      <Visible>$(UsingMicrosoftNETSdk)</Visible>
+      <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+    </SpecFlowFeatureFiles>
   </ItemGroup>
 </Project>

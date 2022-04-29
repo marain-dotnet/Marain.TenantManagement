@@ -15,10 +15,19 @@ namespace Marain.TenantManagement.Configuration
     /// ConfigurationItem have a Configuration property? There's nothing about this that is special
     /// to storage. (There sort of was back when we had a notion of a container definition, but
     /// that has now gone.)
+    /// The ConfigurationKey is under here, because it's not present in legacy ConfigurationItems,
+    /// but that doesn't necessarily make sense. Anything except legacy config items should have that.
     /// </remarks>
     public abstract class StorageConfigurationItem<TConfiguration> : ConfigurationItem
         where TConfiguration : class
     {
+        /// <summary>
+        /// Gets or sets the key under which this configuration is stored in the tenant properties.
+        /// </summary>
+#nullable disable annotations
+        public string ConfigurationKey { get; set; }
+#nullable restore annotations
+
         /// <summary>
         /// Gets or sets the storage configuration.
         /// </summary>

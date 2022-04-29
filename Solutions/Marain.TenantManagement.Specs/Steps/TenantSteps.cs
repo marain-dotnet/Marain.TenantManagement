@@ -81,6 +81,7 @@ namespace Marain.TenantManagement.Specs.Steps
         }
 
         [Given("I have used the tenant store to create a service tenant with manifest '(.*)'")]
+        [Given("I have used the tenant store to create a service tenant with legacy V2 manifest '([^']*)'")]
         public async Task GivenIHaveUsedTheTenantStoreToCreateAServiceTenantWithManifest(string manifestName)
         {
             ServiceManifest manifest = this.manifestSteps.NamedManifest(manifestName);
