@@ -10,10 +10,14 @@ Background:
     Given the tenancy provider has been initialised for use with Marain
     And I have loaded the manifest called 'ServiceManifestC0D()'
     And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC0D()'
+    And I have loaded the manifest called 'ServiceManifestC1D()'
+    And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC1D()'
     And I have loaded the manifest called 'ServiceManifestC0D(C0D())'
     And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC0D(C0D())'
-    And I have loaded the manifest called 'ServiceManifestC1D(C0D())'
-    And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC1D(C0D())'
+    And I have loaded the manifest called 'ServiceManifestC0D(C1D())'
+    And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC0D(C1D())'
+    And I have loaded the manifest called 'ServiceManifestC1D(C1D())'
+    And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC1D(C1D())'
     And I have used the tenant store to create a new client tenant called 'Litware'
 
 # Dependency graph:
@@ -88,7 +92,7 @@ Scenario: Service used directly and as dependency with no configuration
 #        |     +-> SvcC1D(C0D())\Litware
 #        |
 #        +-> SvcC0D()
-Scenario: Service used dependency of two different services with no configuration
+Scenario: Service with no configuration used as dependency of two different services
     Given I have enrollment configuration called 'Config'
     And the enrollment configuration called 'Config' contains the following Blob Storage configuration items
     | Key                                | Account Name   | Container        |
@@ -138,6 +142,18 @@ Scenario: Service used dependency of two different services with no configuratio
 #        |
 #        +-> SvcC1D()
 # TODO. (Requires multiple configs.)
+Scenario: Service with configuration used as dependency of two different services
+    Given I have enrollment configuration called 'Config1'
+    And the enrollment configuration called 'Config1' contains the following Blob Storage configuration items
+    | Key                            | Account Name   | Container        |
+    | TestServices:C1D():FooBarStore | opsblobaccount1 | opsblobcontainer1 |
+    And I have enrollment configuration called 'Config2'
+    And the enrollment configuration called 'Config2' contains the following Blob Storage configuration items
+    | Key                                | Account Name   | Container        |
+    | TestServices:C1D():FooBarStore     | fbblobaccount2 | fbblobcontainer2 |
+    | TestServices:C1D(C1D()):operations | opsblobaccount | opsblobcontainer |
+    When I use the tenant store with the enrollment configuration called 'Config1' to enroll the tenant called 'Litware' in the service called 'SvcC0D(C1D())'
+    And I use the tenant store with the enrollment configuration called 'Config2' to enroll the tenant called 'Litware' in the service called 'SvcC1D(C1D())'
 
 
 
