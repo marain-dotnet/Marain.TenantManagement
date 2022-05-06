@@ -2,11 +2,11 @@
   "$schema": "./ServiceManifestSchema.json",
   "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest.v3",
   "wellKnownTenantGuid": "ff74a61e-3060-40d3-bfec-60dfe12febac", // 3633754ac4c9be44b55bfe791b1780f11ea674ff6030d340bfec60dfe12febac
-  "serviceName": "FooBar v1",
+  "serviceName": "SvcC1D()",
   "requiredConfigurationEntries": [
     {
       "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage.v3",
-      "key": "fooBarStore",
+      "key": "TestServices:C1D():FooBarStore",
       "description": "Stores Foos and Bars"
     }
   ]

@@ -495,8 +495,10 @@ namespace Marain.TenantManagement
             foreach ((ServiceManifestRequiredConfigurationEntry RequiredConfigurationEntry, EnrollmentConfigurationItem ProvidedConfigurationItem) current in matchedConfigItems)
             {
                 logger?.LogDebug(
-                    "Adding configuration entry '{requiredConfigurationEntryKey}' to tenant '{serviceTenantName}' with Id '{serviceTenantId}'",
+                    "Adding configuration entry '{requiredConfigurationEntryKey}' to tenant '{enrollingTenant}' with Id '{enrollingTenantId}' for '{serviceTenantName}' with Id '{serviceTenantId}'",
                     current.RequiredConfigurationEntry.Key,
+                    enrollingTenant.Name,
+                    enrollingTenant.Id,
                     serviceTenant.Name,
                     serviceTenant.Id);
 

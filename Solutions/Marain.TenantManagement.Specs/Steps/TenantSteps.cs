@@ -241,10 +241,12 @@ namespace Marain.TenantManagement.Specs.Steps
             Assert.IsNull(matchingChild, $"The service tenant '{serviceTenantName}' contains a child tenant called '{childTenantName}'");
         }
 
-        [Then("the tenant called '(.*)' should contain blob storage configuration under the key '(.*)' for a blob storage container definition with container name '(.*)'")]
+        [Then("the tenant called '([^']*)' should contain blob storage configuration under the key '([^']*)' for the account '([^']*)' and container name '([^']*)'")]
+        ////[Then("the tenant called '(.*)' should contain blob storage configuration under the key '(.*)' for a blob storage container definition with container name '(.*)'")]
         public void ThenTheTenantCalledShouldContainBlobStorageConfigurationForABlobStorageContainerDefinitionWithContainerName(
             string tenantName,
             string configurationKey,
+            string accountName,
             string containerName)
         {
             InMemoryTenantProvider tenantProvider =
@@ -258,6 +260,7 @@ namespace Marain.TenantManagement.Specs.Steps
             // GetBlobStorageConfiguration would have thrown an exception if the config didn't exist, but we'll do a
             // not null assertion anyway...
             Assert.IsNotNull(tenantConfigItem);
+            Assert.AreEqual(accountName, tenantConfigItem.AccountName);
             Assert.AreEqual(containerName, tenantConfigItem.Container);
         }
 

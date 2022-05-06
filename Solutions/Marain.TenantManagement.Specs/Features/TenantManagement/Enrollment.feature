@@ -19,109 +19,17 @@ Feature: Enrollment
 
 Background:
 	Given the tenancy provider has been initialised for use with Marain
-	And I have loaded the manifest called 'SimpleManifestWithNoDependenciesOrConfiguration'
-	And I have used the tenant store to create a service tenant with manifest 'SimpleManifestWithNoDependenciesOrConfiguration'
-	And I have loaded the manifest called 'FooBarServiceManifest'
-	And I have used the tenant store to create a service tenant with manifest 'FooBarServiceManifest'
-	And I have loaded the manifest called 'OperationsServiceManifest'
-	And I have used the tenant store to create a service tenant with manifest 'OperationsServiceManifest'
+	And I have loaded the manifest called 'ServiceManifestC0D()'
+	And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC0D()'
+	And I have loaded the manifest called 'ServiceManifestC1D()'
+	And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC1D()'
+	And I have loaded the manifest called 'ServiceManifestC1D(C1D())'
+	And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC1D(C1D())'
 	And I have loaded the manifest called 'WorkflowServiceManifest'
 	And I have used the tenant store to create a service tenant with manifest 'WorkflowServiceManifest'
 	And I have used the tenant store to create a new client tenant called 'Litware'
 	And I have used the tenant store to create a new client tenant called 'Contoso'
 
-Scenario: Attempt to enroll in a non-service tenant
-	When I use the tenant store to enroll the tenant called 'Litware' in the service called 'Contoso' anticipating an exception
-	Then an 'InvalidMarainTenantTypeException' is thrown
-
-Scenario: Basic enrollment without dependencies or configuration
-	When I use the tenant store to enroll the tenant called 'Litware' in the service called 'Simple manifest with no dependencies or configuration'
-	Then the tenant called 'Litware' should have the id of the tenant called 'Simple manifest with no dependencies or configuration' added to its enrollments
-
-Scenario: Basic enrollment with configuration
-	Given I have enrollment configuration called 'FooBar config'
-	And the enrollment configuration called 'FooBar config' contains the following Blob Storage configuration items
-	| Key         | Account Name | Container     |
-	| fooBarStore | blobaccount  | blobcontainer |
-	When I use the tenant store with the enrollment configuration called 'FooBar config' to enroll the tenant called 'Litware' in the service called 'FooBar v1'
-	Then the tenant called 'Litware' should have the id of the tenant called 'FooBar v1' added to its enrollments
-	And the tenant called 'Litware' should contain blob storage configuration under the key 'fooBarStore' for a blob storage container definition with container name 'blobcontainer'
-
-Scenario: Basic enrollment without supplying required configuration
-	When I use the tenant store to enroll the tenant called 'Litware' in the service called 'FooBar v1' anticipating an exception
-	Then an 'InvalidEnrollmentConfigurationException' is thrown
-	Then the tenant called 'Litware' should not have the id of the tenant called 'FooBar v1' in its enrollments
-
-Scenario: Enrollment with a dependency
-	# Dependency graph:
-	#
-	# +---------+         +------------+
-	# |         |         |            |
-	# | Litware +---------> OPERATIONS +------+
-	# |         |         |            |      |
-	# +---------+         +------------+      |
-	#                                         |
-	#                                         |
-	#                                   +-----v------+
-	#                                   |            |
-	#                                   | FOOBAR     |
-	#                                   |            |
-	#                                   +------------+
-	#
-	# Expected tenant tree:
-	#
-	# Root tenant
-	#  |
-	#  +-> Client Tenants
-	#  |     |
-	#  |     +-> Litware
-	#  |
-	#  +-> Service Tenants
-	#        |
-	#        +-> Operations v1
-	#        |     |
-	#        |     +-> Operations v1\Litware
-	#        |
-	#        +-> FooBar
-	#
-	Given I have enrollment configuration called 'Operations config'
-	And the enrollment configuration called 'Operations config' contains the following Blob Storage configuration items
-	| Key                                                    | Account Name   | Container        |
-	| fooBarStore                                            | fbblobaccount  | fbblobcontainer  |
-	| MarainOperations:BlobContainerConfiguration:operations | opsblobaccount | opsblobcontainer |
-	When I use the tenant store with the enrollment configuration called 'Operations config' to enroll the tenant called 'Litware' in the service called 'Operations v1'
-	Then the tenant called 'Litware' should have the id of the tenant called 'Operations v1' added to its enrollments
-	And the tenant called 'Litware' should contain blob storage configuration under the key 'MarainOperations:BlobContainerConfiguration:operations' for a blob storage container definition with container name 'opsblobcontainer'
-	And a new child tenant called 'Operations v1\Litware' of the service tenant called 'Operations v1' has been created
-	And the tenant called 'Operations v1\Litware' should have the id of the tenant called 'FooBar v1' added to its enrollments
-	And the tenant called 'Operations v1\Litware' should contain blob storage configuration under the key 'fooBarStore' for a blob storage container definition with container name 'fbblobcontainer'
-	And the tenant called 'Litware' should have the id of the tenant called 'Operations v1\Litware' set as the delegated tenant for the service called 'Operations v1'
-
-Scenario: Enrollment with a dependency without supplying configuration for the dependency service
-	# Dependency graph: as for "Enrollment with a dependency"
-	#
-	# Expected tenant tree (no changes are expected as the lack of config should mean nothing is modified):
-	#
-	# Root tenant
-	#  |
-	#  +-> Client Tenants
-	#  |     |
-	#  |     +-> Litware
-	#  |
-	#  +-> Service Tenants
-	#        |
-	#        +-> Operations v1
-	#        |
-	#        +-> FooBar
-	Given I have enrollment configuration called 'Operations config'
-	And the enrollment configuration called 'Operations config' contains the following Blob Storage configuration items
-	| Key                                                    | Account Name   | Container        |
-	| MarainOperations:BlobContainerConfiguration:operations | opsblobaccount | opsblobcontainer |
-	When I use the tenant store with the enrollment configuration called 'Operations config' to enroll the tenant called 'Litware' in the service called 'Operations v1' anticipating an exception
-	Then an 'InvalidEnrollmentConfigurationException' is thrown
-	Then the tenant called 'Litware' should not have the id of the tenant called 'Operations v1' in its enrollments
-	And the tenant called 'Litware' should not contain blob storage configuration under key 'MarainOperations:BlobContainerConfiguration:operations'
-	And no new child tenant called 'Operations v1\Litware' of the service tenant called 'Operations v1' has been created
 
 Scenario: Enrollment with multiple levels of dependency
 	# Dependency graph:
@@ -184,11 +92,11 @@ Scenario: Enrollment with multiple levels of dependency
 	And the tenant called 'Litware' should contain Cosmos configuration under the key 'MarainWorkflow:CosmosContainerConfiguration:Instances' with database name 'wfdb' and container name 'wfinstancecontainer'
 	And a new child tenant called 'Workflow v1\Litware' of the service tenant called 'Workflow v1' has been created
 	And the tenant called 'Workflow v1\Litware' should have the id of the tenant called 'Operations v1' added to its enrollments
-	And the tenant called 'Workflow v1\Litware' should contain blob storage configuration under the key 'MarainOperations:BlobContainerConfiguration:operations' for a blob storage container definition with container name 'opsblobcontainer'
+	And the tenant called 'Workflow v1\Litware' should contain blob storage configuration under the key 'MarainOperations:BlobContainerConfiguration:operations' for the account 'opsblobaccount' and container name 'opsblobcontainer'
 	And the tenant called 'Litware' should have the id of the tenant called 'Workflow v1\Litware' set as the delegated tenant for the service called 'Workflow v1'
 	And a new child tenant called 'Operations v1\Workflow v1\Litware' of the service tenant called 'Operations v1' has been created
-	And the tenant called 'Operations v1\Workflow v1\Litware' should have the id of the tenant called 'FooBar v1' added to its enrollments
-	And the tenant called 'Operations v1\Workflow v1\Litware' should contain blob storage configuration under the key 'fooBarStore' for a blob storage container definition with container name 'fbblobcontainer'
+	And the tenant called 'Operations v1\Workflow v1\Litware' should have the id of the tenant called 'SvcC1D()' added to its enrollments
+	And the tenant called 'Operations v1\Workflow v1\Litware' should contain blob storage configuration under the key 'fooBarStore' for the account 'fbblobaccount' and container name 'fbblobcontainer'
 	And the tenant called 'Workflow v1\Litware' should have the id of the tenant called 'Operations v1\Workflow v1\Litware' set as the delegated tenant for the service called 'Operations v1'
 
 Scenario: Enrollment with multiple levels of dependency and with the client tenant directly enrolled in one of the dependent services
@@ -259,17 +167,17 @@ Scenario: Enrollment with multiple levels of dependency and with the client tena
 	And the tenant called 'Litware' should contain Cosmos configuration under the key 'MarainWorkflow:CosmosContainerConfiguration:Definitions' with database name 'wfdb' and container name 'wfcontainer'
 	And the tenant called 'Litware' should contain Cosmos configuration under the key 'MarainWorkflow:CosmosContainerConfiguration:Instances' with database name 'wfdb' and container name 'wfinstancecontainer'
 	And the tenant called 'Litware' should have the id of the tenant called 'Operations v1' added to its enrollments
-	And the tenant called 'Litware' should contain blob storage configuration under the key 'MarainOperations:BlobContainerConfiguration:operations' for a blob storage container definition with container name 'opsblobcontainer2'
+	And the tenant called 'Litware' should contain blob storage configuration under the key 'MarainOperations:BlobContainerConfiguration:operations' for the account 'opsblobaccount2' and container name 'opsblobcontainer2'
 	And a new child tenant called 'Workflow v1\Litware' of the service tenant called 'Workflow v1' has been created
 	And the tenant called 'Workflow v1\Litware' should have the id of the tenant called 'Operations v1' added to its enrollments
 	And the tenant called 'Workflow v1\Litware' should contain blob storage configuration under the key 'MarainOperations:BlobContainerConfiguration:operations' for a blob storage container definition with container name 'opsblobcontainer'
 	And the tenant called 'Litware' should have the id of the tenant called 'Workflow v1\Litware' set as the delegated tenant for the service called 'Workflow v1'
 	And a new child tenant called 'Operations v1\Workflow v1\Litware' of the service tenant called 'Operations v1' has been created
-	And the tenant called 'Operations v1\Workflow v1\Litware' should have the id of the tenant called 'FooBar v1' added to its enrollments
-	And the tenant called 'Operations v1\Workflow v1\Litware' should contain blob storage configuration under the key 'fooBarStore' for a blob storage container definition with container name 'fbblobcontainer'
+	And the tenant called 'Operations v1\Workflow v1\Litware' should have the id of the tenant called 'SvcC1D()' added to its enrollments
+	And the tenant called 'Operations v1\Workflow v1\Litware' should contain blob storage configuration under the key 'fooBarStore' for the account 'fbblobaccount' and container name 'fbblobcontainer'
 	And the tenant called 'Workflow v1\Litware' should have the id of the tenant called 'Operations v1\Workflow v1\Litware' set as the delegated tenant for the service called 'Operations v1'
 	And a new child tenant called 'Operations v1\Litware' of the service tenant called 'Operations v1' has been created
-	And the tenant called 'Operations v1\Litware' should have the id of the tenant called 'FooBar v1' added to its enrollments
-	And the tenant called 'Operations v1\Litware' should contain blob storage configuration under the key 'fooBarStore' for a blob storage container definition with container name 'fbblobcontainer2'
+	And the tenant called 'Operations v1\Litware' should have the id of the tenant called 'SvcC1D()' added to its enrollments
+	And the tenant called 'Operations v1\Litware' should contain blob storage configuration under the key 'fooBarStore' for the account 'fbblobaccount2' and container name 'fbblobcontainer2'
 	And the tenant called 'Litware' should have the id of the tenant called 'Operations v1\Litware' set as the delegated tenant for the service called 'Operations v1'
 	

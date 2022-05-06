@@ -6,8 +6,8 @@ Feature: Service manifest deserialization
     I want to be able to supply a service manifest as Json
 
 Scenario: Simple manifest with no dependencies or configuration
-    When I deserialize the manifest called 'SimpleManifestWithNoDependenciesOrConfiguration'
-    Then the resulting manifest should have the service name 'Simple manifest with no dependencies or configuration'
+    When I deserialize the manifest called 'ServiceManifestC0D()'
+    Then the resulting manifest should have the service name 'SvcC0D()'
     And the resulting manifest should have a well known service GUID of 'b4dd52e4-a6cd-4e7b-842f-059528a23153'
     And the resulting manifest should not have any dependencies
     And the resulting manifest should not have any required configuration entries

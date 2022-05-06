@@ -6,7 +6,7 @@
   "dependsOnServiceTenants": [
     {
       "id": "3633754ac4c9be44b55bfe791b1780f11ea674ff6030d340bfec60dfe12febac",
-      "expectedName": "FooBar v1"
+      "expectedName": "Service with 0 Dependencies, 1 Configuration"
     }
   ],
   "requiredConfigurationEntries": [
