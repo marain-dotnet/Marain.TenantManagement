@@ -360,6 +360,29 @@ namespace Marain.TenantManagement.Specs.Steps
             }
         }
 
+        [Then("the tenant called '([^']*)' should not contain table storage configuration under key '(.*)'")]
+        public void ThenTheTenantCalledShouldNotContainTableStorageConfigurationForABlobStorageContainerDefinitionWithContainerName(
+            string tenantName,
+            string configurationKey)
+        {
+            InMemoryTenantProvider tenantProvider =
+                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<InMemoryTenantProvider>();
+
+            ITenant enrolledTenant = tenantProvider.GetTenantByName(tenantName)
+                ?? throw new TenantNotFoundException($"Could not find tenant with name '{tenantName}'");
+
+            try
+            {
+                // This should throw. If it doesn't, then the config exists and the test fails.
+                enrolledTenant.GetTableStorageConfiguration(configurationKey);
+                Assert.Fail($"Did not expect to find table storage configuration in tenant '{tenantName}' for container definition with container name '{configurationKey}', but it was present.");
+            }
+            catch (InvalidOperationException)
+            {
+                // This is what's expected - all is well.
+            }
+        }
+
         private async Task<ITenant?> GetChildTenantOfServiceTenant(string childTenantName, string serviceTenantName)
         {
             ITenantStore tenantStore = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
