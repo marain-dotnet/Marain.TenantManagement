@@ -153,11 +153,67 @@ Scenario: Service with configuration used as dependency of two different service
 
 
 
+# TODO: when this pattern occurs, there is a problem. See the tenant tree below
+# Dependency graph:
+#
+# +---------+      +-----------------+      +------------------+
+# |         |      | Service with    |      | Service with     |
+# | Litware +------> 1 Configuration +------> 1 Configurations |
+# |         |      | 2 Dependencies  |      | 1 Dependency     |
+# +----+----+      +-----------------+      +------------------+
+#                          |                         |
+#                          |                +--------v---------+
+#                          |                | Service with     |
+#                          +----------------> 1 Configurations |
+#                                           | 0 Dependencies   |
+#                                           +------------------+
+# Expected tenant tree:
+#
+# Root tenant
+#  |
+#  +-> Client Tenants
+#  |     |
+#  |     +-> Litware
+#  |
+#  +-> Service Tenants
+#        |
+#        +-> SvcC1D(SvcC1D(C1D()),C1D())
+#        |     |
+#        |     +-> SvcC1D(SvcC1D(C1D()),C1D())\Litware
+#        |
+#        +-> SvcC1D(C1D())
+#        |     |
+#        |     +-> SvcC1D(C1D())\Litware
+#        |
+#        +-> SvcC1D()
+#
+# We've got two delegated tenants for Litware, under each of the two service tenants
+# shown in the top row of the dependency graph above. Each of these will have its
+# own configuration for the service in the bottom row (SvcC1D()). That in these two
+# scenarios:
+#   1. Litware uses the top left service, which uses the top right service, which
+#       uses the bottom right service
+#   2. Litware uses the top left service, which uses the bottom right service
+# that the bottom right service ends up using different configuration in each case.
+# However, our tenant enrollment mechanisms don't make it possible to take advantage
+# of this. We can only specify configuration for the bottom right service once when
+# enrolling Litware in the top left service, so the two delegated tenants will get
+# the same configuration for the bottom right service.
+# Is this a problem? It could be. If the bottom right service provides a per-tenant
+# namespace, a client could presume that it doesn't need to ensure globally unique
+# names. But because two different delegated tenants here will end up with the same
+# configuration, they will share a namespace. This could cause trouble.
+
+#no way for the enrollment configuration
+# to specify different configuration for use of the bottom right service in the case
+# where the top-left service
+
+
 # Dependency graph:
 #
 # +---------+         +------------------+
 # |         |         | Service with     |
-# | Litware +---------> 0 Configurations +-----+
+# | Litware +---------> 1 Configurations +-----+
 # |         |         | 1 Dependency     |     |
 # +----+----+         +------------------+     |
 #      |                                       |
@@ -165,7 +221,7 @@ Scenario: Service with configuration used as dependency of two different service
 #      |    +-----------------+       +--------v---------+
 #      |    | Service with    |       | Service with     |
 #      +----> 1 Configuration +-------> 1 Configurations |
-#           | 1 Dependency    |       | 1 Dependencies   |
+#           | 2 Dependencies  |       | 1 Dependency     |
 #           +-----------------+       +------------------+
 #                   |                          |
 #                   |                 +--------v---------+
@@ -173,9 +229,50 @@ Scenario: Service with configuration used as dependency of two different service
 #                   +-----------------> 1 Configurations |
 #                                     | 0 Dependencies   |
 #                                     +------------------+
+#
+# Expected tenant tree:
+#
+# Root tenant
+#  |
+#  +-> Client Tenants
+#  |     |
+#  |     +-> Litware
+#  |
+#  +-> Service Tenants
+#        |
+#        +-> SvcC0D(C1D())
+#        |     |
+#        |     +-> SvcC0D(C1D())\Litware
+#        |
+#        +-> SvcC1D(SvcC1D(C1D()),C1D())
+#        |     |
+#        |     +-> SvcC1D(SvcC1D(C1D()),C1D())\Litware
+#        |
+#        +-> SvcC1D(C1D())
+#        |     |
+#        |     +-> SvcC1D(C1D())\Litware
+#        |
+#        +-> SvcC1D()
+# TODO: this has a more complex version of the same problem as the preceding example.
 
-# TODO. See example in Enrollment.feature
-
+#Scenario: Enrollment of a service two levels of dependency and configuration at all levels where client depends on another service that depends on the middle and lower services
+#    Given I have enrollment configuration called 'Config1'
+#    And the enrollment configuration called 'Config1' contains the following Blob Storage configuration items
+#    | Key                                        | Account Name           | Container                 |
+#    | TestServices:C1D():FooBarStore             | fbblobaccount          | fbblobcontainer           |
+#    | TestServices:C1D(C1D()):operations         | opsblobaccountindirect | opsblobcontainerindirect  |
+#    | TestServices:C3D(C1D(C1D())):manglewurzles | rootvegblobaccount     | mangleworzleblobcontainer |
+#	And the enrollment configuration called 'Config1' contains the following Cosmos configuration items
+#	| Key                                        | Account Uri          | Database Name | Container Name  |
+#	| TestServices:C3D(C1D(C1D())):RootAggregate | rootvegcosmosaccount | rvdb          | aggregatedroots |
+#	And the enrollment configuration called 'Config1' contains the following Table Storage configuration items
+#	| Key                                    | Account Name   | Table      |
+#	| TestServices:C3D(C1D(C1D())):AuditLogs | rvtableaccount | audittable |
+#    And I have enrollment configuration called 'Config2'
+#    And the enrollment configuration called 'Config2' contains the following Blob Storage configuration items
+#    | Key                                | Account Name   | Container        |
+#    | TestServices:C1D():FooBarStore     | fbblobaccount2 | fbblobcontainer2 |
+#    | TestServices:C1D(C1D()):operations | opsblobaccount | opsblobcontainer |
 
 
 # Dependency graph:
