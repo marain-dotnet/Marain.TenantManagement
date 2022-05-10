@@ -8,8 +8,7 @@ Feature: Enroll Service Requiring V3 Configuration Supplying Incorrect Configura
 
 Background:
     Given the tenancy provider has been initialised for use with Marain
-    And I have loaded the manifest called 'ServiceManifestC1D()'
-    And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC1D()'
+    And I have loaded the manifest called 'ServiceManifestC1D()' and used the tenant store to create a service tenant with it
     And I have used the tenant store to create a new client tenant called 'Litware'
 
 # Dependency graph:

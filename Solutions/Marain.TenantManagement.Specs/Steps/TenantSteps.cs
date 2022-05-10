@@ -92,6 +92,13 @@ namespace Marain.TenantManagement.Specs.Steps
             this.scenarioContext.Set(newTenant.Id, manifest.ServiceName);
         }
 
+        [Given("I have loaded the manifest called '(.*)' and used the tenant store to create a service tenant with it")]
+        public async Task GivenIHaveLoadedTheManifestCalled(string manifestName)
+        {
+            this.manifestSteps.GivenIHaveLoadedTheManifestCalled(manifestName);
+            await this.GivenIHaveUsedTheTenantStoreToCreateAServiceTenantWithManifest(manifestName).ConfigureAwait(false);
+        }
+
         [Given("I have an existing service tenant with manifest '(.*)'")]
         [When("I use the tenant store to create a new service tenant with manifest '(.*)'")]
         public Task WhenIUseTheTenantStoreToCreateANewServiceTenantWithManifest(string manifestName)
@@ -242,7 +249,6 @@ namespace Marain.TenantManagement.Specs.Steps
         }
 
         [Then("the tenant called '([^']*)' should contain blob storage configuration under the key '([^']*)' for the account '([^']*)' and container name '([^']*)'")]
-        ////[Then("the tenant called '(.*)' should contain blob storage configuration under the key '(.*)' for a blob storage container definition with container name '(.*)'")]
         public void ThenTheTenantCalledShouldContainBlobStorageConfigurationForABlobStorageContainerDefinitionWithContainerName(
             string tenantName,
             string configurationKey,
@@ -264,10 +270,11 @@ namespace Marain.TenantManagement.Specs.Steps
             Assert.AreEqual(containerName, tenantConfigItem.Container);
         }
 
-        [Then("the tenant called '(.*)' should contain table storage configuration under the key '(.*)' for a table storage table definition with table name '(.*)'")]
+        [Then("the tenant called '(.*)' should contain table storage configuration under the key '([^']*)' for the account '([^']*)' and table name '([^']*)'")]
         public void ThenTheTenantCalledShouldContainTableStorageConfigurationForATableStorageTableDefinitionWithTableName(
             string tenantName,
             string configurationKey,
+            string accountName,
             string tableName)
         {
             InMemoryTenantProvider tenantProvider =
@@ -281,6 +288,7 @@ namespace Marain.TenantManagement.Specs.Steps
             // GetTableStorageConfiguration would have thrown an exception if the config didn't exist, but we'll do a
             // not null assertion anyway...
             Assert.IsNotNull(tenantConfigItem);
+            Assert.AreEqual(accountName, tenantConfigItem.AccountName);
             Assert.AreEqual(tableName, tenantConfigItem.TableName);
         }
 

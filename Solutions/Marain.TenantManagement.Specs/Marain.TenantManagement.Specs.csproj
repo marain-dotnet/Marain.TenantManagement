@@ -60,7 +60,8 @@
     <None Remove="Data\ServiceManifests\ServiceManifestC1D().jsonc" />
     <None Remove="Data\ServiceManifests\ServiceManifestC1D(C0D()).jsonc" />
     <None Remove="Data\ServiceManifests\ServiceManifestC1D(C1D()).jsonc" />
-    <None Remove="Data\ServiceManifests\ServiceManifestC1D(C1D(C1D())).jsonc" />
+    <None Remove="Data\ServiceManifests\ServiceManifestC3D().jsonc" />
+    <None Remove="Data\ServiceManifests\ServiceManifestC3D(C1D(C1D())).jsonc" />
     <None Remove="Data\ServiceManifests\WorkflowServiceManifest.jsonc" />
   </ItemGroup>
 
@@ -83,7 +84,8 @@
     <EmbeddedResource Include="Data\ServiceManifests\ManifestWithConfiguration.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\ManifestWithDependencies.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\ServiceManifestC0D%28C0D%28C0D%28%29%29%29.jsonc" />
-    <EmbeddedResource Include="Data\ServiceManifests\ServiceManifestC1D%28C1D%28C1D%28%29%29%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\ServiceManifestC3D%28%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\ServiceManifestC3D%28C1D%28C1D%28%29%29%29.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\ServiceManifestC1D%28%29.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\ServiceManifestC1D%28C1D%28%29%29.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\ServiceManifestC0D%28%29.jsonc" />

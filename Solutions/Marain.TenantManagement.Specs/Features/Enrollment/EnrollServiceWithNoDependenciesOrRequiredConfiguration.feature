@@ -8,8 +8,7 @@ Feature: Enroll Service with No Dependencies and No Required Configuration
 
 Background:
     Given the tenancy provider has been initialised for use with Marain
-    And I have loaded the manifest called 'ServiceManifestC0D()'
-    And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC0D()'
+    And I have loaded the manifest called 'ServiceManifestC0D()' and used the tenant store to create a service tenant with it
     And I have used the tenant store to create a new client tenant called 'Litware'
     And I have used the tenant store to create a new client tenant called 'Contoso'
 
@@ -27,4 +26,3 @@ Scenario: Basic enrollment without dependencies or configuration
 Scenario: Attempt to enroll in a non-service tenant
     When I use the tenant store to enroll the tenant called 'Litware' in the service called 'Contoso' anticipating an exception
     Then an 'InvalidMarainTenantTypeException' is thrown
-

@@ -1,0 +1,23 @@
+{
+  "$schema": "./ServiceManifestSchema.json",
+  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest.v3",
+  "wellKnownTenantGuid": "aee01b0a-8a3d-422a-a254-e54c176d2793", // 3633754ac4c9be44b55bfe791b1780f10a1be0ae3d8a2a42a254e54c176d2793
+  "serviceName": "SvcC3D()",
+  "requiredConfigurationEntries": [
+    {
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage.v3",
+      "key": "TestServices:C3D():QuuxStore",
+      "description": "Stores Quuxes"
+    },
+    {
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb.v3",
+      "key": "TestServices:C3D():SpongStore",
+      "description": "Stores spongs"
+    },
+    {
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azuretablestorage.v3",
+      "key": "TestServices:C3D():Wibble",
+      "description": "Stores wibbles"
+    }
+  ]
+}

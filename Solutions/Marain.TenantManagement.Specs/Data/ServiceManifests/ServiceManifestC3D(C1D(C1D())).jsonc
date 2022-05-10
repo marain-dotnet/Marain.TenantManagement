@@ -1,0 +1,28 @@
+{
+  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest.v3",
+  "wellKnownTenantGuid": "91d52fb5-ec46-4176-a89c-ff0d6f777868", //
+  "serviceName": "SvcC3D(C1D(C1D()))",
+  "dependsOnServiceTenants": [
+    {
+      "id": "3633754ac4c9be44b55bfe791b1780f12429524fe7b6cc48a265a307407ec858",
+      "expectedName": "SvcC1D(C1D())"
+    }
+  ],
+  "requiredConfigurationEntries": [
+    {
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage.v3",
+      "key": "TestServices:C3D(C1D(C1D())):manglewurzles",
+      "description": "Stores specific root vegetables"
+    },
+    {
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb.v3",
+      "key": "TestServices:C3D(C1D(C1D())):RootAggregate",
+      "description": "Stores generic root vegetables"
+    },
+    {
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azuretablestorage.v3",
+      "key": "TestServices:C3D(C1D(C1D())):AuditLogs",
+      "description": "Stores audit logs"
+    }
+  ]
+}

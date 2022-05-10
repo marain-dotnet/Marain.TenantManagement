@@ -8,18 +8,12 @@ Feature: Enroll Service That Has One Dependency with No Further Dependencies
 
 Background:
     Given the tenancy provider has been initialised for use with Marain
-    And I have loaded the manifest called 'ServiceManifestC0D()'
-    And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC0D()'
-    And I have loaded the manifest called 'ServiceManifestC1D()'
-    And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC1D()'
-    And I have loaded the manifest called 'ServiceManifestC0D(C0D())'
-    And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC0D(C0D())'
-    And I have loaded the manifest called 'ServiceManifestC0D(C1D())'
-    And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC0D(C1D())'
-    And I have loaded the manifest called 'ServiceManifestC1D(C0D())'
-    And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC1D(C0D())'
-    And I have loaded the manifest called 'ServiceManifestC1D(C1D())'
-    And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC1D(C1D())'
+    And I have loaded the manifest called 'ServiceManifestC0D()' and used the tenant store to create a service tenant with it
+    And I have loaded the manifest called 'ServiceManifestC1D()' and used the tenant store to create a service tenant with it
+    And I have loaded the manifest called 'ServiceManifestC0D(C0D())' and used the tenant store to create a service tenant with it
+    And I have loaded the manifest called 'ServiceManifestC0D(C1D())' and used the tenant store to create a service tenant with it
+    And I have loaded the manifest called 'ServiceManifestC1D(C0D())' and used the tenant store to create a service tenant with it
+    And I have loaded the manifest called 'ServiceManifestC1D(C1D())' and used the tenant store to create a service tenant with it
     And I have used the tenant store to create a new client tenant called 'Litware'
 
 # Dependency graph:

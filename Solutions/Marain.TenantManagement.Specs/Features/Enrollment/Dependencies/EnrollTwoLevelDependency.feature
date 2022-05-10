@@ -8,18 +8,12 @@ Feature: Enroll service that has dependency which has a further dependency
 
 Background:
     Given the tenancy provider has been initialised for use with Marain
-    And I have loaded the manifest called 'ServiceManifestC0D()'
-    And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC0D()'
-    And I have loaded the manifest called 'ServiceManifestC1D()'
-    And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC1D()'
-    And I have loaded the manifest called 'ServiceManifestC0D(C0D())'
-    And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC0D(C0D())'
-    And I have loaded the manifest called 'ServiceManifestC1D(C1D())'
-    And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC1D(C1D())'
-    And I have loaded the manifest called 'ServiceManifestC0D(C0D(C0D()))'
-    And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC0D(C0D(C0D()))'
-    And I have loaded the manifest called 'ServiceManifestC1D(C1D(C1D()))'
-    And I have used the tenant store to create a service tenant with manifest 'ServiceManifestC1D(C1D(C1D()))'
+    And I have loaded the manifest called 'ServiceManifestC0D()' and used the tenant store to create a service tenant with it
+    And I have loaded the manifest called 'ServiceManifestC1D()' and used the tenant store to create a service tenant with it
+    And I have loaded the manifest called 'ServiceManifestC0D(C0D())' and used the tenant store to create a service tenant with it
+    And I have loaded the manifest called 'ServiceManifestC1D(C1D())' and used the tenant store to create a service tenant with it
+    And I have loaded the manifest called 'ServiceManifestC0D(C0D(C0D()))' and used the tenant store to create a service tenant with it
+    And I have loaded the manifest called 'ServiceManifestC3D(C1D(C1D()))' and used the tenant store to create a service tenant with it
     And I have used the tenant store to create a new client tenant called 'Litware'
 
 # Dependency graph:
@@ -81,24 +75,23 @@ Scenario: Enrollment of a service two levels of dependency and no configuration 
 #
 # +---------+         +------------------+
 # |         |         | Service with     |
-# | Litware +---------> 0 Configurations +--+
+# | Litware +---------> 1 Configuration  +--+
 # |         |         | 1 Dependency     |  |
 # +---------+         +------------------+  |
 #                                           |
 #                                           |
 #                                  +--------v---------+
 #                                  | Service with     |
-#                                  | 0 Configurations +--+
+#                                  | 1 Configuration  +--+
 #                                  | 1 Dependencies   |  |
 #                                  +------------------+  |
 #                                                        |
 #                                                        |
 #                                               +--------v---------+
 #                                               | Service with     |
-#                                               | 0 Configurations |
+#                                               | 1 Configurations |
 #                                               | 0 Dependencies   |
 #                                               +------------------+
-#
 #
 # Expected tenant tree:
 #
@@ -110,13 +103,13 @@ Scenario: Enrollment of a service two levels of dependency and no configuration 
 #  |
 #  +-> Service Tenants
 #        |
-#        +-> SvcC1D(C1D(C1D()))
+#        +-> SvcC3D(C1D(C1D()))
 #        |     |
-#        |     +-> SvcC1D(C1D(C1D()))\Litware
+#        |     +-> SvcC3D(C1D(C1D()))\Litware
 #        |
 #        +-> SvcC1D(C1D())
 #        |     |
-#        |     +-> SvcC1D(C1D())\SvcC1D(C1D(C1D()))\Litware
+#        |     +-> SvcC1D(C1D())\SvcC3D(C1D(C1D()))\Litware
 #        |
 #        +-> SvcC1D()
 #
@@ -126,13 +119,23 @@ Scenario: Enrollment of a service two levels of dependency and configuration at 
     | Key                                        | Account Name       | Container                 |
     | TestServices:C1D():FooBarStore             | fbblobaccount      | fbblobcontainer           |
     | TestServices:C1D(C1D()):operations         | opsblobaccount     | opsblobcontainer          |
-    | TestServices:C1D(C1D(C1D())):manglewurzles | rootvegblobaccount | mangleworzleblobcontainer |
-    When I use the tenant store with the enrollment configuration called 'Config' to enroll the tenant called 'Litware' in the service called 'SvcC1D(C1D(C1D()))'
-    Then the tenant called 'Litware' should have the id of the tenant called 'SvcC1D(C1D(C1D()))' added to its enrollments
-    And the tenant called 'Litware' should contain blob storage configuration under the key 'TestServices:C1D(C1D(C1D())):manglewurzles' for the account 'rootvegblobaccount' and container name 'mangleworzleblobcontainer'
-    And a new child tenant called 'SvcC1D(C1D(C1D()))\Litware' of the service tenant called 'SvcC1D(C1D(C1D()))' has been created
-    And a new child tenant called 'SvcC1D(C1D())\SvcC1D(C1D(C1D()))\Litware' of the service tenant called 'SvcC1D(C1D())' has been created
-    And the tenant called 'SvcC1D(C1D(C1D()))\Litware' should have the id of the tenant called 'SvcC1D(C1D())' added to its enrollments
-    And the tenant called 'Litware' should have the id of the tenant called 'SvcC1D(C1D(C1D()))\Litware' set as the delegated tenant for the service called 'SvcC1D(C1D(C1D()))'
-    And the tenant called 'SvcC1D(C1D())\SvcC1D(C1D(C1D()))\Litware' should have the id of the tenant called 'SvcC1D()' added to its enrollments
-    And the tenant called 'SvcC1D(C1D(C1D()))\Litware' should have the id of the tenant called 'SvcC1D(C1D())\SvcC1D(C1D(C1D()))\Litware' set as the delegated tenant for the service called 'SvcC1D(C1D())'
+    | TestServices:C3D(C1D(C1D())):manglewurzles | rootvegblobaccount | mangleworzleblobcontainer |
+	And the enrollment configuration called 'Config' contains the following Cosmos configuration items
+	| Key                                        | Account Uri          | Database Name | Container Name  |
+	| TestServices:C3D(C1D(C1D())):RootAggregate | rootvegcosmosaccount | rvdb          | aggregatedroots |
+	And the enrollment configuration called 'Config' contains the following Table Storage configuration items
+	| Key                                    | Account Name   | Table      |
+	| TestServices:C3D(C1D(C1D())):AuditLogs | rvtableaccount | audittable |
+    When I use the tenant store with the enrollment configuration called 'Config' to enroll the tenant called 'Litware' in the service called 'SvcC3D(C1D(C1D()))'
+    Then the tenant called 'Litware' should have the id of the tenant called 'SvcC3D(C1D(C1D()))' added to its enrollments
+    And the tenant called 'Litware' should contain blob storage configuration under the key 'TestServices:C3D(C1D(C1D())):manglewurzles' for the account 'rootvegblobaccount' and container name 'mangleworzleblobcontainer'
+    And the tenant called 'Litware' should contain Cosmos configuration under the key 'TestServices:C3D(C1D(C1D())):RootAggregate' with database name 'rvdb' and container name 'aggregatedroots'
+    And the tenant called 'Litware' should contain table storage configuration under the key 'TestServices:C3D(C1D(C1D())):AuditLogs' for the account 'rvtableaccount' and table name 'audittable'
+    And a new child tenant called 'SvcC3D(C1D(C1D()))\Litware' of the service tenant called 'SvcC3D(C1D(C1D()))' has been created
+    And a new child tenant called 'SvcC1D(C1D())\SvcC3D(C1D(C1D()))\Litware' of the service tenant called 'SvcC1D(C1D())' has been created
+    And the tenant called 'SvcC3D(C1D(C1D()))\Litware' should have the id of the tenant called 'SvcC1D(C1D())' added to its enrollments
+    And the tenant called 'Litware' should have the id of the tenant called 'SvcC3D(C1D(C1D()))\Litware' set as the delegated tenant for the service called 'SvcC3D(C1D(C1D()))'
+    And the tenant called 'SvcC3D(C1D(C1D()))\Litware' should contain blob storage configuration under the key 'TestServices:C1D(C1D()):operations' for the account 'opsblobaccount' and container name 'opsblobcontainer'
+    And the tenant called 'SvcC1D(C1D())\SvcC3D(C1D(C1D()))\Litware' should have the id of the tenant called 'SvcC1D()' added to its enrollments
+    And the tenant called 'SvcC3D(C1D(C1D()))\Litware' should have the id of the tenant called 'SvcC1D(C1D())\SvcC3D(C1D(C1D()))\Litware' set as the delegated tenant for the service called 'SvcC1D(C1D())'
+    And the tenant called 'SvcC1D(C1D())\SvcC3D(C1D(C1D()))\Litware' should contain blob storage configuration under the key 'TestServices:C1D():FooBarStore' for the account 'fbblobaccount' and container name 'fbblobcontainer'
