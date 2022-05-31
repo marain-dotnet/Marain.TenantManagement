@@ -1,6 +1,6 @@
 {
   "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest.v3",
-  "wellKnownTenantGuid": "91d52fb5-ec46-4176-a89c-ff0d6f777868", //
+  "wellKnownTenantGuid": "91d52fb5-ec46-4176-a89c-ff0d6f777868", // 3633754ac4c9be44b55bfe791b1780f1b52fd59146ec7641a89cff0d6f777868
   "serviceName": "SvcC3D(C1D(C1D()))",
   "dependsOnServiceTenants": [
     {

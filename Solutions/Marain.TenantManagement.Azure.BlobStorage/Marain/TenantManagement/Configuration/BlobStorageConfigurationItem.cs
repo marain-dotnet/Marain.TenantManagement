@@ -17,7 +17,7 @@ public class BlobStorageConfigurationItem : StorageConfigurationItem<BlobContain
     /// <summary>
     /// The content type of the configuration item.
     /// </summary>
-    public const string RegisteredContentType = ConfigurationItem.BaseContentType + "azureblobstorage";
+    public const string RegisteredContentType = ConfigurationItem.BaseContentType + "azureblobstorage.v3";
 
     /// <inheritdoc/>
     public override string ContentType => RegisteredContentType;

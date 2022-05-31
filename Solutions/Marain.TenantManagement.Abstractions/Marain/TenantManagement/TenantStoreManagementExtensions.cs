@@ -8,14 +8,17 @@ namespace Marain.TenantManagement
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
     using Corvus.Json;
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
+
     using Marain.TenantManagement.Configuration;
     using Marain.TenantManagement.EnrollmentConfiguration;
     using Marain.TenantManagement.Exceptions;
     using Marain.TenantManagement.Internal;
     using Marain.TenantManagement.ServiceManifests;
+
     using Microsoft.Extensions.Logging;
 
     /// <summary>
@@ -117,7 +120,7 @@ namespace Marain.TenantManagement
             this ITenantStore tenantStore,
             string enrollingTenantId,
             string serviceTenantId,
-            EnrollmentConfigurationItem[] configurationItems)
+            IReadOnlyDictionary<string, EnrollmentConfigurationEntry> configurationItems)
         {
             ArgumentNullException.ThrowIfNull(enrollingTenantId);
             if (string.IsNullOrWhiteSpace(enrollingTenantId))
@@ -156,7 +159,7 @@ namespace Marain.TenantManagement
             this ITenantStore tenantStore,
             ITenant enrollingTenant,
             string serviceTenantId,
-            EnrollmentConfigurationItem[] configurationItems)
+            IReadOnlyDictionary<string, EnrollmentConfigurationEntry> configurationItems)
         {
             // Enrolling tenant validation will happen when we call through to the next method to do the enrollment, so no
             // need to do it here as well.
@@ -216,7 +219,7 @@ namespace Marain.TenantManagement
         /// <returns>
         /// A list of <see cref="ServiceManifestRequiredConfigurationEntry"/> representing the configuration requirements.
         /// </returns>
-        public static async Task<ServiceManifestRequiredConfigurationEntry[]> GetServiceEnrollmentConfigurationRequirementsAsync(
+        public static async Task<ServiceManifestRequiredConfigurationEntryIncludingDescendants> GetServiceEnrollmentConfigurationRequirementsAsync(
             this ITenantStore tenantStore,
             string serviceTenantId)
         {
@@ -317,7 +320,10 @@ namespace Marain.TenantManagement
         /// </param>
         /// <param name="logger">Optional logger.</param>
         /// <returns>The new tenant.</returns>
-        public static async Task<ITenant> CreateServiceTenantAsync(this ITenantStore tenantStore, ServiceManifest manifest, ILogger? logger = null)
+        public static async Task<ITenant> CreateServiceTenantAsync(
+            this ITenantStore tenantStore,
+            ServiceManifest manifest,
+            ILogger? logger = null)
         {
             ArgumentNullException.ThrowIfNull(manifest);
 
@@ -447,7 +453,7 @@ namespace Marain.TenantManagement
             this ITenantStore tenantStore,
             ITenant enrollingTenant,
             ITenant serviceTenant,
-            EnrollmentConfigurationItem[] configurationItems,
+            IReadOnlyDictionary<string, EnrollmentConfigurationEntry> configurationItems,
             ILogger? logger = null)
         {
             ArgumentNullException.ThrowIfNull(enrollingTenant);
@@ -469,113 +475,144 @@ namespace Marain.TenantManagement
 
             // First we need to ensure that all the required config items for both the service being enrolled in,
             // as well as any dependent services is provided.
-            ServiceManifestRequiredConfigurationEntry[] requiredConfig = await tenantStore.GetServiceEnrollmentConfigurationRequirementsAsync(serviceTenant).ConfigureAwait(false);
+            ServiceManifestRequiredConfigurationEntryIncludingDescendants requiredConfig = await tenantStore.GetServiceEnrollmentConfigurationRequirementsAsync(serviceTenant).ConfigureAwait(false);
 
-            logger?.LogDebug("Validating supplied configuration against required config.");
-            configurationItems.ValidateAndThrow(requiredConfig);
-
-            ServiceManifest manifest = serviceTenant.GetServiceManifest();
-
-            // Now, match up the required config items for this service to the relevent supplied config (we may
-            // have been supplied with config for dependent services as well, so we can't just attach all
-            // of the supplied config items to the enrolling tenant - some of it could belong on delegated
-            // tenants.
-            logger?.LogDebug(
-                "Attaching required configuration items to tenant '{serviceTenantName}' with Id '{serviceTenantId}'",
-                serviceTenant.Name,
-                serviceTenant.Id);
-
-            IEnumerable<(ServiceManifestRequiredConfigurationEntry RequiredConfigurationEntry, EnrollmentConfigurationItem ProvidedConfigurationItem)> matchedConfigItems =
-                manifest.RequiredConfigurationEntries.Select(
-                    requiredConfigItem =>
-                    (requiredConfigItem, configurationItems.Single(item => item.Key == requiredConfigItem.Key)));
-
-            IEnumerable<KeyValuePair<string, object>> propertiesToAddToEnrollingTenant = PropertyBagValues.Empty;
-
-            foreach ((ServiceManifestRequiredConfigurationEntry RequiredConfigurationEntry, EnrollmentConfigurationItem ProvidedConfigurationItem) current in matchedConfigItems)
+            if (configurationItems.TryGetValue(serviceTenant.Id, out EnrollmentConfigurationEntry? enrollmentConfigurationForThisService))
             {
+                logger?.LogDebug("Validating supplied configuration against required config.");
+                requiredConfig.ValidateAndThrow(enrollmentConfigurationForThisService);
+            }
+            else
+            {
+                throw new InvalidEnrollmentConfigurationException(new[]
+                {
+                    $"Tenant '{enrollingTenant.Name}' (id: {enrollingTenant.Id} depends on service '{serviceTenant.Name}' (id: {serviceTenant.Id})), which requires these configuration entries: [{string.Join(", ", requiredConfig.RequiredConfigurationEntries.Select(e => e.Key))}, but no configuration for this dependency was supplied]",
+                });
+            }
+
+            await EnrollInServiceCoreAsync(enrollingTenant, serviceTenant, enrollmentConfigurationForThisService)
+                .ConfigureAwait(false);
+
+            async Task EnrollInServiceCoreAsync(
+                ITenant enrollingTenant,
+                ITenant serviceTenant,
+                EnrollmentConfigurationEntry enrollmentConfigurationForThisService)
+            {
+                IEnumerable<KeyValuePair<string, object>> propertiesToAddToEnrollingTenant = PropertyBagValues.Empty;
+
+                // Now, match up the required config items for this service to the relevent supplied config (we may
+                // have been supplied with config for dependent services as well, so we can't just attach all
+                // of the supplied config items to the enrolling tenant - some of it could belong on delegated
+                // tenants.
                 logger?.LogDebug(
-                    "Adding configuration entry '{requiredConfigurationEntryKey}' to tenant '{enrollingTenant}' with Id '{enrollingTenantId}' for '{serviceTenantName}' with Id '{serviceTenantId}'",
-                    current.RequiredConfigurationEntry.Key,
-                    enrollingTenant.Name,
-                    enrollingTenant.Id,
+                    "Attaching required configuration items to tenant '{serviceTenantName}' with Id '{serviceTenantId}'",
                     serviceTenant.Name,
                     serviceTenant.Id);
 
-                propertiesToAddToEnrollingTenant = current.RequiredConfigurationEntry.AddToTenantProperties(
-                    propertiesToAddToEnrollingTenant, current.ProvidedConfigurationItem);
-            }
+                ServiceManifest manifest = serviceTenant.GetServiceManifest();
+                IEnumerable<(ServiceManifestRequiredConfigurationEntry RequiredConfigurationEntry, ConfigurationItem ConfigurationEntry)> matchedConfigItems =
+                    manifest.RequiredConfigurationEntries.Select(
+                        requiredConfigItem =>
+                        (requiredConfigItem, enrollmentConfigurationForThisService.ConfigurationItems[requiredConfigItem.Key]));
 
-            // Add an enrollment entry to the tenant.
-            logger?.LogDebug(
-                "Adding service enrollment to tenant '{serviceTenantName}' with Id '{serviceTenantId}'",
-                serviceTenant.Name,
-                serviceTenant.Id);
+                foreach ((ServiceManifestRequiredConfigurationEntry RequiredConfigurationEntry, ConfigurationItem ConfigurationEntry) current in matchedConfigItems)
+                {
+                    logger?.LogDebug(
+                        "Adding configuration entry '{requiredConfigurationEntryKey}' to tenant '{enrollingTenant}' with Id '{enrollingTenantId}' for '{serviceTenantName}' with Id '{serviceTenantId}'",
+                        current.RequiredConfigurationEntry.Key,
+                        enrollingTenant.Name,
+                        enrollingTenant.Id,
+                        serviceTenant.Name,
+                        serviceTenant.Id);
 
-            propertiesToAddToEnrollingTenant = propertiesToAddToEnrollingTenant.AddServiceEnrollment(
-                enrollingTenant, serviceTenant.Id);
+                    propertiesToAddToEnrollingTenant = current.RequiredConfigurationEntry.AddToTenantProperties(
+                        propertiesToAddToEnrollingTenant, current.ConfigurationEntry);
+                }
 
-            // Update the tenant now, so that the tenant type is correctly set - otherwise
-            // recursive enrollments will fail
-            logger?.LogDebug(
-                "Updating tenant '{enrollingTenantName}' with Id '{enrollingTenantId}'",
-                enrollingTenant.Name,
-                enrollingTenant.Id);
-
-            enrollingTenant = await tenantStore.UpdateTenantAsync(
-                enrollingTenant.Id,
-                propertiesToSetOrAdd: propertiesToAddToEnrollingTenant)
-                .ConfigureAwait(false);
-
-            propertiesToAddToEnrollingTenant = PropertyBagValues.Empty;
-
-            // If this service has dependencies, we need to create a new delegated tenant for the service to use when
-            // accessing those dependencies.
-            if (manifest.DependsOnServiceTenants.Count > 0)
-            {
+                // Add an enrollment entry to the tenant.
                 logger?.LogDebug(
-                    "Service '{serviceTenantName}' has dependencies. Creating delegated tenant for enrollment.",
-                    serviceTenant.Name);
-
-                ITenant delegatedTenant = await tenantStore.CreateDelegatedTenant(enrollingTenant, serviceTenant).ConfigureAwait(false);
-
-                // Now enroll the new delegated tenant for all of the dependent services.
-                await Task.WhenAll(manifest.DependsOnServiceTenants.Select(
-                    dependsOnService => tenantStore.EnrollInServiceAsync(
-                        delegatedTenant,
-                        dependsOnService.Id,
-                        configurationItems))).ConfigureAwait(false);
-
-                // Add the delegated tenant Id to the enrolling tenant
-                logger?.LogDebug(
-                    "Setting delegated tenant for client '{enrollingTenantName}' with Id '{enrollingTenantId}' in service '{serviceTenantName}' with Id '{serviceTenantId}' to new tenant '{delegatedTenantName}' with Id '{delegatedTenantId}'.",
-                    enrollingTenant.Name,
-                    enrollingTenant.Id,
+                    "Adding service enrollment to tenant '{serviceTenantName}' with Id '{serviceTenantId}'",
                     serviceTenant.Name,
-                    serviceTenant.Id,
-                    delegatedTenant.Name,
-                    delegatedTenant.Id);
+                    serviceTenant.Id);
 
-                propertiesToAddToEnrollingTenant = propertiesToAddToEnrollingTenant.SetDelegatedTenantForService(
-                    enrollingTenant, serviceTenant, delegatedTenant);
+                propertiesToAddToEnrollingTenant = propertiesToAddToEnrollingTenant.AddServiceEnrollment(
+                    enrollingTenant, serviceTenant.Id);
 
+                // Update the tenant now, so that the tenant type is correctly set - otherwise
+                // recursive enrollments will fail
                 logger?.LogDebug(
                     "Updating tenant '{enrollingTenantName}' with Id '{enrollingTenantId}'",
                     enrollingTenant.Name,
                     enrollingTenant.Id);
 
-                await tenantStore.UpdateTenantAsync(
+                enrollingTenant = await tenantStore.UpdateTenantAsync(
                     enrollingTenant.Id,
                     propertiesToSetOrAdd: propertiesToAddToEnrollingTenant)
                     .ConfigureAwait(false);
-            }
 
-            logger?.LogInformation(
-                "Successfully enrolled tenant '{enrollingTenantName}' with Id '{enrollingTenant.Id}' for service '{serviceTenantName}' with Id '{serviceTenantId}'",
-                enrollingTenant.Name,
-                enrollingTenant.Id,
-                serviceTenant.Name,
-                serviceTenant.Id);
+                propertiesToAddToEnrollingTenant = PropertyBagValues.Empty;
+
+                // If this service has dependencies, we need to create a new delegated tenant for the service to use when
+                // accessing those dependencies.
+                if (manifest.DependsOnServiceTenants.Count > 0)
+                {
+                    logger?.LogDebug(
+                        "Service '{serviceTenantName}' has dependencies. Creating delegated tenant for enrollment.",
+                        serviceTenant.Name);
+
+                    ITenant delegatedTenant = await tenantStore.CreateDelegatedTenant(enrollingTenant, serviceTenant).ConfigureAwait(false);
+
+                    // Now enroll the new delegated tenant for all of the dependent services.
+                    await Task.WhenAll(manifest.DependsOnServiceTenants.Select(
+                        async dependsOnService =>
+                        {
+                            ITenant dependentService = await tenantStore.GetServiceTenantAsync(dependsOnService.Id)
+                                .ConfigureAwait(false);
+
+                            if (!enrollmentConfigurationForThisService.Dependencies.TryGetValue(
+                                dependentService.Id, out EnrollmentConfigurationEntry? dependencyConfiguration))
+                            {
+                                dependencyConfiguration = EnrollmentConfigurationEntry.Empty;
+                            }
+
+                            await EnrollInServiceCoreAsync(
+                                delegatedTenant,
+                                dependentService,
+                                dependencyConfiguration)
+                                .ConfigureAwait(false);
+                        })).ConfigureAwait(false);
+
+                    // Add the delegated tenant Id to the enrolling tenant
+                    logger?.LogDebug(
+                        "Setting delegated tenant for client '{enrollingTenantName}' with Id '{enrollingTenantId}' in service '{serviceTenantName}' with Id '{serviceTenantId}' to new tenant '{delegatedTenantName}' with Id '{delegatedTenantId}'.",
+                        enrollingTenant.Name,
+                        enrollingTenant.Id,
+                        serviceTenant.Name,
+                        serviceTenant.Id,
+                        delegatedTenant.Name,
+                        delegatedTenant.Id);
+
+                    propertiesToAddToEnrollingTenant = propertiesToAddToEnrollingTenant.SetDelegatedTenantForService(
+                        enrollingTenant, serviceTenant, delegatedTenant);
+
+                    logger?.LogDebug(
+                        "Updating tenant '{enrollingTenantName}' with Id '{enrollingTenantId}'",
+                        enrollingTenant.Name,
+                        enrollingTenant.Id);
+
+                    await tenantStore.UpdateTenantAsync(
+                        enrollingTenant.Id,
+                        propertiesToSetOrAdd: propertiesToAddToEnrollingTenant)
+                        .ConfigureAwait(false);
+                }
+
+                logger?.LogInformation(
+                    "Successfully enrolled tenant '{enrollingTenantName}' with Id '{enrollingTenant.Id}' for service '{serviceTenantName}' with Id '{serviceTenantId}'",
+                    enrollingTenant.Name,
+                    enrollingTenant.Id,
+                    serviceTenant.Name,
+                    serviceTenant.Id);
+            }
         }
 
         /// <summary>
@@ -706,22 +743,26 @@ namespace Marain.TenantManagement
         /// <returns>
         /// A list of <see cref="ServiceManifestRequiredConfigurationEntry"/> representing the configuration requirements.
         /// </returns>
-        public static async Task<ServiceManifestRequiredConfigurationEntry[]> GetServiceEnrollmentConfigurationRequirementsAsync(this ITenantStore tenantStore, ITenant serviceTenant)
+        public static async Task<ServiceManifestRequiredConfigurationEntryIncludingDescendants> GetServiceEnrollmentConfigurationRequirementsAsync(
+            this ITenantStore tenantStore,
+            ITenant serviceTenant)
         {
             serviceTenant.EnsureTenantIsOfType(MarainTenantType.Service);
-
-            var requirements = new List<ServiceManifestRequiredConfigurationEntry>();
             ServiceManifest serviceManifest = serviceTenant.GetServiceManifest();
-            requirements.AddRange(serviceManifest.RequiredConfigurationEntries);
 
-            ServiceManifestRequiredConfigurationEntry[][] dependentServicesConfigRequirements =
+            (string Id, ServiceManifestRequiredConfigurationEntryIncludingDescendants DependencyRequirements)[] dependentServicesConfigRequirements =
                 await Task.WhenAll(
                     serviceManifest.DependsOnServiceTenants.Select(
-                        x => tenantStore.GetServiceEnrollmentConfigurationRequirementsAsync(x.Id))).ConfigureAwait(false);
+                        async x =>
+                        {
+                            ITenant childServiceTenant = await tenantStore.GetServiceTenantAsync(x.Id).ConfigureAwait(false);
 
-            requirements.AddRange(dependentServicesConfigRequirements.SelectMany(x => x));
+                            return (x.Id, DependencyRequirements: await tenantStore.GetServiceEnrollmentConfigurationRequirementsAsync(childServiceTenant).ConfigureAwait(false));
+                        })).ConfigureAwait(false);
 
-            return requirements.ToArray();
+            return new ServiceManifestRequiredConfigurationEntryIncludingDescendants(
+                serviceManifest.RequiredConfigurationEntries,
+                dependentServicesConfigRequirements.ToDictionary(x => x.Id, x => x.DependencyRequirements));
         }
 
         /// <summary>

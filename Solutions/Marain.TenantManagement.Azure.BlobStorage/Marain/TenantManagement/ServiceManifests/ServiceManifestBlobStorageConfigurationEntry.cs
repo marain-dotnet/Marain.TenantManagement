@@ -9,6 +9,8 @@ namespace Marain.TenantManagement.ServiceManifests
 
     using Corvus.Storage.Azure.BlobStorage.Tenancy;
     using Corvus.Tenancy;
+
+    using Marain.TenantManagement.Configuration;
     using Marain.TenantManagement.EnrollmentConfiguration;
 
     /// <summary>
@@ -26,7 +28,7 @@ namespace Marain.TenantManagement.ServiceManifests
 
         /// <inheritdoc/>
         public override string ExpectedConfigurationItemContentType =>
-            EnrollmentBlobStorageConfigurationItem.RegisteredContentType;
+            BlobStorageConfigurationItem.RegisteredContentType;
 
         /// <summary>
         /// Gets or sets a value indicating whether this service supports legacy V2 style
@@ -84,14 +86,14 @@ namespace Marain.TenantManagement.ServiceManifests
         /// <inheritdoc/>
         public override IEnumerable<KeyValuePair<string, object>> AddToTenantProperties(
             IEnumerable<KeyValuePair<string, object>> existingValues,
-            EnrollmentConfigurationItem enrollmentConfigurationItem)
+            ConfigurationItem enrollmentConfigurationItem)
         {
             ArgumentNullException.ThrowIfNull(enrollmentConfigurationItem);
 
-            if (enrollmentConfigurationItem is not EnrollmentBlobStorageConfigurationItem blobStorageConfigurationItem)
+            if (enrollmentConfigurationItem is not BlobStorageConfigurationItem blobStorageConfigurationItem)
             {
                 throw new ArgumentException(
-                    $"The supplied value must be of type {nameof(EnrollmentBlobStorageConfigurationItem)}",
+                    $"The supplied value must be of type {nameof(BlobStorageConfigurationItem)}",
                     nameof(enrollmentConfigurationItem));
             }
 

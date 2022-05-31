@@ -6,10 +6,10 @@ namespace Marain.TenantManagement.ServiceManifests
 {
     using System;
     using System.Collections.Generic;
-    using Corvus.Storage.Azure.Cosmos;
+
     using Corvus.Storage.Azure.Cosmos.Tenancy;
-    using Corvus.Tenancy;
-    using Marain.TenantManagement.EnrollmentConfiguration;
+
+    using Marain.TenantManagement.Configuration;
 
     /// <summary>
     /// Service manifest configuration entry for CosmosDb.
@@ -26,7 +26,7 @@ namespace Marain.TenantManagement.ServiceManifests
 
         /// <inheritdoc/>
         public override string ExpectedConfigurationItemContentType =>
-            EnrollmentCosmosConfigurationItem.RegisteredContentType;
+            CosmosConfigurationItem.RegisteredContentType;
 
         /// <summary>
         /// Gets or sets a value indicating whether this service supports legacy V2 style
@@ -37,14 +37,14 @@ namespace Marain.TenantManagement.ServiceManifests
         /// <inheritdoc/>
         public override IEnumerable<KeyValuePair<string, object>> AddToTenantProperties(
             IEnumerable<KeyValuePair<string, object>> existingValues,
-            EnrollmentConfigurationItem enrollmentConfigurationItem)
+            ConfigurationItem enrollmentConfigurationItem)
         {
             ArgumentNullException.ThrowIfNull(enrollmentConfigurationItem);
 
-            if (enrollmentConfigurationItem is not EnrollmentCosmosConfigurationItem cosmosConfigurationItem)
+            if (enrollmentConfigurationItem is not CosmosConfigurationItem cosmosConfigurationItem)
             {
                 throw new ArgumentException(
-                    $"The supplied value must be of type {nameof(EnrollmentCosmosConfigurationItem)}",
+                    $"The supplied value must be of type {nameof(CosmosConfigurationItem)}",
                     nameof(enrollmentConfigurationItem));
             }
 

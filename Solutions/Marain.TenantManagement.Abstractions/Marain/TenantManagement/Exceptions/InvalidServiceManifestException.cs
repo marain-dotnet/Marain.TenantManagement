@@ -21,7 +21,7 @@ namespace Marain.TenantManagement.Exceptions
         /// </summary>
         /// <param name="errors">The list of issues with the manifest.</param>
         public InvalidServiceManifestException(IEnumerable<string> errors)
-            : base("The specified manifest is invalid. For full error information, see the Errors list in the exception Data.")
+            : base($"The specified manifest is invalid. {errors.First()} For full error information, see the Errors list in the exception Data.")
         {
             this.Errors = errors.ToArray();
         }

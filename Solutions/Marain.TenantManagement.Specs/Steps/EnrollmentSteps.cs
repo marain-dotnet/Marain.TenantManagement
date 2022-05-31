@@ -8,22 +8,29 @@ namespace Marain.TenantManagement.Specs.Steps
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
     using Corvus.Storage.Azure.BlobStorage;
     using Corvus.Storage.Azure.Cosmos;
     using Corvus.Storage.Azure.TableStorage;
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
     using Corvus.Testing.SpecFlow;
+
+    using Marain.TenantManagement.Configuration;
     using Marain.TenantManagement.EnrollmentConfiguration;
     using Marain.TenantManagement.Testing;
+
     using Microsoft.Extensions.DependencyInjection;
+
     using NUnit.Framework;
+
     using TechTalk.SpecFlow;
 
     [Binding]
     public class EnrollmentSteps
     {
         private readonly ScenarioContext scenarioContext;
+        private readonly Dictionary<string, EnrollmentConfigurationEntryInputs> enrollmentConfigurationEntries = new();
 
         public EnrollmentSteps(ScenarioContext scenarioContext)
         {
@@ -33,7 +40,30 @@ namespace Marain.TenantManagement.Specs.Steps
         [Given("I have enrollment configuration called '(.*)'")]
         public void GivenIHaveEnrollmentConfigurationCalled(string enrollmentConfigurationName)
         {
-            this.scenarioContext.Set(new List<EnrollmentConfigurationItem>(), enrollmentConfigurationName);
+            this.enrollmentConfigurationEntries.Add(
+                enrollmentConfigurationName,
+                new EnrollmentConfigurationEntryInputs(
+                    new Dictionary<string, ConfigurationItem>(),
+                    new Dictionary<string, EnrollmentConfigurationEntryInputs>()));
+        }
+
+        [Given("the '([^']*)' enrollment has a dependency on the service tenant called '([^']*)' using configuration '([^']*)'")]
+        public void GivenTheEnrollmentHasADependencyOnTheServiceTenantCalledUsingConfiguration(
+            string parentEnrollmentConfigurationName,
+            string dependencyServiceTenantName,
+            string dependencyEnrollmentConfigurationName)
+        {
+            EnrollmentConfigurationEntryInputs parentEnrollmentConfiguration =
+                this.enrollmentConfigurationEntries[parentEnrollmentConfigurationName];
+            EnrollmentConfigurationEntryInputs dependencyEnrollmentConfiguration =
+                this.enrollmentConfigurationEntries[dependencyEnrollmentConfigurationName];
+
+            InMemoryTenantProvider tenantProvider =
+                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<InMemoryTenantProvider>();
+            ITenant serviceTenant = tenantProvider.GetTenantByName(dependencyServiceTenantName)
+                ?? throw new TenantNotFoundException($"Could not find tenant with name '{dependencyServiceTenantName}'");
+
+            parentEnrollmentConfiguration.Dependencies.Add(serviceTenant.Id, dependencyEnrollmentConfiguration);
         }
 
         [Given("the enrollment configuration called '(.*)' contains the following Blob Storage configuration items")]
@@ -41,20 +71,22 @@ namespace Marain.TenantManagement.Specs.Steps
             string enrollmentConfigurationName,
             Table configurationEntries)
         {
-            List<EnrollmentConfigurationItem> enrollmentConfiguration =
-                this.scenarioContext.Get<List<EnrollmentConfigurationItem>>(enrollmentConfigurationName);
+            EnrollmentConfigurationEntryInputs enrollmentConfigurationSet =
+                this.enrollmentConfigurationEntries[enrollmentConfigurationName];
 
-            enrollmentConfiguration.AddRange(
-                configurationEntries.Rows.Select(
-                    row => new EnrollmentBlobStorageConfigurationItem
+            foreach (TableRow? row in configurationEntries.Rows)
+            {
+                enrollmentConfigurationSet.ConfigurationItems.Add(
+                    row["Key"],
+                    new BlobStorageConfigurationItem
                     {
-                        Key = row["Key"],
                         Configuration = new BlobContainerConfiguration
                         {
                             AccountName = row["Account Name"],
                             Container = row["Container"],
                         },
-                    }));
+                    });
+            }
         }
 
         [Given("the enrollment configuration called '(.*)' contains the following Table Storage configuration items")]
@@ -62,20 +94,22 @@ namespace Marain.TenantManagement.Specs.Steps
             string enrollmentConfigurationName,
             Table configurationEntries)
         {
-            List<EnrollmentConfigurationItem> enrollmentConfiguration =
-                this.scenarioContext.Get<List<EnrollmentConfigurationItem>>(enrollmentConfigurationName);
+            EnrollmentConfigurationEntryInputs enrollmentConfigurationSet =
+                this.enrollmentConfigurationEntries[enrollmentConfigurationName];
 
-            enrollmentConfiguration.AddRange(
-                configurationEntries.Rows.Select(
-                    row => new EnrollmentTableStorageConfigurationItem
+            foreach (TableRow? row in configurationEntries.Rows)
+            {
+                enrollmentConfigurationSet.ConfigurationItems.Add(
+                    row["Key"],
+                    new TableStorageConfigurationItem
                     {
-                        Key = row["Key"],
                         Configuration = new TableConfiguration
                         {
                             AccountName = row["Account Name"],
                             TableName = row["Table"],
                         },
-                    }));
+                    });
+            }
         }
 
         [Given("the enrollment configuration called '(.*)' contains the following Cosmos configuration items")]
@@ -83,21 +117,23 @@ namespace Marain.TenantManagement.Specs.Steps
             string enrollmentConfigurationName,
             Table configurationEntries)
         {
-            List<EnrollmentConfigurationItem> enrollmentConfiguration =
-                this.scenarioContext.Get<List<EnrollmentConfigurationItem>>(enrollmentConfigurationName);
+            EnrollmentConfigurationEntryInputs enrollmentConfigurationSet =
+                this.enrollmentConfigurationEntries[enrollmentConfigurationName];
 
-            enrollmentConfiguration.AddRange(
-                configurationEntries.Rows.Select(
-                    row => new EnrollmentCosmosConfigurationItem
+            foreach (TableRow? row in configurationEntries.Rows)
+            {
+                enrollmentConfigurationSet.ConfigurationItems.Add(
+                    row["Key"],
+                    new CosmosConfigurationItem
                     {
-                        Key = row["Key"],
                         Configuration = new CosmosContainerConfiguration
                         {
                             AccountUri = row["Account Uri"],
                             Database = row["Database Name"],
                             Container = row["Container Name"],
                         },
-                    }));
+                    });
+            }
         }
 
         [Given("I have used the tenant store to enroll the tenant called '([^']*)' in the service called '([^']*)'")]
@@ -264,15 +300,29 @@ namespace Marain.TenantManagement.Specs.Steps
             ITenant enrollingTenant = await tenantProvider.GetTenantAsync(this.scenarioContext.Get<string>(enrollingTenantName)).ConfigureAwait(false);
             ITenant serviceTenant = await tenantProvider.GetTenantAsync(this.scenarioContext.Get<string>(serviceTenantName)).ConfigureAwait(false);
 
-            List<EnrollmentConfigurationItem> enrollmentConfiguration =
+            EnrollmentConfigurationEntry MakeEnrollmentConfiguration(EnrollmentConfigurationEntryInputs inputs)
+            {
+                return new EnrollmentConfigurationEntry(
+                    inputs.ConfigurationItems,
+                    inputs.Dependencies.ToDictionary(
+                        d => d.Key,
+                        d => MakeEnrollmentConfiguration(d.Value)));
+            }
+
+            EnrollmentConfigurationEntry enrollmentConfigurationEntry =
                 string.IsNullOrEmpty(enrollmentConfigurationName)
-                ? new List<EnrollmentConfigurationItem>()
-                : this.scenarioContext.Get<List<EnrollmentConfigurationItem>>(enrollmentConfigurationName);
+                ? new EnrollmentConfigurationEntry(new Dictionary<string, ConfigurationItem>(), new Dictionary<string, EnrollmentConfigurationEntry>())
+                : MakeEnrollmentConfiguration(this.enrollmentConfigurationEntries[enrollmentConfigurationName]);
+
+            Dictionary<string, EnrollmentConfigurationEntry> enrollmentConfiguration = new()
+            {
+                [serviceTenant.Id] = enrollmentConfigurationEntry,
+            };
 
             Task Enroll() => managementService.EnrollInServiceAsync(
                     enrollingTenant,
                     serviceTenant,
-                    enrollmentConfiguration.ToArray());
+                    enrollmentConfiguration);
 
             if (catchExceptions)
             {
@@ -285,5 +335,9 @@ namespace Marain.TenantManagement.Specs.Steps
                 await Enroll();
             }
         }
+
+        private record EnrollmentConfigurationEntryInputs(
+            Dictionary<string, ConfigurationItem> ConfigurationItems,
+            Dictionary<string, EnrollmentConfigurationEntryInputs> Dependencies);
     }
 }

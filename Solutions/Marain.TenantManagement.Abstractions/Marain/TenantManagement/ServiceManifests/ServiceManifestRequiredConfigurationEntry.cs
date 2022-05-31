@@ -7,6 +7,8 @@ namespace Marain.TenantManagement.ServiceManifests
     using System;
     using System.Collections.Generic;
     using Corvus.Tenancy;
+
+    using Marain.TenantManagement.Configuration;
     using Marain.TenantManagement.EnrollmentConfiguration;
 
     /// <summary>
@@ -25,7 +27,7 @@ namespace Marain.TenantManagement.ServiceManifests
         public abstract string ContentType { get; }
 
         /// <summary>
-        /// Gets the expected content type of the <see cref="EnrollmentConfigurationItem"/> that should be provided for
+        /// Gets the expected content type of the <see cref="ConfigurationItem"/> that should be provided for
         /// this configuration entry.
         /// </summary>
         public abstract string ExpectedConfigurationItemContentType { get; }
@@ -59,7 +61,9 @@ namespace Marain.TenantManagement.ServiceManifests
         /// Properties to pass to
         /// <see cref="ITenantStore.UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>.
         /// </returns>
-        public abstract IEnumerable<KeyValuePair<string, object>> AddToTenantProperties(IEnumerable<KeyValuePair<string, object>> existingValues, EnrollmentConfigurationItem enrollmentConfigurationItem);
+        public abstract IEnumerable<KeyValuePair<string, object>> AddToTenantProperties(
+            IEnumerable<KeyValuePair<string, object>> existingValues,
+            ConfigurationItem enrollmentConfigurationItem);
 
         /// <summary>
         /// Removes any data associated with this required configuration entry from the specified tenant.

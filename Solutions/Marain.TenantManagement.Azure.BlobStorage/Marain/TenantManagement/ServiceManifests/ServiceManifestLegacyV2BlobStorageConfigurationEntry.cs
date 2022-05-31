@@ -27,7 +27,7 @@ public class ServiceManifestLegacyV2BlobStorageConfigurationEntry : ServiceManif
 
     /// <inheritdoc/>
     public override string ExpectedConfigurationItemContentType =>
-        EnrollmentBlobStorageConfigurationItem.RegisteredContentType;
+        LegacyV2BlobStorageConfigurationItem.RegisteredContentType;
 
     /// <summary>
     /// Gets or sets the container definition that this configuration entry relates to.
@@ -39,14 +39,14 @@ public class ServiceManifestLegacyV2BlobStorageConfigurationEntry : ServiceManif
     /// <inheritdoc/>
     public override IEnumerable<KeyValuePair<string, object>> AddToTenantProperties(
         IEnumerable<KeyValuePair<string, object>> existingValues,
-        EnrollmentConfigurationItem enrollmentConfigurationItem)
+        ConfigurationItem enrollmentConfigurationItem)
     {
         ArgumentNullException.ThrowIfNull(enrollmentConfigurationItem);
 
-        if (enrollmentConfigurationItem is not EnrollmentLegacyV2BlobStorageConfigurationItem blobStorageConfigurationItem)
+        if (enrollmentConfigurationItem is not LegacyV2BlobStorageConfigurationItem blobStorageConfigurationItem)
         {
             throw new ArgumentException(
-                $"The supplied value must be of type {nameof(EnrollmentLegacyV2BlobStorageConfigurationItem)}",
+                $"The supplied value must be of type {nameof(LegacyV2BlobStorageConfigurationItem)}",
                 nameof(enrollmentConfigurationItem));
         }
 

@@ -21,7 +21,7 @@ namespace Marain.TenantManagement.Exceptions
         /// </summary>
         /// <param name="errors">The list of issues with the manifest.</param>
         public InvalidConfigurationException(IEnumerable<string> errors)
-            : base("One or more of the supplied configuration items are invalid. For full error information, see the Errors list in the exception Data.")
+            : base($"One or more of the supplied configuration items are invalid. {errors.First()} For full error information, see the Errors list in the exception Data.")
         {
             this.Errors = errors.ToArray();
         }

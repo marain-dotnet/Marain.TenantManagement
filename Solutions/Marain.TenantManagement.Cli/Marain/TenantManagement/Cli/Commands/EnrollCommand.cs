@@ -5,6 +5,7 @@
 namespace Marain.TenantManagement.Cli.Commands
 {
     using System;
+    using System.Collections.Generic;
     using System.CommandLine;
     using System.CommandLine.Invocation;
     using System.IO;
@@ -68,13 +69,17 @@ namespace Marain.TenantManagement.Cli.Commands
 
         private async Task<int> HandleCommand(string enrollingTenantId, string serviceTenantId, FileInfo? config)
         {
-            EnrollmentConfigurationItem[] enrollmentConfig = Array.Empty<EnrollmentConfigurationItem>();
+            Dictionary<string, EnrollmentConfigurationEntry> enrollmentConfig;
 
             if (config != null)
             {
                 string configJson = File.ReadAllText(config.FullName);
                 enrollmentConfig =
-                    JsonConvert.DeserializeObject<EnrollmentConfigurationItem[]>(configJson, this.serializerSettingsProvider.Instance);
+                    JsonConvert.DeserializeObject<Dictionary<string, EnrollmentConfigurationEntry>>(configJson, this.serializerSettingsProvider.Instance);
+            }
+            else
+            {
+                enrollmentConfig = new();
             }
 
             try

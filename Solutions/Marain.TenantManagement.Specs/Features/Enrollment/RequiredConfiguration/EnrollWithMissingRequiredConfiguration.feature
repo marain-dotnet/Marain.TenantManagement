@@ -28,14 +28,14 @@ Scenario: Basic enrollment without supplying required configuration
 # Dependency graph:
 #
 # +---------+         +------------------+
-# |         |         | Service with     |
+# |         |         | SvcC0D(C1D())    |
 # | Litware +---------> 0 Configurations +-----+
 # |         |         | 1 Dependency     |     |
 # +---------+         +------------------+     |
 #                                              |
 #                                              |
 #                                     +--------v--------+
-#                                     | Service with    |
+#                                     | SvcC1D()        |
 #                                     | 1 Configuration |
 #                                     | 0 Dependencies  |
 #                                     +-----------------+
@@ -63,5 +63,16 @@ Scenario: Enrollment of a service with a dependency requiring configuration with
     And the tenant called 'Litware' should not have the id of the tenant called 'SvcC0D(C1D())' in its enrollments
     And no new child tenant called 'SvcC0D(C1D())\Litware' of the service tenant called 'SvcC0D(C1D())' has been created
 
+Scenario: Enrollment of a service with a dependency where the supplied dependency configuration is missing required setting
+    Given I have enrollment configuration called 'ConfigSvcC0D(C1D())'
+    And I have enrollment configuration called 'ConfigSvcC1D()'
+    And the 'ConfigSvcC0D(C1D())' enrollment has a dependency on the service tenant called 'SvcC1D()' using configuration 'ConfigSvcC1D()'
+    When I use the tenant store to enroll the tenant called 'Litware' in the service called 'SvcC0D(C1D())' anticipating an exception
+	Then an 'InvalidEnrollmentConfigurationException' is thrown
+    And the tenant called 'Litware' should not have the id of the tenant called 'SvcC0D(C1D())' in its enrollments
+    And no new child tenant called 'SvcC0D(C1D())\Litware' of the service tenant called 'SvcC0D(C1D())' has been created
+
 
 # TODO: service requiring multiple config, and only some supplied
+
+# TODO: service used both directly and indirectly where only one of those configs has been supplied

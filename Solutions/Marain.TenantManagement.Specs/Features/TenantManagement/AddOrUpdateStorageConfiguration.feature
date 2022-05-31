@@ -28,7 +28,7 @@ Scenario: Add table storage configuration
     | ConfigurationKey | Configuration - Account Name | Configuration - Table |
     | foo              | tableaccount                 | fbtable               |
     When I use the tenant store with the configuration called 'FooBar config' to add config for the tenant called 'Contoso'
-    Then the tenant called 'Contoso' should contain table storage configuration under the key 'foo' for a table storage table definition with table name 'fbtable'
+    Then the tenant called 'Contoso' should contain table storage configuration under the key 'foo' for the account 'tableaccount' and table name 'fbtable'
 
 Scenario: Add cosmos configuration
     Given I have configuration called 'FooBar config'

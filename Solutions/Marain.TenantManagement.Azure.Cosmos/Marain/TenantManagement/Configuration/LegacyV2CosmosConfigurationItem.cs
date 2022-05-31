@@ -1,4 +1,4 @@
-﻿// <copyright file="CosmosConfigurationItem.cs" company="Endjin Limited">
+﻿// <copyright file="LegacyV2CosmosConfigurationItem.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
@@ -12,12 +12,12 @@ using Corvus.Storage.Azure.Cosmos.Tenancy;
 /// <summary>
 /// Enrollment configuration item for tenanted cosmos storage config.
 /// </summary>
-public class CosmosConfigurationItem : StorageConfigurationItem<CosmosContainerConfiguration>
+public class LegacyV2CosmosConfigurationItem : StorageConfigurationItem<CosmosContainerConfiguration>
 {
     /// <summary>
     /// The content type of the configuration item.
     /// </summary>
-    public const string RegisteredContentType = ConfigurationItem.BaseContentType + "cosmosdb.v3";
+    public const string RegisteredContentType = ConfigurationItem.BaseContentType + "cosmosdb";
 
     /// <inheritdoc/>
     public override string ContentType => RegisteredContentType;

@@ -97,25 +97,37 @@ Scenario: Basic unenrollment with configuration
 #        +-> SvcC1D()
 #
 Scenario: Unenrollment with multiple levels of dependency and with the client tenant remaining directly enrolled in one of the dependent services
-    Given I have enrollment configuration called 'Top Config'
-    And the enrollment configuration called 'Top Config' contains the following Blob Storage configuration items
+    Given I have enrollment configuration called 'ConfigSvcC3D(C1D(C1D()))'
+    And I have enrollment configuration called 'ConfigSvcC1D(C1D())Direct'
+    And I have enrollment configuration called 'ConfigSvcC1D(C1D())Indirect'
+    And I have enrollment configuration called 'ConfigSvcC1D()Indirect'
+    And I have enrollment configuration called 'ConfigSvcC1D()DoublyIndirect'
+    And the 'ConfigSvcC3D(C1D(C1D()))' enrollment has a dependency on the service tenant called 'SvcC1D(C1D())' using configuration 'ConfigSvcC1D(C1D())Indirect'
+    And the 'ConfigSvcC1D(C1D())Indirect' enrollment has a dependency on the service tenant called 'SvcC1D()' using configuration 'ConfigSvcC1D()DoublyIndirect'
+    And the 'ConfigSvcC1D(C1D())Direct' enrollment has a dependency on the service tenant called 'SvcC1D()' using configuration 'ConfigSvcC1D()Indirect'
+    And the enrollment configuration called 'ConfigSvcC3D(C1D(C1D()))' contains the following Blob Storage configuration items
     | Key                                        | Account Name           | Container                 |
-    | TestServices:C1D():FooBarStore             | fbblobaccount          | fbblobcontainer           |
-    | TestServices:C1D(C1D()):operations         | opsblobaccountindirect | opsblobcontainerindirect  |
     | TestServices:C3D(C1D(C1D())):manglewurzles | rootvegblobaccount     | mangleworzleblobcontainer |
-	And the enrollment configuration called 'Top Config' contains the following Cosmos configuration items
+	And the enrollment configuration called 'ConfigSvcC3D(C1D(C1D()))' contains the following Cosmos configuration items
 	| Key                                        | Account Uri          | Database Name | Container Name  |
 	| TestServices:C3D(C1D(C1D())):RootAggregate | rootvegcosmosaccount | rvdb          | aggregatedroots |
-	And the enrollment configuration called 'Top Config' contains the following Table Storage configuration items
+	And the enrollment configuration called 'ConfigSvcC3D(C1D(C1D()))' contains the following Table Storage configuration items
 	| Key                                    | Account Name   | Table      |
 	| TestServices:C3D(C1D(C1D())):AuditLogs | rvtableaccount | audittable |
-    And I have enrollment configuration called 'Middle Config'
-    And the enrollment configuration called 'Middle Config' contains the following Blob Storage configuration items
+    And the enrollment configuration called 'ConfigSvcC1D(C1D())Direct' contains the following Blob Storage configuration items
     | Key                                | Account Name         | Container              |
-    | TestServices:C1D():FooBarStore     | fbblobaccountdirect  | fbblobcontainerdirect  |
     | TestServices:C1D(C1D()):operations | opsblobaccountdirect | opsblobcontainerdirect |
-    And I have used the tenant store with the enrollment configuration called 'Top Config' to enroll the tenant called 'Litware' in the service called 'SvcC3D(C1D(C1D()))'
-    And I have used the tenant store with the enrollment configuration called 'Middle Config' to enroll the tenant called 'Litware' in the service called 'SvcC1D(C1D())'
+    And the enrollment configuration called 'ConfigSvcC1D(C1D())Indirect' contains the following Blob Storage configuration items
+    | Key                                        | Account Name           | Container                 |
+    | TestServices:C1D(C1D()):operations         | opsblobaccountindirect | opsblobcontainerindirect  |
+    And the enrollment configuration called 'ConfigSvcC1D()Indirect' contains the following Blob Storage configuration items
+    | Key                            | Account Name        | Container             |
+    | TestServices:C1D():FooBarStore | fbblobaccountdirect | fbblobcontainerdirect |
+    And the enrollment configuration called 'ConfigSvcC1D()DoublyIndirect' contains the following Blob Storage configuration items
+    | Key                            | Account Name          | Container               |
+    | TestServices:C1D():FooBarStore | fbblobaccountindirect | fbblobcontainerindirect |
+    And I have used the tenant store with the enrollment configuration called 'ConfigSvcC3D(C1D(C1D()))' to enroll the tenant called 'Litware' in the service called 'SvcC3D(C1D(C1D()))'
+    And I have used the tenant store with the enrollment configuration called 'ConfigSvcC1D(C1D())Direct' to enroll the tenant called 'Litware' in the service called 'SvcC1D(C1D())'
     When I use the tenant store to unenroll the tenant called 'Litware' from the service called 'SvcC3D(C1D(C1D()))'
     Then the tenant called 'Litware' should not have the id of the tenant called 'SvcC3D(C1D(C1D()))' in its enrollments
     And the tenant called 'Litware' should have the id of the tenant called 'SvcC1D(C1D())' added to its enrollments

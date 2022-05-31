@@ -6,8 +6,10 @@ namespace Marain.TenantManagement.ServiceManifests
 {
     using System;
     using System.Collections.Generic;
+
     using Corvus.Storage.Azure.TableStorage.Tenancy;
-    using Marain.TenantManagement.EnrollmentConfiguration;
+
+    using Marain.TenantManagement.Configuration;
 
     /// <summary>
     /// Service manifest configuration entry for table storage.
@@ -24,7 +26,7 @@ namespace Marain.TenantManagement.ServiceManifests
 
         /// <inheritdoc/>
         public override string ExpectedConfigurationItemContentType =>
-            EnrollmentTableStorageConfigurationItem.RegisteredContentType;
+            TableStorageConfigurationItem.RegisteredContentType;
 
         /// <summary>
         /// Gets or sets a value indicating whether this service supports legacy V2 style
@@ -35,14 +37,14 @@ namespace Marain.TenantManagement.ServiceManifests
         /// <inheritdoc/>
         public override IEnumerable<KeyValuePair<string, object>> AddToTenantProperties(
             IEnumerable<KeyValuePair<string, object>> existingValues,
-            EnrollmentConfigurationItem enrollmentConfigurationItem)
+            ConfigurationItem enrollmentConfigurationItem)
         {
             ArgumentNullException.ThrowIfNull(enrollmentConfigurationItem);
 
-            if (enrollmentConfigurationItem is not EnrollmentTableStorageConfigurationItem tableStorageConfigurationItem)
+            if (enrollmentConfigurationItem is not TableStorageConfigurationItem tableStorageConfigurationItem)
             {
                 throw new ArgumentException(
-                    $"The supplied value must be of type {nameof(EnrollmentTableStorageConfigurationItem)}",
+                    $"The supplied value must be of type {nameof(TableStorageConfigurationItem)}",
                     nameof(enrollmentConfigurationItem));
             }
 

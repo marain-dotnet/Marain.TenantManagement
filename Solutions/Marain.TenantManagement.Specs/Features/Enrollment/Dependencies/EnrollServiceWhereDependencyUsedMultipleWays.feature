@@ -106,18 +106,18 @@ Scenario: Service with no configuration used as dependency of two different serv
 
 # Dependency graph:
 #
-# +---------+         +------------------+
-# |         |         | Service with     |
-# | Litware +---------> 0 Configurations +-----+
-# |         |         | 1 Dependency     |     |
-# +----+----+         +------------------+     |
-#      |                                       |
-#      |                                       |
-#      |    +-----------------+       +--------v---------+
-#      |    | Service with    |       | Service with     |
-#      +----> 1 Configuration +-------> 1 Configurations |
-#           | 1 Dependency    |       | 0 Dependencies   |
-#           +-----------------+       +------------------+
+# +---------+          +------------------+
+# |         |          | SvcC0(SvcC1D())  |
+# | Litware +----------> 0 Configurations +-----+
+# |         |          | 1 Dependency     |     |
+# +----+----+          +------------------+     |
+#      |                                        |
+#      |                                        |
+#      |    +------------------+       +--------v---------+
+#      |    | SvcC1D(SvcC1D()) |       | SvcC1D()         |
+#      +----> 1 Configuration  +-------> 1 Configurations |
+#           | 1 Dependency     |       | 0 Dependencies   |
+#           +------------------+       +------------------+
 #
 # Expected tenant tree:
 #
@@ -139,21 +139,28 @@ Scenario: Service with no configuration used as dependency of two different serv
 #        |
 #        +-> SvcC1D()
 Scenario: Service with configuration used as dependency of two different services
-    Given I have enrollment configuration called 'Config1'
-    And the enrollment configuration called 'Config1' contains the following Blob Storage configuration items
-    | Key                            | Account Name   | Container        |
-    | TestServices:C1D():FooBarStore | opsblobaccount1 | opsblobcontainer1 |
-    And I have enrollment configuration called 'Config2'
-    And the enrollment configuration called 'Config2' contains the following Blob Storage configuration items
+    Given I have enrollment configuration called 'ConfigSvcC0D(C1D())'
+    Given I have enrollment configuration called 'ConfigSvcC1D(C1D())'
+    Given I have enrollment configuration called 'ConfigSvcC1D()1'
+    Given I have enrollment configuration called 'ConfigSvcC1D()2'
+    And the 'ConfigSvcC0D(C1D())' enrollment has a dependency on the service tenant called 'SvcC1D()' using configuration 'ConfigSvcC1D()1'
+    And the 'ConfigSvcC1D(C1D())' enrollment has a dependency on the service tenant called 'SvcC1D()' using configuration 'ConfigSvcC1D()2'
+    And the enrollment configuration called 'ConfigSvcC1D(C1D())' contains the following Blob Storage configuration items
+    | Key                                | Account Name   | Container        |
+    | TestServices:C1D(C1D()):operations | opsblobaccount | opsblobcontainer |
+    And the enrollment configuration called 'ConfigSvcC1D()1' contains the following Blob Storage configuration items
+    | Key                                | Account Name   | Container        |
+    | TestServices:C1D():FooBarStore     | fbblobaccount1 | fbblobcontainer1 |
+    And the enrollment configuration called 'ConfigSvcC1D()2' contains the following Blob Storage configuration items
     | Key                                | Account Name   | Container        |
     | TestServices:C1D():FooBarStore     | fbblobaccount2 | fbblobcontainer2 |
-    | TestServices:C1D(C1D()):operations | opsblobaccount | opsblobcontainer |
-    When I use the tenant store with the enrollment configuration called 'Config1' to enroll the tenant called 'Litware' in the service called 'SvcC0D(C1D())'
-    And I use the tenant store with the enrollment configuration called 'Config2' to enroll the tenant called 'Litware' in the service called 'SvcC1D(C1D())'
+    When I use the tenant store with the enrollment configuration called 'ConfigSvcC0D(C1D())' to enroll the tenant called 'Litware' in the service called 'SvcC0D(C1D())'
+    And I use the tenant store with the enrollment configuration called 'ConfigSvcC1D(C1D())' to enroll the tenant called 'Litware' in the service called 'SvcC1D(C1D())'
 
 
 
 # TODO: when this pattern occurs, there is a problem. See the tenant tree below
+# TODO: actually this is now fixed, but we need to ensure we've got tests for it. (We test for more complex versions though.)
 # Dependency graph:
 #
 # +---------+      +-----------------+      +------------------+
@@ -211,24 +218,24 @@ Scenario: Service with configuration used as dependency of two different service
 
 # Dependency graph:
 #
-# +---------+         +------------------+
-# |         |         | Service with     |
-# | Litware +---------> 1 Configurations +-----+
-# |         |         | 1 Dependency     |     |
-# +----+----+         +------------------+     |
-#      |                                       |
-#      |                                       |
-#      |    +-----------------+       +--------v---------+
-#      |    | Service with    |       | Service with     |
-#      +----> 1 Configuration +-------> 1 Configurations |
-#           | 2 Dependencies  |       | 1 Dependency     |
-#           +-----------------+       +------------------+
-#                   |                          |
-#                   |                 +--------v---------+
-#                   |                 | Service with     |
-#                   +-----------------> 1 Configurations |
-#                                     | 0 Dependencies   |
-#                                     +------------------+
+# +---------+         +--------------------+
+# |         |         | SvcC1D(C1D(C1D())) |
+# | Litware +---------> 1 Configurations   +----------+
+# |         |         | 1 Dependency       |          |
+# +----+----+         +--------------------+          |
+#      |                                              |
+#      |                                              |
+#      |    +--------------------------+     +--------v---------+
+#      |    | SvcC1D(C1D(C1D()),C1D()) |     | SvcC1D(C1D())    |
+#      +----> 1 Configuration          +-----> 1 Configurations |
+#           | 2 Dependencies           |     | 1 Dependency     |
+#           +--------------------------+     +------------------+
+#                        |                            |
+#                        |                   +--------v---------+
+#                        |                   | SvcC1D()         |
+#                        +-------------------> 1 Configurations |
+#                                            | 0 Dependencies   |
+#                                            +------------------+
 #
 # Expected tenant tree:
 #
@@ -240,17 +247,18 @@ Scenario: Service with configuration used as dependency of two different service
 #  |
 #  +-> Service Tenants
 #        |
-#        +-> SvcC0D(C1D())
-#        |     |
-#        |     +-> SvcC0D(C1D())\Litware
-#        |
-#        +-> SvcC1D(SvcC1D(C1D()),C1D())
-#        |     |
-#        |     +-> SvcC1D(SvcC1D(C1D()),C1D())\Litware
-#        |
 #        +-> SvcC1D(C1D())
 #        |     |
-#        |     +-> SvcC1D(C1D())\Litware
+#        |     +-> SvcC1D(C1D())\SvcC1D(C1D(C1D()),C1D())\Litware
+#        |     +-> SvcC1D(C1D())\SvcC1D(C1D(C1D())  )\Litware
+#        |
+#        +-> SvcC1D(C1D(C1D()),C1D())
+#        |     |
+#        |     +-> SvcC1D(C1D(C1D()),C1D())\Litware
+#        |
+#        +-> SvcC1D(C1D(C1D()))
+#        |     |
+#        |     +-> SvcC1D(C1D(C1D()))\Litware
 #        |
 #        +-> SvcC1D()
 # TODO: this has a more complex version of the same problem as the preceding example.
@@ -259,6 +267,7 @@ Scenario: Service with configuration used as dependency of two different service
 #    Given I have enrollment configuration called 'Config1'
 #    And the enrollment configuration called 'Config1' contains the following Blob Storage configuration items
 #    | Key                                        | Account Name           | Container                 |
+#    | TestServices:SvcC1D(C1D(C1D())):TestServices:SvcC1D(C1D()):TestServices:C1D():FooBarStore             | fbblobaccount          | fbblobcontainer           |
 #    | TestServices:C1D():FooBarStore             | fbblobaccount          | fbblobcontainer           |
 #    | TestServices:C1D(C1D()):operations         | opsblobaccountindirect | opsblobcontainerindirect  |
 #    | TestServices:C3D(C1D(C1D())):manglewurzles | rootvegblobaccount     | mangleworzleblobcontainer |
@@ -277,25 +286,25 @@ Scenario: Service with configuration used as dependency of two different service
 
 # Dependency graph:
 #
-# +---------+         +------------------+
-# |         |         | Service with     |
-# | Litware +---------> 1 Configuration  +--+
-# |         |         | 1 Dependency     |  |
-# +----|----+         +------------------+  |
-#      |                                    |
-#      |                                    |
-#      |                           +--------v---------+
-#      |                           | Service with     |
-#      +---------------------------> 1 Configuration  +--+
-#                                  | 1 Dependencies   |  |
-#                                  +------------------+  |
-#                                                        |
-#                                                        |
-#                                               +--------v---------+
-#                                               | Service with     |
-#                                               | 1 Configurations |
-#                                               | 0 Dependencies   |
-#                                               +------------------+
+# +---------+         +--------------------+
+# |         |         | SvcC3D(C1D(C1D())) |
+# | Litware +---------> 3 Configurations   +--+
+# |         |         | 1 Dependency       |  |
+# +----|----+         +--------------------+  |
+#      |                                      |
+#      |                                      |
+#      |                             +--------v---------+
+#      |                             | SvcC1D(C1D())    |
+#      +-----------------------------> 1 Configuration  +--+
+#                                    | 1 Dependencies   |  |
+#                                    +------------------+  |
+#                                                          |
+#                                                          |
+#                                                 +--------v---------+
+#                                                 | SvcC1D()         |
+#                                                 | 1 Configurations |
+#                                                 | 0 Dependencies   |
+#                                                 +------------------+
 #
 # Expected tenant tree:
 #
@@ -318,25 +327,37 @@ Scenario: Service with configuration used as dependency of two different service
 #        |
 #        +-> SvcC1D()
 Scenario: Enrollment of a service two levels of dependency and configuration at all levels where client also uses middle service directly
-    Given I have enrollment configuration called 'Top Config'
-    And the enrollment configuration called 'Top Config' contains the following Blob Storage configuration items
+    Given I have enrollment configuration called 'ConfigSvcC3D(C1D(C1D()))'
+    And I have enrollment configuration called 'ConfigSvcC1D(C1D())Direct'
+    And I have enrollment configuration called 'ConfigSvcC1D(C1D())Indirect'
+    And I have enrollment configuration called 'ConfigSvcC1D()Indirect'
+    And I have enrollment configuration called 'ConfigSvcC1D()DoublyIndirect'
+    And the 'ConfigSvcC3D(C1D(C1D()))' enrollment has a dependency on the service tenant called 'SvcC1D(C1D())' using configuration 'ConfigSvcC1D(C1D())Indirect'
+    And the 'ConfigSvcC1D(C1D())Indirect' enrollment has a dependency on the service tenant called 'SvcC1D()' using configuration 'ConfigSvcC1D()DoublyIndirect'
+    And the 'ConfigSvcC1D(C1D())Direct' enrollment has a dependency on the service tenant called 'SvcC1D()' using configuration 'ConfigSvcC1D()Indirect'
+    And the enrollment configuration called 'ConfigSvcC3D(C1D(C1D()))' contains the following Blob Storage configuration items
     | Key                                        | Account Name           | Container                 |
-    | TestServices:C1D():FooBarStore             | fbblobaccount          | fbblobcontainer           |
-    | TestServices:C1D(C1D()):operations         | opsblobaccountindirect | opsblobcontainerindirect  |
     | TestServices:C3D(C1D(C1D())):manglewurzles | rootvegblobaccount     | mangleworzleblobcontainer |
-	And the enrollment configuration called 'Top Config' contains the following Cosmos configuration items
+	And the enrollment configuration called 'ConfigSvcC3D(C1D(C1D()))' contains the following Cosmos configuration items
 	| Key                                        | Account Uri          | Database Name | Container Name  |
 	| TestServices:C3D(C1D(C1D())):RootAggregate | rootvegcosmosaccount | rvdb          | aggregatedroots |
-	And the enrollment configuration called 'Top Config' contains the following Table Storage configuration items
+	And the enrollment configuration called 'ConfigSvcC3D(C1D(C1D()))' contains the following Table Storage configuration items
 	| Key                                    | Account Name   | Table      |
 	| TestServices:C3D(C1D(C1D())):AuditLogs | rvtableaccount | audittable |
-    And I have enrollment configuration called 'Middle Config'
-    And the enrollment configuration called 'Middle Config' contains the following Blob Storage configuration items
+    And the enrollment configuration called 'ConfigSvcC1D(C1D())Direct' contains the following Blob Storage configuration items
     | Key                                | Account Name         | Container              |
-    | TestServices:C1D():FooBarStore     | fbblobaccountdirect  | fbblobcontainerdirect  |
     | TestServices:C1D(C1D()):operations | opsblobaccountdirect | opsblobcontainerdirect |
-    When I use the tenant store with the enrollment configuration called 'Top Config' to enroll the tenant called 'Litware' in the service called 'SvcC3D(C1D(C1D()))'
-    And I use the tenant store with the enrollment configuration called 'Middle Config' to enroll the tenant called 'Litware' in the service called 'SvcC1D(C1D())'
+    And the enrollment configuration called 'ConfigSvcC1D(C1D())Indirect' contains the following Blob Storage configuration items
+    | Key                                        | Account Name           | Container                 |
+    | TestServices:C1D(C1D()):operations         | opsblobaccountindirect | opsblobcontainerindirect  |
+    And the enrollment configuration called 'ConfigSvcC1D()Indirect' contains the following Blob Storage configuration items
+    | Key                            | Account Name        | Container             |
+    | TestServices:C1D():FooBarStore | fbblobaccountdirect | fbblobcontainerdirect |
+    And the enrollment configuration called 'ConfigSvcC1D()DoublyIndirect' contains the following Blob Storage configuration items
+    | Key                            | Account Name          | Container               |
+    | TestServices:C1D():FooBarStore | fbblobaccountindirect | fbblobcontainerindirect |
+    When I use the tenant store with the enrollment configuration called 'ConfigSvcC3D(C1D(C1D()))' to enroll the tenant called 'Litware' in the service called 'SvcC3D(C1D(C1D()))'
+    And I use the tenant store with the enrollment configuration called 'ConfigSvcC1D(C1D())Direct' to enroll the tenant called 'Litware' in the service called 'SvcC1D(C1D())'
     Then the tenant called 'Litware' should have the id of the tenant called 'SvcC3D(C1D(C1D()))' added to its enrollments
     And the tenant called 'Litware' should have the id of the tenant called 'SvcC1D(C1D())' added to its enrollments
     And the tenant called 'Litware' should contain blob storage configuration under the key 'TestServices:C3D(C1D(C1D())):manglewurzles' for the account 'rootvegblobaccount' and container name 'mangleworzleblobcontainer'
@@ -353,4 +374,4 @@ Scenario: Enrollment of a service two levels of dependency and configuration at 
     And the tenant called 'SvcC3D(C1D(C1D()))\Litware' should contain blob storage configuration under the key 'TestServices:C1D(C1D()):operations' for the account 'opsblobaccountindirect' and container name 'opsblobcontainerindirect'
     And the tenant called 'SvcC1D(C1D())\SvcC3D(C1D(C1D()))\Litware' should have the id of the tenant called 'SvcC1D()' added to its enrollments
     And the tenant called 'SvcC3D(C1D(C1D()))\Litware' should have the id of the tenant called 'SvcC1D(C1D())\SvcC3D(C1D(C1D()))\Litware' set as the delegated tenant for the service called 'SvcC1D(C1D())'
-    And the tenant called 'SvcC1D(C1D())\SvcC3D(C1D(C1D()))\Litware' should contain blob storage configuration under the key 'TestServices:C1D():FooBarStore' for the account 'fbblobaccount' and container name 'fbblobcontainer'
+    And the tenant called 'SvcC1D(C1D())\SvcC3D(C1D(C1D()))\Litware' should contain blob storage configuration under the key 'TestServices:C1D():FooBarStore' for the account 'fbblobaccountindirect' and container name 'fbblobcontainerindirect'

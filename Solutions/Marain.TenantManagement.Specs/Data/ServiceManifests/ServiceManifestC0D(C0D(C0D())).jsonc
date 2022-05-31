@@ -4,8 +4,8 @@
   "serviceName": "SvcC0D(C0D(C0D()))",
   "dependsOnServiceTenants": [
     {
-      // ServiceManifestC0D(C0D())
-      "id": "3633754ac4c9be44b55bfe791b1780f150c6e67240ce054ba019a53400f3e10a"
+      "id": "3633754ac4c9be44b55bfe791b1780f150c6e67240ce054ba019a53400f3e10a",
+      "expectedName": "SvcC0D(C0D())"
     }
   ]
 }

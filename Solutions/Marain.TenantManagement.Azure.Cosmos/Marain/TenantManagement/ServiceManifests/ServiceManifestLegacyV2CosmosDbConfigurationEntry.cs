@@ -9,6 +9,7 @@ using System.Collections.Generic;
 
 using Corvus.Tenancy;
 
+using Marain.TenantManagement.Configuration;
 using Marain.TenantManagement.EnrollmentConfiguration;
 
 /// <summary>
@@ -26,7 +27,7 @@ public class ServiceManifestLegacyV2CosmosDbConfigurationEntry : ServiceManifest
 
     /// <inheritdoc/>
     public override string ExpectedConfigurationItemContentType =>
-        EnrollmentCosmosConfigurationItem.RegisteredContentType;
+        CosmosConfigurationItem.RegisteredContentType;
 
     /// <summary>
     /// Gets or sets the container definition that the service is expecting to use with this configuration.
@@ -44,14 +45,14 @@ public class ServiceManifestLegacyV2CosmosDbConfigurationEntry : ServiceManifest
     /// <inheritdoc/>
     public override IEnumerable<KeyValuePair<string, object>> AddToTenantProperties(
         IEnumerable<KeyValuePair<string, object>> existingValues,
-        EnrollmentConfigurationItem enrollmentConfigurationItem)
+        ConfigurationItem enrollmentConfigurationItem)
     {
         ArgumentNullException.ThrowIfNull(enrollmentConfigurationItem);
 
-        if (enrollmentConfigurationItem is not EnrollmentLegacyV2CosmosConfigurationItem cosmosConfigurationItem)
+        if (enrollmentConfigurationItem is not LegacyV2CosmosConfigurationItem cosmosConfigurationItem)
         {
             throw new ArgumentException(
-                $"The supplied value must be of type {nameof(EnrollmentCosmosConfigurationItem)}",
+                $"The supplied value must be of type {nameof(LegacyV2CosmosConfigurationItem)}",
                 nameof(enrollmentConfigurationItem));
         }
 

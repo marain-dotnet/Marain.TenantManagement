@@ -36,8 +36,7 @@ namespace Microsoft.Extensions.DependencyInjection
             factory.RegisterTransientContent<ServiceManifest>();
             factory.RegisterTransientContent<ServiceManifestBlobStorageConfigurationEntry>();
 
-            factory.RegisterTransientContent<EnrollmentBlobStorageConfigurationItem>();
-
+            factory.RegisterTransientContent<LegacyV2BlobStorageConfigurationItem>();
             factory.RegisterTransientContent<BlobStorageConfigurationItem>();
         }
     }

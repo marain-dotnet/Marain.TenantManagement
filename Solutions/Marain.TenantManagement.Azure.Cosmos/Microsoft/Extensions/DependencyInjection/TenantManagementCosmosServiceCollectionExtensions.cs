@@ -6,8 +6,8 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     using Corvus.ContentHandling;
     using Corvus.Tenancy;
+
     using Marain.TenantManagement.Configuration;
-    using Marain.TenantManagement.EnrollmentConfiguration;
     using Marain.TenantManagement.ServiceManifests;
 
     /// <summary>
@@ -36,8 +36,7 @@ namespace Microsoft.Extensions.DependencyInjection
             factory.RegisterTransientContent<ServiceManifest>();
             factory.RegisterTransientContent<ServiceManifestCosmosDbConfigurationEntry>();
 
-            factory.RegisterTransientContent<EnrollmentCosmosConfigurationItem>();
-
+            factory.RegisterTransientContent<LegacyV2CosmosConfigurationItem>();
             factory.RegisterTransientContent<CosmosConfigurationItem>();
         }
     }

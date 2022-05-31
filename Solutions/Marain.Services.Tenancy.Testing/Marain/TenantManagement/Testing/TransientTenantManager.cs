@@ -171,7 +171,7 @@ namespace Marain.TenantManagement.Testing
         public async Task AddEnrollmentAsync(
             string enrollingTenantId,
             string serviceTenantId,
-            EnrollmentConfigurationItem[] configurationItems)
+            IReadOnlyDictionary<string, EnrollmentConfigurationEntry> configurationItems)
         {
             await this.tenantStore.EnrollInServiceAsync(
                 enrollingTenantId,
