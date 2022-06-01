@@ -41,14 +41,7 @@
 
   <ItemGroup>
     <None Remove="Data\ServiceManifests\LegacyV2\ServiceManifest0D1C.jsonc" />
-    <None Remove="Data\ServiceManifests\LegacyV2\ManifestWithConfiguration.jsonc" />
-    <None Remove="Data\ServiceManifests\LegacyV2\ManifestWithConfigurationWithUnknownContentType.jsonc" />
-    <None Remove="Data\ServiceManifests\LegacyV2\ManifestWithDependencies.jsonc" />
-    <None Remove="Data\ServiceManifests\LegacyV2\ManifestWithMultipleConfigurationItems.jsonc" />
-    <None Remove="Data\ServiceManifests\LegacyV2\OperationsServiceManifest.jsonc" />
-    <None Remove="Data\ServiceManifests\LegacyV2\SimpleManifestWithNoDependenciesOrConfiguration.jsonc" />
-    <None Remove="Data\ServiceManifests\LegacyV2\V3ServiceWithV2MigrationSupportManifest.jsonc" />
-    <None Remove="Data\ServiceManifests\LegacyV2\WorkflowServiceManifest.jsonc" />
+    <None Remove="Data\ServiceManifests\LegacyV2\SvcC3V3orV2D().jsonc" />
     <None Remove="Data\ServiceManifests\ManifestWithConfiguration.jsonc" />
     <None Remove="Data\ServiceManifests\ManifestWithConfigurationWithUnknownContentType.jsonc" />
     <None Remove="Data\ServiceManifests\ManifestWithDependencies.jsonc" />
@@ -70,14 +63,7 @@
     <SpecFlowObsoleteCodeBehindFiles Remove="Features\ServiceManifests\Validation\CommonPropertyValidation - Copy.feature.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\V3ServiceWithV2MigrationSupportManifest.jsonc" />
-    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\ManifestWithConfiguration.jsonc" />
-    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\ManifestWithConfigurationWithUnknownContentType.jsonc" />
-    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\ManifestWithDependencies.jsonc" />
-    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\ManifestWithMultipleConfigurationItems.jsonc" />
-    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\OperationsServiceManifest.jsonc" />
-    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\SimpleManifestWithNoDependenciesOrConfiguration.jsonc" />
-    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\WorkflowServiceManifest.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\SvcC3V3orV2D%28%29.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\ManifestWithConfigurationWithUnknownContentType.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\ServiceManifestC0D%28C0D%28%29%29.jsonc" />
     <EmbeddedResource Include="Data\ServiceManifests\ManifestWithMultipleConfigurationItems.jsonc" />
@@ -119,6 +105,18 @@
   </ItemGroup>
   <ItemGroup>
     <SpecFlowFeatureFiles Update="Features\Enrollment\RequiredConfiguration\EnrollSupplyingWrongConfiguration.feature">
+      <Visible>$(UsingMicrosoftNETSdk)</Visible>
+      <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Update="Features\Enrollment\RequiredConfiguration\Legacy\EnrollV2OrV3RequiredWithV2OrV3RequiredDependency.feature">
+      <Visible>$(UsingMicrosoftNETSdk)</Visible>
+      <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Update="Features\Enrollment\RequiredConfiguration\Legacy\EnrollV2OrV3RequiredWithV2RequiredDependency.feature">
+      <Visible>$(UsingMicrosoftNETSdk)</Visible>
+      <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Update="Features\Enrollment\RequiredConfiguration\Legacy\EnrollV2OrV3RequiredWithV3RequiredDependency.feature">
       <Visible>$(UsingMicrosoftNETSdk)</Visible>
       <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
     </SpecFlowFeatureFiles>

@@ -89,6 +89,29 @@ namespace Marain.TenantManagement.Specs.Steps
             }
         }
 
+        [Given("the enrollment configuration called '(.*)' contains the following legacy V2 Blob Storage configuration items")]
+        public void GivenTheEnrollmentConfigurationCalledContainsTheFollowingLegacyV2BlobStorageConfigurationItems(
+            string enrollmentConfigurationName,
+            Table configurationEntries)
+        {
+            EnrollmentConfigurationEntryInputs enrollmentConfigurationSet =
+                this.enrollmentConfigurationEntries[enrollmentConfigurationName];
+
+            foreach (TableRow? row in configurationEntries.Rows)
+            {
+                enrollmentConfigurationSet.ConfigurationItems.Add(
+                    row["Key"],
+                    new LegacyV2BlobStorageConfigurationItem
+                    {
+                        Configuration = new()
+                        {
+                            AccountName = row["Account Name"],
+                            Container = row["Container"],
+                        },
+                    });
+            }
+        }
+
         [Given("the enrollment configuration called '(.*)' contains the following Table Storage configuration items")]
         public void GivenTheEnrollmentConfigurationCalledContainsTheFollowingTableStorageConfigurationItems(
             string enrollmentConfigurationName,
@@ -104,6 +127,29 @@ namespace Marain.TenantManagement.Specs.Steps
                     new TableStorageConfigurationItem
                     {
                         Configuration = new TableConfiguration
+                        {
+                            AccountName = row["Account Name"],
+                            TableName = row["Table"],
+                        },
+                    });
+            }
+        }
+
+        [Given("the enrollment configuration called '(.*)' contains the following legacy V2 Table Storage configuration items")]
+        public void GivenTheEnrollmentConfigurationCalledContainsTheFollowingLegacyV2TableStorageConfigurationItems(
+            string enrollmentConfigurationName,
+            Table configurationEntries)
+        {
+            EnrollmentConfigurationEntryInputs enrollmentConfigurationSet =
+                this.enrollmentConfigurationEntries[enrollmentConfigurationName];
+
+            foreach (TableRow? row in configurationEntries.Rows)
+            {
+                enrollmentConfigurationSet.ConfigurationItems.Add(
+                    row["Key"],
+                    new LegacyV2TableStorageConfigurationItem
+                    {
+                        Configuration = new()
                         {
                             AccountName = row["Account Name"],
                             TableName = row["Table"],
@@ -131,6 +177,30 @@ namespace Marain.TenantManagement.Specs.Steps
                             AccountUri = row["Account Uri"],
                             Database = row["Database Name"],
                             Container = row["Container Name"],
+                        },
+                    });
+            }
+        }
+
+        [Given("the enrollment configuration called '(.*)' contains the following legacy V2 Cosmos configuration items")]
+        public void GivenTheEnrollmentConfigurationCalledContainsTheFollowingLegacyV2CosmosConfigurationItems(
+            string enrollmentConfigurationName,
+            Table configurationEntries)
+        {
+            EnrollmentConfigurationEntryInputs enrollmentConfigurationSet =
+                this.enrollmentConfigurationEntries[enrollmentConfigurationName];
+
+            foreach (TableRow? row in configurationEntries.Rows)
+            {
+                enrollmentConfigurationSet.ConfigurationItems.Add(
+                    row["Key"],
+                    new LegacyV2CosmosConfigurationItem
+                    {
+                        Configuration = new()
+                        {
+                            AccountUri = row["Account Uri"],
+                            DatabaseName = row["Database Name"],
+                            ContainerName = row["Container Name"],
                         },
                     });
             }

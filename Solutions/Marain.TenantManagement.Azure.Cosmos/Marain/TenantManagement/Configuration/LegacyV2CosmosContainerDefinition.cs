@@ -2,7 +2,7 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-namespace Marain.TenantManagement.EnrollmentConfiguration;
+namespace Marain.TenantManagement.Configuration;
 
 /// <summary>
 /// The structure of a definition used in legacy V2 tenancy to identify a logical Cosmos container.

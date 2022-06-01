@@ -1,8 +1,8 @@
 {
   "$schema": "./ServiceManifestSchema.json",
   "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest.v3",
-  "wellKnownTenantGuid": "19f30a02-527d-4abf-ac35-aa29abc985cc",
-  "serviceName": "V3 with V2 Migration",
+  "wellKnownTenantGuid": "19f30a02-527d-4abf-ac35-aa29abc985cc", // 3633754ac4c9be44b55bfe791b1780f1020af3197d52bf4aac35aa29abc985cc
+  "serviceName": "SvcC3V3orV2D()",
   "requiredConfigurationEntries": [
     {
       "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage.v3",
@@ -12,7 +12,7 @@
     },
     {
       "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb.v3",
-      "key": "V3WithV2Migration:CosmosContainerConfiguration:mytable",
+      "key": "V3WithV2Migration:CosmosContainerConfiguration:mycontainer",
       "SupportsLegacyV2Configuration": true,
       "description": "Stores docs"
     },

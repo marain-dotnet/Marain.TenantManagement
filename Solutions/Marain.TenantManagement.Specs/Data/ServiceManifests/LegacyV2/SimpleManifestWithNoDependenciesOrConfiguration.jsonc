@@ -1,5 +1,0 @@
-{
-  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest",
-  "wellKnownTenantGuid": "b4dd52e4-a6cd-4e7b-842f-059528a23153",
-  "serviceName": "Simple manifest with no dependencies or configuration"
-}

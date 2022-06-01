@@ -47,8 +47,8 @@ Scenario: Manifest with a configuration item that has an unknown content type
     Then an 'InvalidOperationException' is thrown
 
 Scenario: Manifest with multiple V2 to V3 migration configuration items
-    When I deserialize the manifest called 'LegacyV2.V3ServiceWithV2MigrationSupportManifest'
-    Then the resulting manifest should have the service name 'V3 with V2 Migration'
+    When I deserialize the manifest called 'LegacyV2.SvcC3V3orV2D()'
+    Then the resulting manifest should have the service name 'SvcC3V3orV2D()'
     And the resulting manifest should have a well known service GUID of '19f30a02-527d-4abf-ac35-aa29abc985cc'
     And the resulting manifest should not have any dependencies
     And the resulting manifest should have 3 required configuration entries

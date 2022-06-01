@@ -6,13 +6,12 @@ namespace Marain.TenantManagement.Configuration;
 
 using System.Collections.Generic;
 
-using Corvus.Storage.Azure.Cosmos;
 using Corvus.Storage.Azure.Cosmos.Tenancy;
 
 /// <summary>
 /// Enrollment configuration item for tenanted cosmos storage config.
 /// </summary>
-public class LegacyV2CosmosConfigurationItem : StorageConfigurationItem<CosmosContainerConfiguration>
+public class LegacyV2CosmosConfigurationItem : LegacyV2StorageConfigurationItem<LegacyV2CosmosContainerDefinition, LegacyV2CosmosContainerConfiguration>
 {
     /// <summary>
     /// The content type of the configuration item.
@@ -25,8 +24,8 @@ public class LegacyV2CosmosConfigurationItem : StorageConfigurationItem<CosmosCo
     /// <inheritdoc/>
     public override IEnumerable<KeyValuePair<string, object>> AddConfiguration(IEnumerable<KeyValuePair<string, object>> values)
     {
-        return values.AddCosmosConfiguration(
-            this.ConfigurationKey,
-            this.Configuration);
+        return values.Append(new KeyValuePair<string, object>(
+            this.Definition.GetConfigurationKey(),
+            this.Configuration));
     }
 }
