@@ -36,11 +36,11 @@ Scenario: Manifest with multiple configuration items
     And the resulting manifest should not have any dependencies
     And the resulting manifest should have 3 required configuration entries
     And the configuration item with index 0 should be of type 'ServiceManifestBlobStorageConfigurationEntry'
-    And the ServiceManifestBlobStorageConfigurationEntry at index 0 should have SupportsLegacyV2Configuration of 'false'
+    And the ServiceManifestBlobStorageConfigurationEntry at index 0 should have a null LegacyV2Key
     And the configuration item with index 1 should be of type 'ServiceManifestCosmosDbConfigurationEntry'
-    And the ServiceManifestCosmosDbConfigurationEntry at index 1 should have SupportsLegacyV2Configuration of 'false'
+    And the ServiceManifestCosmosDbConfigurationEntry at index 1 should have a null LegacyV2Key
     And the configuration item with index 2 should be of type 'ServiceManifestTableStorageConfigurationEntry'
-    And the ServiceManifestTableStorageConfigurationEntry at index 2 should have SupportsLegacyV2Configuration of 'false'
+    And the ServiceManifestTableStorageConfigurationEntry at index 2 should have a null LegacyV2Key
 
 Scenario: Manifest with a configuration item that has an unknown content type
     When I deserialize the manifest called 'ManifestWithConfigurationWithUnknownContentType' anticipating an exception
@@ -53,8 +53,8 @@ Scenario: Manifest with multiple V2 to V3 migration configuration items
     And the resulting manifest should not have any dependencies
     And the resulting manifest should have 3 required configuration entries
     And the configuration item with index 0 should be of type 'ServiceManifestBlobStorageConfigurationEntry'
-    And the ServiceManifestBlobStorageConfigurationEntry at index 0 should have SupportsLegacyV2Configuration of 'true'
+    And the ServiceManifestBlobStorageConfigurationEntry at index 0 should have a LegacyV2Key of 'StorageConfiguration__mycontainer'
     And the configuration item with index 1 should be of type 'ServiceManifestCosmosDbConfigurationEntry'
-    And the ServiceManifestCosmosDbConfigurationEntry at index 1 should have SupportsLegacyV2Configuration of 'true'
+    And the ServiceManifestCosmosDbConfigurationEntry at index 1 should have a LegacyV2Key of 'StorageConfiguration__mydb__mycontainer'
     And the configuration item with index 2 should be of type 'ServiceManifestTableStorageConfigurationEntry'
-    And the ServiceManifestTableStorageConfigurationEntry at index 2 should have SupportsLegacyV2Configuration of 'true'
+    And the ServiceManifestTableStorageConfigurationEntry at index 2 should have a LegacyV2Key of 'StorageConfiguration__mytable'

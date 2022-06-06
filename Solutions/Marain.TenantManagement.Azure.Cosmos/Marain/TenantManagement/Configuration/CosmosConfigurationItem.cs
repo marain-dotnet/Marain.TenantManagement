@@ -12,6 +12,11 @@ using Corvus.Storage.Azure.Cosmos.Tenancy;
 /// <summary>
 /// Enrollment configuration item for tenanted cosmos storage config.
 /// </summary>
+/// <remarks>
+/// TODO: We've got some naming inconsistencies - CosmosContainerConfiguration mentions the
+/// Container, but CosmosConfigurationItem does not. There are similar inconsistencies for
+/// blob and table storage.
+/// </remarks>
 public class CosmosConfigurationItem : StorageConfigurationItem<CosmosContainerConfiguration>
 {
     /// <summary>

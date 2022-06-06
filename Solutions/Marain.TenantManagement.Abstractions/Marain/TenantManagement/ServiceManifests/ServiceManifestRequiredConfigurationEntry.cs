@@ -6,10 +6,10 @@ namespace Marain.TenantManagement.ServiceManifests
 {
     using System;
     using System.Collections.Generic;
+
     using Corvus.Tenancy;
 
     using Marain.TenantManagement.Configuration;
-    using Marain.TenantManagement.EnrollmentConfiguration;
 
     /// <summary>
     /// Base class for the different supported types of configuration entry.

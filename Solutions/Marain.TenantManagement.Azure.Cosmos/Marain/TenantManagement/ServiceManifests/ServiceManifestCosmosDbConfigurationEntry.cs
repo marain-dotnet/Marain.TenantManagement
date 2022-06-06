@@ -4,9 +4,7 @@
 
 namespace Marain.TenantManagement.ServiceManifests
 {
-    using System;
-    using System.Collections.Generic;
-
+    using Corvus.Storage.Azure.Cosmos;
     using Corvus.Storage.Azure.Cosmos.Tenancy;
 
     using Marain.TenantManagement.Configuration;
@@ -14,7 +12,9 @@ namespace Marain.TenantManagement.ServiceManifests
     /// <summary>
     /// Service manifest configuration entry for CosmosDb.
     /// </summary>
-    public class ServiceManifestCosmosDbConfigurationEntry : ServiceManifestRequiredConfigurationEntry
+    public class ServiceManifestCosmosDbConfigurationEntry :
+        ServiceManifestRequiredConfigurationEntryWithV2LegacySupport<
+            CosmosContainerConfiguration, CosmosConfigurationItem, LegacyV2CosmosContainerConfiguration, LegacyV2CosmosConfigurationItem>
     {
         /// <summary>
         /// The content type of the configuration entry.
@@ -27,28 +27,5 @@ namespace Marain.TenantManagement.ServiceManifests
         /// <inheritdoc/>
         public override string ExpectedConfigurationItemContentType =>
             CosmosConfigurationItem.RegisteredContentType;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this service supports legacy V2 style
-        /// configuration entries to enable V2 to V3 migration.
-        /// </summary>
-        public bool SupportsLegacyV2Configuration { get; set; }
-
-        /// <inheritdoc/>
-        public override IEnumerable<KeyValuePair<string, object>> AddToTenantProperties(
-            IEnumerable<KeyValuePair<string, object>> existingValues,
-            ConfigurationItem enrollmentConfigurationItem)
-        {
-            ArgumentNullException.ThrowIfNull(enrollmentConfigurationItem);
-
-            if (enrollmentConfigurationItem is not CosmosConfigurationItem cosmosConfigurationItem)
-            {
-                throw new ArgumentException(
-                    $"The supplied value must be of type {nameof(CosmosConfigurationItem)}",
-                    nameof(enrollmentConfigurationItem));
-            }
-
-            return existingValues.AddCosmosConfiguration(this.Key, cosmosConfigurationItem.Configuration);
-        }
     }
 }

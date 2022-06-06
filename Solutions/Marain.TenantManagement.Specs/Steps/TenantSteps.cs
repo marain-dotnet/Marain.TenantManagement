@@ -28,6 +28,7 @@ namespace Marain.TenantManagement.Specs.Steps
     {
         private readonly ScenarioContext scenarioContext;
         private readonly ManifestSteps manifestSteps;
+        private readonly ITenantStore tenantStore;
 
         public TenantSteps(
             ScenarioContext scenarioContext,
@@ -35,18 +36,18 @@ namespace Marain.TenantManagement.Specs.Steps
         {
             this.scenarioContext = scenarioContext;
             this.manifestSteps = manifestSteps;
+
+            this.tenantStore = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
         }
 
         [When("I use the tenant store to create a new client tenant called '(.*)'")]
         public Task WhenIUseTheTenantStoreToCreateANewClientTenantCalled(string clientName)
         {
-            ITenantStore service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
-
             return CatchException.AndStoreInScenarioContextAsync(
                 this.scenarioContext,
                 async () =>
                 {
-                    ITenant newTenant = await service.CreateClientTenantAsync(clientName).ConfigureAwait(false);
+                    ITenant newTenant = await this.tenantStore.CreateClientTenantAsync(clientName).ConfigureAwait(false);
                     this.scenarioContext.Set(newTenant.Id, clientName);
                 });
         }
@@ -75,8 +76,7 @@ namespace Marain.TenantManagement.Specs.Steps
         [Given("I have used the tenant store to create a new client tenant called '(.*)'")]
         public async Task GivenIHaveUsedTheTenantStoreToCreateANewClientTenantCalled(string clientName)
         {
-            ITenantStore service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
-            ITenant newTenant = await service.CreateClientTenantAsync(clientName).ConfigureAwait(false);
+            ITenant newTenant = await this.tenantStore.CreateClientTenantAsync(clientName).ConfigureAwait(false);
             this.scenarioContext.Set(newTenant.Id, clientName);
         }
 
@@ -86,9 +86,7 @@ namespace Marain.TenantManagement.Specs.Steps
         {
             ServiceManifest manifest = this.manifestSteps.NamedManifest(manifestName);
 
-            ITenantStore service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
-
-            ITenant newTenant = await service.CreateServiceTenantAsync(manifest).ConfigureAwait(false);
+            ITenant newTenant = await this.tenantStore.CreateServiceTenantAsync(manifest).ConfigureAwait(false);
             this.scenarioContext.Set(newTenant.Id, manifest.ServiceName);
         }
 
@@ -116,13 +114,11 @@ namespace Marain.TenantManagement.Specs.Steps
 
         public Task CreateServiceTenantWithExceptionHandlingAsync(ServiceManifest manifest)
         {
-            ITenantStore service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
-
             return CatchException.AndStoreInScenarioContextAsync(
                 this.scenarioContext,
                 async () =>
                 {
-                    ITenant newTenant = await service.CreateServiceTenantAsync(manifest).ConfigureAwait(false);
+                    ITenant newTenant = await this.tenantStore.CreateServiceTenantAsync(manifest).ConfigureAwait(false);
                     this.scenarioContext.Set(newTenant.Id, manifest.ServiceName);
                 });
         }
@@ -130,8 +126,7 @@ namespace Marain.TenantManagement.Specs.Steps
         [Then("the tenancy provider contains (.*) tenants as children of the root tenant")]
         public async Task ThenTheTenancyProviderContainsTenantsAsChildrenOfTheRootTenant(int expectedTenantCount)
         {
-            ITenantStore tenantStore = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
-            TenantCollectionResult rootTenantChildren = await tenantStore.GetChildrenAsync(tenantStore.Root.Id).ConfigureAwait(false);
+            TenantCollectionResult rootTenantChildren = await this.tenantStore.GetChildrenAsync(this.tenantStore.Root.Id).ConfigureAwait(false);
             Assert.AreEqual(expectedTenantCount, rootTenantChildren.Tenants.Count);
         }
 
@@ -186,9 +181,8 @@ namespace Marain.TenantManagement.Specs.Steps
         [Then("there is a tenant called '(.*)' as a child of the root tenant")]
         public async Task ThenANewTenantCalledIsCreatedAsAChildOfTheRootTenant(string tenantName)
         {
-            ITenantStore tenantStore = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
-            TenantCollectionResult rootTenantChildren = await tenantStore.GetChildrenAsync(tenantStore.Root.Id).ConfigureAwait(false);
-            ITenant[] tenants = await Task.WhenAll(rootTenantChildren.Tenants.Select(x => tenantStore.GetTenantAsync(x))).ConfigureAwait(false);
+            TenantCollectionResult rootTenantChildren = await this.tenantStore.GetChildrenAsync(this.tenantStore.Root.Id).ConfigureAwait(false);
+            ITenant[] tenants = await Task.WhenAll(rootTenantChildren.Tenants.Select(x => this.tenantStore.GetTenantAsync(x))).ConfigureAwait(false);
             ITenant? matchingTenant = Array.Find(tenants, x => x.Name == tenantName);
 
             Assert.IsNotNull(matchingTenant, $"Could not find a child of the root tenant with the name '{tenantName}'");
@@ -197,9 +191,8 @@ namespace Marain.TenantManagement.Specs.Steps
         [Then("there is no tenant called '(.*)' as a child of the root tenant")]
         public async Task ThenThereIsNoTenantCalledAsAChildOfTheRootTenant(string tenantName)
         {
-            ITenantStore tenantStore = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
-            TenantCollectionResult rootTenantChildren = await tenantStore.GetChildrenAsync(tenantStore.Root.Id).ConfigureAwait(false);
-            ITenant[] tenants = await Task.WhenAll(rootTenantChildren.Tenants.Select(x => tenantStore.GetTenantAsync(x))).ConfigureAwait(false);
+            TenantCollectionResult rootTenantChildren = await this.tenantStore.GetChildrenAsync(this.tenantStore.Root.Id).ConfigureAwait(false);
+            ITenant[] tenants = await Task.WhenAll(rootTenantChildren.Tenants.Select(x => this.tenantStore.GetTenantAsync(x))).ConfigureAwait(false);
             ITenant? matchingTenant = Array.Find(tenants, x => x.Name == tenantName);
 
             Assert.IsNull(matchingTenant, $"Could not find a child of the root tenant with the name '{tenantName}'");
@@ -216,10 +209,9 @@ namespace Marain.TenantManagement.Specs.Steps
         [Then("there is a client tenant called '(.*)'")]
         public async Task ThenThereIsAClientTenantCalled(string clientTenantName)
         {
-            ITenantStore tenantStore = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
-            await foreach (string clientTenantId in tenantStore.EnumerateAllChildrenAsync(WellKnownTenantIds.ClientTenantParentId))
+            await foreach (string clientTenantId in this.tenantStore.EnumerateAllChildrenAsync(WellKnownTenantIds.ClientTenantParentId))
             {
-                ITenant tenant = await tenantStore.GetTenantAsync(clientTenantId).ConfigureAwait(false);
+                ITenant tenant = await this.tenantStore.GetTenantAsync(clientTenantId).ConfigureAwait(false);
                 if (tenant.Name == clientTenantName)
                 {
                     return;
@@ -270,6 +262,28 @@ namespace Marain.TenantManagement.Specs.Steps
             Assert.AreEqual(containerName, tenantConfigItem.Container);
         }
 
+        [Then("the tenant called '([^']*)' should contain legacy V2 blob storage configuration under the key '([^']*)' for the account '([^']*)' and container name '([^']*)'")]
+        public void ThenTheTenantCalledShouldContainLegacyV2BlobStorageConfigurationForABlobStorageContainerDefinitionWithContainerName(
+            string tenantName,
+            string configurationKey,
+            string accountName,
+            string containerName)
+        {
+            InMemoryTenantProvider tenantProvider =
+                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<InMemoryTenantProvider>();
+
+            ITenant tenant = tenantProvider.GetTenantByName(tenantName)
+                ?? throw new TenantNotFoundException($"Could not find tenant with name '{tenantName}'");
+
+            Assert.IsTrue(
+                tenant.Properties.TryGet(configurationKey, out LegacyV2BlobStorageConfiguration? tenantConfigItem),
+                $"Tenant '{tenant.Name}' ({tenant.Id}) did not contain {nameof(LegacyV2BlobStorageConfiguration)} with key {configurationKey}");
+
+            Assert.IsNotNull(tenantConfigItem);
+            Assert.AreEqual(accountName, tenantConfigItem!.AccountName);
+            Assert.AreEqual(containerName, tenantConfigItem.Container);
+        }
+
         [Then("the tenant called '(.*)' should contain table storage configuration under the key '([^']*)' for the account '([^']*)' and table name '([^']*)'")]
         public void ThenTheTenantCalledShouldContainTableStorageConfigurationForATableStorageTableDefinitionWithTableName(
             string tenantName,
@@ -289,6 +303,30 @@ namespace Marain.TenantManagement.Specs.Steps
             // not null assertion anyway...
             Assert.IsNotNull(tenantConfigItem);
             Assert.AreEqual(accountName, tenantConfigItem.AccountName);
+            Assert.AreEqual(tableName, tenantConfigItem.TableName);
+        }
+
+        [Then("the tenant called '(.*)' should contain legacy V2 table storage configuration under the key '([^']*)' for the account '([^']*)' and table name '([^']*)'")]
+        public void ThenTheTenantCalledShouldContainLegacyV2TableStorageConfigurationForATableStorageTableDefinitionWithTableName(
+            string tenantName,
+            string configurationKey,
+            string accountName,
+            string tableName)
+        {
+            InMemoryTenantProvider tenantProvider =
+                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<InMemoryTenantProvider>();
+
+            ITenant tenant = tenantProvider.GetTenantByName(tenantName)
+                ?? throw new TenantNotFoundException($"Could not find tenant with name '{tenantName}'");
+
+            Assert.IsTrue(
+                tenant.Properties.TryGet(configurationKey, out LegacyV2TableConfiguration? tenantConfigItem),
+                $"Tenant '{tenant.Name}' ({tenant.Id}) did not contain {nameof(LegacyV2TableConfiguration)} with key {configurationKey}");
+
+            // GetTableStorageConfiguration would have thrown an exception if the config didn't exist, but we'll do a
+            // not null assertion anyway...
+            Assert.IsNotNull(tenantConfigItem);
+            Assert.AreEqual(accountName, tenantConfigItem!.AccountName);
             Assert.AreEqual(tableName, tenantConfigItem.TableName);
         }
 
@@ -312,6 +350,28 @@ namespace Marain.TenantManagement.Specs.Steps
             Assert.IsNotNull(tenantConfigItem);
             Assert.AreEqual(databaseName, tenantConfigItem.Database);
             Assert.AreEqual(containerName, tenantConfigItem.Container);
+        }
+
+        [Then("the tenant called '([^']*)' should contain legacy V2 Cosmos configuration under the key '([^']*)' with database name '([^']*)' and container name '([^']*)'")]
+        public void ThenTheTenantCalledShouldContainLegacyV2CosmosConfigurationUnderTheKeyWithDatabaseNameAndContainerName(
+            string tenantName,
+            string configurationKey,
+            string databaseName,
+            string containerName)
+        {
+            InMemoryTenantProvider tenantProvider =
+                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<InMemoryTenantProvider>();
+
+            ITenant tenant = tenantProvider.GetTenantByName(tenantName)
+                ?? throw new TenantNotFoundException($"Could not find tenant with name '{tenantName}'");
+
+            Assert.IsTrue(
+                tenant.Properties.TryGet(configurationKey, out LegacyV2CosmosContainerConfiguration? tenantConfigItem),
+                $"Tenant '{tenant.Name}' ({tenant.Id}) did not contain {nameof(LegacyV2CosmosContainerConfiguration)} with key {configurationKey}");
+
+            Assert.IsNotNull(tenantConfigItem);
+            Assert.AreEqual(databaseName, tenantConfigItem!.DatabaseName);
+            Assert.AreEqual(containerName, tenantConfigItem.ContainerName);
         }
 
         [Then("the tenant called '([^']*)' should not contain blob storage configuration under key '(.*)'")]
@@ -385,26 +445,22 @@ namespace Marain.TenantManagement.Specs.Steps
 
         private async Task<ITenant?> GetChildTenantOfServiceTenant(string childTenantName, string serviceTenantName)
         {
-            ITenantStore tenantStore = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
-
-            ITenant serviceTenant = await tenantStore.GetTenantAsync(this.scenarioContext.Get<string>(serviceTenantName)).ConfigureAwait(false);
+            ITenant serviceTenant = await this.tenantStore.GetTenantAsync(this.scenarioContext.Get<string>(serviceTenantName)).ConfigureAwait(false);
 
             // Normally would have to care about pagination, but under test we only expect a small number of items.
-            TenantCollectionResult getChildrenResult = await tenantStore.GetChildrenAsync(serviceTenant.Id).ConfigureAwait(false);
-            ITenant[] children = await tenantStore.GetTenantsAsync(getChildrenResult.Tenants).ConfigureAwait(false);
+            TenantCollectionResult getChildrenResult = await this.tenantStore.GetChildrenAsync(serviceTenant.Id).ConfigureAwait(false);
+            ITenant[] children = await this.tenantStore.GetTenantsAsync(getChildrenResult.Tenants).ConfigureAwait(false);
 
             return Array.Find(children, x => x.Name == childTenantName);
         }
 
         private Task CreateTenant(Guid wellKnownGuid, string clientName, string? parentId = null)
         {
-            ITenantStore service = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
-
             return CatchException.AndStoreInScenarioContextAsync(
                 this.scenarioContext,
                 async () =>
                 {
-                    ITenant newTenant = await service.CreateClientTenantWithWellKnownGuidAsync(wellKnownGuid, clientName, parentId).ConfigureAwait(false);
+                    ITenant newTenant = await this.tenantStore.CreateClientTenantWithWellKnownGuidAsync(wellKnownGuid, clientName, parentId).ConfigureAwait(false);
                     this.scenarioContext.Set(newTenant.Id, clientName);
                 });
         }

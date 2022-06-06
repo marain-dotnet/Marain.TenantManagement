@@ -48,7 +48,7 @@ namespace Marain.TenantManagement.EnrollmentConfiguration
         /// In cases where dependencies have no configuration requirements, enrollment
         /// configuration can omit the relevant section (so that we don't oblige enrollment files
         /// to have lots of named, empty sections in them), but internally it's useful to be able
-        /// to presume that there is always configuration, so we plug this in in cases where no
+        /// to presume that there is always configuration, so we plug this in for cases where no
         /// configuration has been supplied.
         /// </remarks>
         internal static EnrollmentConfigurationEntry Empty { get; } = new(

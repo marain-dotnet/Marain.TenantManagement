@@ -35,12 +35,6 @@ public class ServiceManifestLegacyV2CosmosDbConfigurationEntry : ServiceManifest
     public LegacyV2CosmosContainerDefinition ContainerDefinition { get; set; }
 #nullable restore annotations
 
-    /// <summary>
-    /// Gets or sets a value indicating whether this service supports legacy V2 style
-    /// configuration entries to enable V2 to V3 migration.
-    /// </summary>
-    public bool SupportsLegacyV2Configuration { get; set; }
-
     /// <inheritdoc/>
     public override IEnumerable<KeyValuePair<string, object>> AddToTenantProperties(
         IEnumerable<KeyValuePair<string, object>> existingValues,

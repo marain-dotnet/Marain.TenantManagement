@@ -172,28 +172,52 @@ namespace Marain.TenantManagement.Specs.Steps
             Assert.IsTrue(this.Manifest.DependsOnServiceTenants.Any(x => x.Id == expectedDependencyId));
         }
 
-        [Then("the ServiceManifestBlobStorageConfigurationEntry at index (.*) should have SupportsLegacyV2Configuration of '(true|false)'")]
-        public void ThenTheServiceManifestBlobStorageConfigurationEntryAtIndexShouldHaveSupportsLegacyVConfigurationOf(
-            int index, bool expectedSupportsLegacyV2Configuration)
+        [Then("the ServiceManifestBlobStorageConfigurationEntry at index (.*) should have a null LegacyV2Key")]
+        public void ThenTheServiceManifestBlobStorageConfigurationEntryAtIndexShouldHaveANullLegacyV2Key(
+            int index)
         {
             var configuration = (ServiceManifestBlobStorageConfigurationEntry)this.Manifest.RequiredConfigurationEntries[index];
-            Assert.AreEqual(expectedSupportsLegacyV2Configuration, configuration.SupportsLegacyV2Configuration);
+            Assert.IsNull(configuration.LegacyV2Key);
         }
 
-        [Then("the ServiceManifestCosmosDbConfigurationEntry at index (.*) should have SupportsLegacyV2Configuration of '(true|false)'")]
-        public void ThenTheServiceManifestCosmosDbConfigurationEntryAtIndexShouldHaveSupportsLegacyVConfigurationOf(
-            int index, bool expectedSupportsLegacyV2Configuration)
+        [Then("the ServiceManifestBlobStorageConfigurationEntry at index (.*) should have a LegacyV2Key of '([^']*)'")]
+        public void ThenTheServiceManifestBlobStorageConfigurationEntryAtIndexShouldHaveALegacyV2KeyOf(
+            int index, string expectedLegacyV2Key)
+        {
+            var configuration = (ServiceManifestBlobStorageConfigurationEntry)this.Manifest.RequiredConfigurationEntries[index];
+            Assert.AreEqual(expectedLegacyV2Key, configuration.LegacyV2Key);
+        }
+
+        [Then("the ServiceManifestCosmosDbConfigurationEntry at index (.*) should have a null LegacyV2Key")]
+        public void ThenTheServiceManifestCosmosDbConfigurationEntryAtIndexShouldHaveNullLegacyV2Key(
+            int index)
         {
             var configuration = (ServiceManifestCosmosDbConfigurationEntry)this.Manifest.RequiredConfigurationEntries[index];
-            Assert.AreEqual(expectedSupportsLegacyV2Configuration, configuration.SupportsLegacyV2Configuration);
+            Assert.IsNull(configuration.LegacyV2Key);
         }
 
-        [Then("the ServiceManifestTableStorageConfigurationEntry at index (.*) should have SupportsLegacyV2Configuration of '(true|false)'")]
+        [Then("the ServiceManifestCosmosDbConfigurationEntry at index (.*) should have a LegacyV2Key of '([^']*)'")]
+        public void ThenTheServiceManifestCosmosDbConfigurationEntryAtIndexShouldHaveALegacyV2KeyOf(
+            int index, string expectedLegacyV2Key)
+        {
+            var configuration = (ServiceManifestCosmosDbConfigurationEntry)this.Manifest.RequiredConfigurationEntries[index];
+            Assert.AreEqual(expectedLegacyV2Key, configuration.LegacyV2Key);
+        }
+
+        [Then("the ServiceManifestTableStorageConfigurationEntry at index (.*) should have a null LegacyV2Key")]
         public void ThenTheServiceManifestTableStorageConfigurationEntryAtIndexShouldHaveSupportsLegacyVConfigurationOf(
-            int index, bool expectedSupportsLegacyV2Configuration)
+            int index)
         {
             var configuration = (ServiceManifestTableStorageConfigurationEntry)this.Manifest.RequiredConfigurationEntries[index];
-            Assert.AreEqual(expectedSupportsLegacyV2Configuration, configuration.SupportsLegacyV2Configuration);
+            Assert.IsNull(configuration.LegacyV2Key);
+        }
+
+        [Then("the ServiceManifestTableStorageConfigurationEntry at index (.*) should have a LegacyV2Key of '([^']*)'")]
+        public void ThenTheServiceManifestTableStorageConfigurationEntryAtIndexShouldHaveSupportsLegacyVConfigurationOf(
+            int index, string expectedLegacyV2Key)
+        {
+            var configuration = (ServiceManifestTableStorageConfigurationEntry)this.Manifest.RequiredConfigurationEntries[index];
+            Assert.AreEqual(expectedLegacyV2Key, configuration.LegacyV2Key);
         }
 
         [Given("the service manifest called '(.*)' has the following Azure Blob Storage configuration entries")]
