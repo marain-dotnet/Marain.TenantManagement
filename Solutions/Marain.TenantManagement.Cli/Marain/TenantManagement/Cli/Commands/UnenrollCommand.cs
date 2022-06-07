@@ -8,7 +8,7 @@ namespace Marain.TenantManagement.Cli.Commands
     using System.CommandLine;
     using System.CommandLine.Invocation;
     using System.Threading.Tasks;
-    using Corvus.Extensions.Json;
+
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
 

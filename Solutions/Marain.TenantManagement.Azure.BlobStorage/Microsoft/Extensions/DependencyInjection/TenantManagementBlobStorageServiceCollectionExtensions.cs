@@ -6,8 +6,8 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     using Corvus.ContentHandling;
     using Corvus.Tenancy;
+
     using Marain.TenantManagement.Configuration;
-    using Marain.TenantManagement.EnrollmentConfiguration;
     using Marain.TenantManagement.ServiceManifests;
 
     /// <summary>
@@ -33,11 +33,11 @@ namespace Microsoft.Extensions.DependencyInjection
 
         private static void AddTenantManagementContentTypes(ContentFactory factory)
         {
-            factory.RegisterTransientContent<ServiceManifest>();
             factory.RegisterTransientContent<ServiceManifestBlobStorageConfigurationEntry>();
+            factory.RegisterTransientContent<ServiceManifestLegacyV2BlobStorageConfigurationEntry>();
 
-            factory.RegisterTransientContent<LegacyV2BlobStorageConfigurationItem>();
             factory.RegisterTransientContent<BlobStorageConfigurationItem>();
+            factory.RegisterTransientContent<LegacyV2BlobStorageConfigurationItem>();
         }
     }
 }

@@ -28,13 +28,6 @@ public class ServiceManifestLegacyV2CosmosDbConfigurationEntry : ServiceManifest
     public override string ExpectedConfigurationItemContentType =>
         CosmosConfigurationItem.RegisteredContentType;
 
-    /// <summary>
-    /// Gets or sets the container definition that the service is expecting to use with this configuration.
-    /// </summary>
-#nullable disable annotations
-    public LegacyV2CosmosContainerDefinition ContainerDefinition { get; set; }
-#nullable restore annotations
-
     /// <inheritdoc/>
     public override IEnumerable<KeyValuePair<string, object>> AddToTenantProperties(
         IEnumerable<KeyValuePair<string, object>> existingValues,
@@ -50,36 +43,13 @@ public class ServiceManifestLegacyV2CosmosDbConfigurationEntry : ServiceManifest
         }
 
         return existingValues.Append(new KeyValuePair<string, object>(
-            this.ContainerDefinition.GetConfigurationKey(),
+            this.Key,
             cosmosConfigurationItem.Configuration));
     }
 
     /// <inheritdoc/>
     public override IEnumerable<string> GetPropertiesToRemoveFromTenant(ITenant tenant)
     {
-        return new string[] { this.ContainerDefinition.GetConfigurationKey() };
-    }
-
-    /// <inheritdoc/>
-    public override IList<string> Validate(string messagePrefix)
-    {
-        IList<string> results = base.Validate(messagePrefix);
-
-        if (this.ContainerDefinition == null)
-        {
-            results.Add($"{messagePrefix}: ContainerDefinition must be supplied for configuration entries with content type '{RegisteredContentType}'.");
-        }
-
-        if (string.IsNullOrWhiteSpace(this.ContainerDefinition?.DatabaseName))
-        {
-            results.Add($"{messagePrefix}: ContainerDefinition.DatabaseName must be supplied for configuration entries with content type '{RegisteredContentType}'.");
-        }
-
-        if (string.IsNullOrWhiteSpace(this.ContainerDefinition?.ContainerName))
-        {
-            results.Add($"{messagePrefix}: ContainerDefinition.ContainerName must be supplied for configuration entries with content type '{RegisteredContentType}'.");
-        }
-
-        return results;
+        return new string[] { this.Key };
     }
 }

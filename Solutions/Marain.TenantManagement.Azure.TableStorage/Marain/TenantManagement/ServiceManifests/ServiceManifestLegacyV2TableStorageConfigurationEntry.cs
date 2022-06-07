@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using Corvus.Tenancy;
 
 using Marain.TenantManagement.Configuration;
-using Marain.TenantManagement.EnrollmentConfiguration;
 
 /// <summary>
 /// Service manifest configuration entry for table storage.
@@ -29,13 +28,6 @@ public class ServiceManifestLegacyV2TableStorageConfigurationEntry : ServiceMani
     public override string ExpectedConfigurationItemContentType =>
         LegacyV2TableStorageConfigurationItem.RegisteredContentType;
 
-    /// <summary>
-    /// Gets or sets the container definition that this configuration entry relates to.
-    /// </summary>
-#nullable disable annotations
-    public LegacyV2TableStorageTableDefinition ContainerDefinition { get; set; }
-#nullable restore annotations
-
     /// <inheritdoc/>
     public override IEnumerable<KeyValuePair<string, object>> AddToTenantProperties(
         IEnumerable<KeyValuePair<string, object>> existingValues,
@@ -51,30 +43,13 @@ public class ServiceManifestLegacyV2TableStorageConfigurationEntry : ServiceMani
         }
 
         return existingValues.Append(new KeyValuePair<string, object>(
-            this.ContainerDefinition.GetConfigurationKey(),
+            this.Key,
             tableStorageConfigurationItem.Configuration));
     }
 
     /// <inheritdoc/>
     public override IEnumerable<string> GetPropertiesToRemoveFromTenant(ITenant tenant)
     {
-        return new string[] { this.ContainerDefinition.GetConfigurationKey() };
-    }
-
-    /// <inheritdoc/>
-    public override IList<string> Validate(string messagePrefix)
-    {
-        IList<string> results = base.Validate(messagePrefix);
-
-        if (this.ContainerDefinition == null)
-        {
-            results.Add($"{messagePrefix}: ContainerDefinition must be supplied for configuration entries with content type '{RegisteredContentType}'.");
-        }
-        else if (string.IsNullOrWhiteSpace(this.ContainerDefinition.TableName))
-        {
-            results.Add($"{messagePrefix}: ContainerDefinition.TableName must be supplied for configuration entries with content type '{RegisteredContentType}'.");
-        }
-
-        return results;
+        return new string[] { this.Key };
     }
 }

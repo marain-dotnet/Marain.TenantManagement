@@ -5,9 +5,8 @@
 namespace Marain.TenantManagement.Configuration
 {
     using System.Collections.Generic;
-    using System.Linq;
+
     using Marain.TenantManagement.Exceptions;
-    using Marain.TenantManagement.ServiceManifests;
 
     /// <summary>
     /// Extension methods for the <see cref="ConfigurationItem"/> class.

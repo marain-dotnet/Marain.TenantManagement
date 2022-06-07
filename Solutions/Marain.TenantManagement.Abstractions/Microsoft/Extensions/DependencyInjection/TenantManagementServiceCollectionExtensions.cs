@@ -6,9 +6,9 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     using Corvus.ContentHandling;
     using Corvus.Tenancy;
-    using Marain.TenantManagement.Configuration;
-    using Marain.TenantManagement.EnrollmentConfiguration;
+
     using Marain.TenantManagement.ServiceManifests;
+
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
 

@@ -9,16 +9,19 @@ namespace Marain.TenantManagement.Specs.Steps
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+
     using Corvus.Extensions.Json;
     using Corvus.Tenancy;
     using Corvus.Testing.SpecFlow;
 
-    using Marain.TenantManagement.Configuration;
-    using Marain.TenantManagement.EnrollmentConfiguration;
     using Marain.TenantManagement.ServiceManifests;
+
     using Microsoft.Extensions.DependencyInjection;
+
     using Newtonsoft.Json;
+
     using NUnit.Framework;
+
     using TechTalk.SpecFlow;
 
     [Binding]
@@ -243,7 +246,6 @@ namespace Marain.TenantManagement.Specs.Steps
             {
                 Key = table.Rows[0]["Key"],
                 Description = table.Rows[0]["Description"],
-                ContainerDefinition = new LegacyV2BlobStorageContainerDefinition(table.Rows[0]["Container Name"]),
             });
         }
 
@@ -269,7 +271,6 @@ namespace Marain.TenantManagement.Specs.Steps
             {
                 Key = table.Rows[0]["Key"],
                 Description = table.Rows[0]["Description"],
-                ContainerDefinition = new LegacyV2TableStorageTableDefinition(table.Rows[0]["Table Name"]),
             });
         }
 
@@ -295,12 +296,6 @@ namespace Marain.TenantManagement.Specs.Steps
             {
                 Key = table.Rows[0]["Key"],
                 Description = table.Rows[0]["Description"],
-                ContainerDefinition = new LegacyV2CosmosContainerDefinition(
-                    table.Rows[0]["Database Name"],
-                    table.Rows[0]["Container Name"],
-                    null,
-                    null,
-                    null),
             });
         }
 

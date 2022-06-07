@@ -33,11 +33,11 @@ namespace Microsoft.Extensions.DependencyInjection
 
         private static void AddTenantManagementContentTypes(ContentFactory factory)
         {
-            factory.RegisterTransientContent<ServiceManifest>();
             factory.RegisterTransientContent<ServiceManifestCosmosDbConfigurationEntry>();
+            factory.RegisterTransientContent<ServiceManifestLegacyV2CosmosDbConfigurationEntry>();
 
-            factory.RegisterTransientContent<LegacyV2CosmosConfigurationItem>();
             factory.RegisterTransientContent<CosmosConfigurationItem>();
+            factory.RegisterTransientContent<LegacyV2CosmosConfigurationItem>();
         }
     }
 }
