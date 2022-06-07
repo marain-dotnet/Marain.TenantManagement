@@ -21,11 +21,19 @@ namespace Marain.TenantManagement.ServiceManifests
         /// </summary>
         public const string RegisteredContentType = BaseContentType + "cosmosdb.v3";
 
+        private static readonly string[] ConfigurationItemContentType = { CosmosConfigurationItem.RegisteredContentType };
+        private static readonly string[] ConfigurationItemContentTypesWithLegacySupport =
+        {
+            CosmosConfigurationItem.RegisteredContentType,
+            LegacyV2CosmosConfigurationItem.RegisteredContentType,
+        };
+
         /// <inheritdoc/>
         public override string ContentType => RegisteredContentType;
 
         /// <inheritdoc/>
-        public override string ExpectedConfigurationItemContentType =>
-            CosmosConfigurationItem.RegisteredContentType;
+        public override string[] ExpectedConfigurationItemContentTypes => this.LegacyV2Key is null
+            ? ConfigurationItemContentType
+            : ConfigurationItemContentTypesWithLegacySupport;
     }
 }

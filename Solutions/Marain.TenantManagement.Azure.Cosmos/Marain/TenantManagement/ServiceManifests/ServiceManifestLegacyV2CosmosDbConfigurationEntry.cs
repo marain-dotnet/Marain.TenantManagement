@@ -21,12 +21,13 @@ public class ServiceManifestLegacyV2CosmosDbConfigurationEntry : ServiceManifest
     /// </summary>
     public const string RegisteredContentType = BaseContentType + "cosmosdb";
 
+    private static readonly string[] ConfigurationItemContentTypes = { LegacyV2CosmosConfigurationItem.RegisteredContentType };
+
     /// <inheritdoc/>
     public override string ContentType => RegisteredContentType;
 
     /// <inheritdoc/>
-    public override string ExpectedConfigurationItemContentType =>
-        CosmosConfigurationItem.RegisteredContentType;
+    public override string[] ExpectedConfigurationItemContentTypes => ConfigurationItemContentTypes;
 
     /// <inheritdoc/>
     public override IEnumerable<KeyValuePair<string, object>> AddToTenantProperties(

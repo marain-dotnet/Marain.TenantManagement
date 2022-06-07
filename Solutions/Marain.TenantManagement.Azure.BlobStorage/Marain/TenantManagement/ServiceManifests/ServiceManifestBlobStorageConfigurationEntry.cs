@@ -21,11 +21,19 @@ namespace Marain.TenantManagement.ServiceManifests
         /// </summary>
         public const string RegisteredContentType = BaseContentType + "azureblobstorage.v3";
 
+        private static readonly string[] ConfigurationItemContentType = { BlobStorageConfigurationItem.RegisteredContentType };
+        private static readonly string[] ConfigurationItemContentTypesWithLegacySupport =
+        {
+            BlobStorageConfigurationItem.RegisteredContentType,
+            LegacyV2BlobStorageConfigurationItem.RegisteredContentType,
+        };
+
         /// <inheritdoc/>
         public override string ContentType => RegisteredContentType;
 
         /// <inheritdoc/>
-        public override string ExpectedConfigurationItemContentType =>
-            BlobStorageConfigurationItem.RegisteredContentType;
+        public override string[] ExpectedConfigurationItemContentTypes => this.LegacyV2Key is null
+            ? ConfigurationItemContentType
+            : ConfigurationItemContentTypesWithLegacySupport;
     }
 }

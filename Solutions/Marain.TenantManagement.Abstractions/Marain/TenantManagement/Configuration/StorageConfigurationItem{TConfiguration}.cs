@@ -25,6 +25,7 @@ namespace Marain.TenantManagement.Configuration
         /// Gets or sets the key under which this configuration is stored in the tenant properties.
         /// </summary>
 #nullable disable annotations
+        // TODO! get rid of this?
         public string ConfigurationKey { get; set; }
 #nullable restore annotations
 
@@ -40,10 +41,10 @@ namespace Marain.TenantManagement.Configuration
         {
             var errors = new List<string>();
 
-            if (this.ConfigurationKey == null)
-            {
-                errors.Add("The configuration item does not contain a value for the ConfigurationKey property.");
-            }
+            ////if (this.ConfigurationKey == null)
+            ////{
+            ////    errors.Add("The configuration item does not contain a value for the ConfigurationKey property.");
+            ////}
 
             if (this.Configuration == null)
             {

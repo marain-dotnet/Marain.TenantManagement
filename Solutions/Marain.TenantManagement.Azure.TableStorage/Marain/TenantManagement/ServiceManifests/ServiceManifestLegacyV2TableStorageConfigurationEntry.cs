@@ -21,12 +21,13 @@ public class ServiceManifestLegacyV2TableStorageConfigurationEntry : ServiceMani
     /// </summary>
     public const string RegisteredContentType = BaseContentType + "azuretablestorage";
 
+    private static readonly string[] ConfigurationItemContentTypes = { LegacyV2TableStorageConfigurationItem.RegisteredContentType };
+
     /// <inheritdoc/>
     public override string ContentType => RegisteredContentType;
 
     /// <inheritdoc/>
-    public override string ExpectedConfigurationItemContentType =>
-        LegacyV2TableStorageConfigurationItem.RegisteredContentType;
+    public override string[] ExpectedConfigurationItemContentTypes => ConfigurationItemContentTypes;
 
     /// <inheritdoc/>
     public override IEnumerable<KeyValuePair<string, object>> AddToTenantProperties(

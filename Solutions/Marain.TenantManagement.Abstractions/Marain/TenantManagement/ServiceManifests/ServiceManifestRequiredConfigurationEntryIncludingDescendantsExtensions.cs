@@ -43,14 +43,27 @@ namespace Marain.TenantManagement.ServiceManifests
                             currentProvidedConfiguration.ConfigurationItems.TryGetValue(requiredConfigEntry.Key, out ConfigurationItem? r) ? r : null)).ToArray();
 
                 // Find required config entry without corresponding config item.
-                foreach ((ServiceManifestRequiredConfigurationEntry currentRequiredConfigurationEntry, _) in pairedConfigurationEntries.Where(x => x.ProvidedConfigurationItem is null))
+                foreach ((ServiceManifestRequiredConfigurationEntry currentRequiredConfigurationEntry, ConfigurationItem? providedConfigurationItem) in pairedConfigurationEntries)
                 {
-                    errors.Add($"No configuration was supplied for the required configuration entry with key '{currentRequiredConfigurationEntry.Key}' and description '{currentRequiredConfigurationEntry.Description}'");
+                    if (providedConfigurationItem is null)
+                    {
+                        errors.Add($"No configuration was supplied for the required configuration entry with key '{currentRequiredConfigurationEntry.Key}' and description '{currentRequiredConfigurationEntry.Description}'");
+                    }
+                    else
+                    {
+                        if (!currentRequiredConfigurationEntry.ExpectedConfigurationItemContentTypes.Contains(providedConfigurationItem.ContentType))
+                        {
+                            string contentTypeText = currentRequiredConfigurationEntry.ExpectedConfigurationItemContentTypes.Length == 1
+                                ? $"content type {currentRequiredConfigurationEntry.ExpectedConfigurationItemContentTypes[0]}"
+                                : $"one of these content types: {string.Join(",", currentRequiredConfigurationEntry.ExpectedConfigurationItemContentTypes)}";
+                            errors.Add($"The configuration supplied for the required configuration entry with key '{currentRequiredConfigurationEntry.Key}' and description '{currentRequiredConfigurationEntry.Description}' should have had {contentTypeText} but was {providedConfigurationItem.ContentType}");
+                        }
+                        else
+                        {
+                            errors.AddRange(providedConfigurationItem.Validate());
+                        }
+                    }
                 }
-
-                // Now, foreach config item, validate it using the supplied configuration entry
-                ////errors.AddRange(pairedConfigurationEntries
-                ////    .SelectMany(pair => pair.ProvidedConfigurationItem!.Validate()));
 
                 foreach ((string dependencyKey, ServiceManifestRequiredConfigurationEntryIncludingDescendants? dependencyRequiredConfig) in currentRequiredConfiguration.Dependencies)
                 {

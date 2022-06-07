@@ -21,12 +21,13 @@ public class ServiceManifestLegacyV2BlobStorageConfigurationEntry : ServiceManif
     /// </summary>
     public const string RegisteredContentType = BaseContentType + "azureblobstorage";
 
+    private static readonly string[] ConfigurationItemContentTypes = { LegacyV2BlobStorageConfigurationItem.RegisteredContentType };
+
     /// <inheritdoc/>
     public override string ContentType => RegisteredContentType;
 
     /// <inheritdoc/>
-    public override string ExpectedConfigurationItemContentType =>
-        LegacyV2BlobStorageConfigurationItem.RegisteredContentType;
+    public override string[] ExpectedConfigurationItemContentTypes => ConfigurationItemContentTypes;
 
     /// <inheritdoc/>
     public override IEnumerable<KeyValuePair<string, object>> AddToTenantProperties(

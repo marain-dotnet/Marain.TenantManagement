@@ -27,10 +27,10 @@ public abstract class LegacyV2StorageConfigurationItem<TDefinition, TConfigurati
     {
         var errors = new List<string>();
 
-        if (this.Definition == null)
-        {
-            errors.Add("The configuration item does not contain a value for the Definition property.");
-        }
+        ////if (this.Definition == null)
+        ////{
+        ////    errors.Add("The configuration item does not contain a value for the Definition property.");
+        ////}
 
         if (this.Configuration == null)
         {

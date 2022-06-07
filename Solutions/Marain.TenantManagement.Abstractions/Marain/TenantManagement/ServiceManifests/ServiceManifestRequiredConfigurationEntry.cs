@@ -30,7 +30,7 @@ namespace Marain.TenantManagement.ServiceManifests
         /// Gets the expected content type of the <see cref="ConfigurationItem"/> that should be provided for
         /// this configuration entry.
         /// </summary>
-        public abstract string ExpectedConfigurationItemContentType { get; }
+        public abstract string[] ExpectedConfigurationItemContentTypes { get; }
 
         /// <summary>
         /// Gets or sets the key of the configuration entry. This is used to match configuration supplied as part of

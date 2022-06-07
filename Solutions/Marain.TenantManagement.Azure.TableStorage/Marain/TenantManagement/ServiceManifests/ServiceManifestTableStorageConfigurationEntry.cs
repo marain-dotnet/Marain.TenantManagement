@@ -21,11 +21,19 @@ namespace Marain.TenantManagement.ServiceManifests
         /// </summary>
         public const string RegisteredContentType = BaseContentType + "azuretablestorage.v3";
 
+        private static readonly string[] ConfigurationItemContentType = { TableStorageConfigurationItem.RegisteredContentType };
+        private static readonly string[] ConfigurationItemContentTypesWithLegacySupport =
+        {
+            TableStorageConfigurationItem.RegisteredContentType,
+            LegacyV2TableStorageConfigurationItem.RegisteredContentType,
+        };
+
         /// <inheritdoc/>
         public override string ContentType => RegisteredContentType;
 
         /// <inheritdoc/>
-        public override string ExpectedConfigurationItemContentType =>
-            TableStorageConfigurationItem.RegisteredContentType;
+        public override string[] ExpectedConfigurationItemContentTypes => this.LegacyV2Key is null
+            ? ConfigurationItemContentType
+            : ConfigurationItemContentTypesWithLegacySupport;
     }
 }
