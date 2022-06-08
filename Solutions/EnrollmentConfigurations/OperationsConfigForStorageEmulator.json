@@ -1,11 +1,14 @@
-[
-  {
-    "key": "MarainOperations:BlobContainerConfiguration:operations",
-    "contentType": "application/vnd.marain.tenancy.enrollment.configurationitem.azureblobstorage.v3",
-    "configuration": {
-      "accountName": "",
-      "container": "operations",
-      "disableTenantIdPrefix": false
+{
+  "3633754ac4c9be44b55bfe791b1780f12429524fe7b6cc48a265a307407ec858": {
+    "configurationItems": {
+      "MarainOperations:BlobContainerConfiguration:operations": {
+        "contentType": "application/vnd.marain.tenancy.enrollment.configurationitem.azureblobstorage.v3",
+        "configuration": {
+          "accountName": "",
+          "container": "operations",
+          "disableTenantIdPrefix": false
+        }
+      }
     }
   }
-]
+}

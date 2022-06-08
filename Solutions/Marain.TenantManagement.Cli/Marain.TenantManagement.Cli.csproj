@@ -44,6 +44,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Corvus.Identity.MicrosoftRest" Version="3.1.0" />
     <PackageReference Include="Endjin.RecommendedPractices.GitHub" Version="2.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -55,7 +56,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Marain.TenantManagement.Abstractions\Marain.TenantManagement.Abstractions.csproj" />
+    <ProjectReference Include="..\Marain.TenantManagement.Azure.BlobStorage\Marain.TenantManagement.Azure.BlobStorage.csproj" />
+    <ProjectReference Include="..\Marain.TenantManagement.Azure.Cosmos\Marain.TenantManagement.Azure.Cosmos.csproj" />
+    <ProjectReference Include="..\Marain.TenantManagement.Azure.TableStorage\Marain.TenantManagement.Azure.TableStorage.csproj" />
   </ItemGroup>
 
   <ItemGroup>

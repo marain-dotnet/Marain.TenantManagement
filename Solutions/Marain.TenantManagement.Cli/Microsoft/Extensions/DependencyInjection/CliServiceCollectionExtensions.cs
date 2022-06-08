@@ -75,12 +75,15 @@ namespace Microsoft.Extensions.DependencyInjection
             // optionally with LegacyAzureServiceTokenProviderOptions, or Corvus.Identity.MicrosoftRest's
             // AddMicrosoftRestAdapterForServiceIdentityAccessTokenSource instead'
             services.AddServiceIdentityAzureTokenCredentialSourceFromLegacyConnectionString(serviceTokenProviderOptions);
+            services.AddMicrosoftRestAdapterForServiceIdentityAccessTokenSource();
 
             TenancyClientOptions tenancyClientOptions = config.GetSection("TenancyClient").Get<TenancyClientOptions>();
             services.AddSingleton(tenancyClientOptions);
             services.AddTenantProviderServiceClient();
 
-            services.AddMarainTenantManagement();
+            services.AddMarainTenantManagementForBlobStorage();
+            services.AddMarainTenantManagementForTableStorage();
+            services.AddMarainTenantManagementForCosmosDb();
 
             return services;
         }
