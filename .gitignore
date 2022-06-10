@@ -341,3 +341,5 @@ appsettings.json
 
 *.feature.cs
 *.ncrunchsolution
+/_codeCoverage
+/_packages

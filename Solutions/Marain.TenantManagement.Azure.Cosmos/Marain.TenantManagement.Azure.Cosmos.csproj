@@ -8,6 +8,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
+    <PackageDescription>Azure Cosmos DB support for management components for Marain, allowing tenants using Cosmos DB to be created and enrolled into services.</PackageDescription>
+    <PackageTags>Marain</PackageTags>
+    <PackageReleaseNotes></PackageReleaseNotes>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Corvus.Storage.Azure.Cosmos.Tenancy" Version="3.2.0" />
     <PackageReference Include="Endjin.RecommendedPractices.GitHub" Version="2.1.0">
