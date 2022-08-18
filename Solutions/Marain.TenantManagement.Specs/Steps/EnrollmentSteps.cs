@@ -384,15 +384,10 @@ namespace Marain.TenantManagement.Specs.Steps
                 ? new EnrollmentConfigurationEntry(new Dictionary<string, ConfigurationItem>(), new Dictionary<string, EnrollmentConfigurationEntry>())
                 : MakeEnrollmentConfiguration(this.enrollmentConfigurationEntries[enrollmentConfigurationName]);
 
-            Dictionary<string, EnrollmentConfigurationEntry> enrollmentConfiguration = new()
-            {
-                [serviceTenant.Id] = enrollmentConfigurationEntry,
-            };
-
             Task Enroll() => managementService.EnrollInServiceAsync(
                     enrollingTenant,
                     serviceTenant,
-                    enrollmentConfiguration);
+                    enrollmentConfigurationEntry);
 
             if (catchExceptions)
             {

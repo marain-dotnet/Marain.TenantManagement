@@ -114,13 +114,13 @@ namespace Marain.TenantManagement
         /// <param name="tenantStore">The <see cref="ITenantStore"/>.</param>
         /// <param name="enrollingTenantId">The Id of the tenant to enroll.</param>
         /// <param name="serviceTenantId">The Id of the service to enroll in.</param>
-        /// <param name="configurationItems">Configuration for the enrollment.</param>
+        /// <param name="configuration">Configuration for the enrollment.</param>
         /// <returns>A task which completes when the enrollment has finished.</returns>
         public static async Task EnrollInServiceAsync(
             this ITenantStore tenantStore,
             string enrollingTenantId,
             string serviceTenantId,
-            IReadOnlyDictionary<string, EnrollmentConfigurationEntry> configurationItems)
+            EnrollmentConfigurationEntry configuration)
         {
             ArgumentNullException.ThrowIfNull(enrollingTenantId);
             if (string.IsNullOrWhiteSpace(enrollingTenantId))
@@ -134,7 +134,7 @@ namespace Marain.TenantManagement
                 throw new ArgumentException("Service tenant id must not be empty", nameof(serviceTenantId));
             }
 
-            ArgumentNullException.ThrowIfNull(configurationItems);
+            ArgumentNullException.ThrowIfNull(configuration);
 
             // Enrolling tenant can be either a Client tenant or a Delegated tenant.
             ITenant enrollingTenant = await tenantStore.GetTenantOfTypeAsync(
@@ -144,7 +144,15 @@ namespace Marain.TenantManagement
 
             ITenant serviceTenant = await tenantStore.GetServiceTenantAsync(serviceTenantId).ConfigureAwait(false);
 
-            await tenantStore.EnrollInServiceAsync(enrollingTenant, serviceTenant, configurationItems).ConfigureAwait(false);
+            if (configuration.ServiceName is string serviceNameInConfiguration)
+            {
+                if (serviceTenant.Name != serviceNameInConfiguration)
+                {
+                    throw new InvalidOperationException($"Enrollment configuration expects service name of '{serviceNameInConfiguration}' but service with id {serviceTenantId} has name '{serviceTenant.Name}'");
+                }
+            }
+
+            await tenantStore.EnrollInServiceAsync(enrollingTenant, serviceTenant, configuration).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -153,13 +161,13 @@ namespace Marain.TenantManagement
         /// <param name="tenantStore">The <see cref="ITenantStore"/>.</param>
         /// <param name="enrollingTenant">The tenant to enroll.</param>
         /// <param name="serviceTenantId">The Id of the service to enroll in.</param>
-        /// <param name="configurationItems">Configuration for the enrollment.</param>
+        /// <param name="configuration">Configuration for the enrollment.</param>
         /// <returns>A task which completes when the enrollment has finished.</returns>
         public static async Task EnrollInServiceAsync(
             this ITenantStore tenantStore,
             ITenant enrollingTenant,
             string serviceTenantId,
-            IReadOnlyDictionary<string, EnrollmentConfigurationEntry> configurationItems)
+            EnrollmentConfigurationEntry configuration)
         {
             // Enrolling tenant validation will happen when we call through to the next method to do the enrollment, so no
             // need to do it here as well.
@@ -169,11 +177,11 @@ namespace Marain.TenantManagement
                 throw new ArgumentException("Service tenant id must not be empty", nameof(serviceTenantId));
             }
 
-            ArgumentNullException.ThrowIfNull(configurationItems);
+            ArgumentNullException.ThrowIfNull(configuration);
 
             ITenant serviceTenant = await tenantStore.GetServiceTenantAsync(serviceTenantId).ConfigureAwait(false);
 
-            await tenantStore.EnrollInServiceAsync(enrollingTenant, serviceTenant, configurationItems).ConfigureAwait(false);
+            await tenantStore.EnrollInServiceAsync(enrollingTenant, serviceTenant, configuration).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -446,14 +454,14 @@ namespace Marain.TenantManagement
         /// <param name="tenantStore">The tenant store.</param>
         /// <param name="enrollingTenant">The tenant to enroll.</param>
         /// <param name="serviceTenant">The service to enroll in.</param>
-        /// <param name="configurationItems">Configuration for the enrollment.</param>
+        /// <param name="configuration">Configuration for the enrollment.</param>
         /// <param name="logger">Optional logger.</param>
         /// <returns>A task which completes when the enrollment has finished.</returns>
         public static async Task EnrollInServiceAsync(
             this ITenantStore tenantStore,
             ITenant enrollingTenant,
             ITenant serviceTenant,
-            IReadOnlyDictionary<string, EnrollmentConfigurationEntry> configurationItems,
+            EnrollmentConfigurationEntry configuration,
             ILogger? logger = null)
         {
             ArgumentNullException.ThrowIfNull(enrollingTenant);
@@ -464,7 +472,7 @@ namespace Marain.TenantManagement
 
             serviceTenant.EnsureTenantIsOfType(MarainTenantType.Service);
 
-            ArgumentNullException.ThrowIfNull(configurationItems);
+            ArgumentNullException.ThrowIfNull(configuration);
 
             logger?.LogDebug(
                 "Enrolling tenant '{enrollingTenantName}' with Id '{enrollingTenantId}' from service '{serviceTenantName}' with Id '{serviceTenantId}'",
@@ -477,20 +485,10 @@ namespace Marain.TenantManagement
             // as well as any dependent services is provided.
             ServiceManifestRequiredConfigurationEntryIncludingDescendants requiredConfig = await tenantStore.GetServiceEnrollmentConfigurationRequirementsAsync(serviceTenant).ConfigureAwait(false);
 
-            if (configurationItems.TryGetValue(serviceTenant.Id, out EnrollmentConfigurationEntry? enrollmentConfigurationForThisService))
-            {
-                logger?.LogDebug("Validating supplied configuration against required config.");
-                requiredConfig.ValidateAndThrow(enrollmentConfigurationForThisService);
-            }
-            else
-            {
-                throw new InvalidEnrollmentConfigurationException(new[]
-                {
-                    $"Tenant '{enrollingTenant.Name}' (id: {enrollingTenant.Id} depends on service '{serviceTenant.Name}' (id: {serviceTenant.Id})), which requires these configuration entries: [{string.Join(", ", requiredConfig.RequiredConfigurationEntries.Select(e => e.Key))}, but no configuration for this dependency was supplied]",
-                });
-            }
+            logger?.LogDebug("Validating supplied configuration against required config.");
+            requiredConfig.ValidateAndThrow(configuration);
 
-            await EnrollInServiceCoreAsync(enrollingTenant, serviceTenant, enrollmentConfigurationForThisService)
+            await EnrollInServiceCoreAsync(enrollingTenant, serviceTenant, configuration)
                 .ConfigureAwait(false);
 
             async Task EnrollInServiceCoreAsync(

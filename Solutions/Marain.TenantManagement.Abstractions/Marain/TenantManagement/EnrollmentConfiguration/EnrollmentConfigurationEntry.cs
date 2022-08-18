@@ -21,10 +21,10 @@ namespace Marain.TenantManagement.EnrollmentConfiguration
         /// <param name="dependencies">The <see cref="Dependencies"/>.</param>
         public EnrollmentConfigurationEntry(
             IReadOnlyDictionary<string, ConfigurationItem> configurationItems,
-            IReadOnlyDictionary<string, EnrollmentConfigurationEntry> dependencies)
+            IReadOnlyDictionary<string, EnrollmentConfigurationEntry>? dependencies)
         {
             this.ConfigurationItems = configurationItems;
-            this.Dependencies = dependencies;
+            this.Dependencies = dependencies ?? ImmutableDictionary<string, EnrollmentConfigurationEntry>.Empty;
         }
 
         /// <summary>
@@ -40,6 +40,19 @@ namespace Marain.TenantManagement.EnrollmentConfiguration
         /// configuration. The key is the service tenant id.
         /// </remarks>
         public IReadOnlyDictionary<string, EnrollmentConfigurationEntry> Dependencies { get; }
+
+        /// <summary>
+        /// Gets or sets the optional service name.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The service is identified by the tenant id, so we don't strictly need to specify the
+        /// name, but configuration files can include this, partly to make it easier to see which
+        /// services the file is trying to configure, but also to enable the tools to detect when
+        /// there is a mismatch between the tenant id and service name.
+        /// </para>
+        /// </remarks>
+        public string? ServiceName { get; set; }
 
         /// <summary>
         /// Gets an empty <see cref="EnrollmentConfigurationEntry"/>.

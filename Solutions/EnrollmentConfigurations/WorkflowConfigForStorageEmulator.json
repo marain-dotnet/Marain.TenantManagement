@@ -1,31 +1,34 @@
-[
-  {
-    "key": "MarainWorkflow:CosmosContainerConfiguration:Definitions",
-    "contentType": "application/vnd.marain.tenancy.enrollment.configurationitem.cosmosdb.v3",
-    "configuration": {
-      "accountUri": null,
-      "databaseName": null,
-      "containerName": null,
-      "disableTenantIdPrefix": false
+{
+  "serviceName": "Workflow v1",
+  "configurationItems": {
+    "Marain:Workflow:BlobContainerConfiguration:Definitions": {
+      "contentType": "application/vnd.marain.tenancy.configurationitem.azureblobstorage.v3",
+      "configuration": {
+        "accountName": "",
+        "container": "operations"
+      }
+    },
+    "Marain:Workflow:CosmosContainerConfiguration:Instances": {
+      "contentType": "application/vnd.marain.tenancy.configurationitem.cosmosdb.v3",
+      "configuration": {
+        "accountUri": null,
+        "database": "workflow-instances",
+        "container": "test"
+      }
     }
   },
-  {
-    "key": "MarainWorkflow:CosmosContainerConfiguration:Instances",
-    "contentType": "application/vnd.marain.tenancy.enrollment.configurationitem.cosmosdb.v3",
-    "configuration": {
-      "accountUri": null,
-      "databaseName": null,
-      "containerName": null,
-      "disableTenantIdPrefix": false
-    }
-  },
-  {
-    "key": "MarainOperations:BlobContainerConfiguration:operations",
-    "contentType": "application/vnd.marain.tenancy.enrollment.configurationitem.azureblobstorage.v3",
-    "configuration": {
-      "accountName": null,
-      "container": "operations",
-      "disableTenantIdPrefix": false
+  "dependencies": {
+    "3633754ac4c9be44b55bfe791b1780f12429524fe7b6cc48a265a307407ec858": {
+      "serviceName": "Operations v1",
+      "configurationItems": {
+        "Marain:Operations:BlobContainerConfiguration:Operations": {
+          "contentType": "application/vnd.marain.tenancy.configurationitem.azureblobstorage.v3",
+          "configuration": {
+            "accountName": "",
+            "container": "operations"
+          }
+        }
+      }
     }
   }
-]
+}

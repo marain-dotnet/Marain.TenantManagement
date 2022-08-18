@@ -24,11 +24,11 @@
       },
       "Endjin.RecommendedPractices.GitHub": {
         "type": "Direct",
-        "requested": "[2.1.0, )",
-        "resolved": "2.1.0",
-        "contentHash": "I5hRIYqow1UTBh+mlsaC23Pi1ISIbc04HUeDbdnmv4a3tCZyOEYOJF8Q/SVWbSEdh9chEPYSr6qfdltv/GrCPA==",
+        "requested": "[2.1.1, )",
+        "resolved": "2.1.1",
+        "contentHash": "f+fDu+C3yh+fuPrlm3ZOytILw/nl1IYjLSjs8cjf37K8IU45elqsbFM3Q7lkNsUz8v4tG3Ags+WPS7t2c8zH1w==",
         "dependencies": {
-          "Endjin.RecommendedPractices": "2.1.0",
+          "Endjin.RecommendedPractices": "2.1.1",
           "Microsoft.SourceLink.GitHub": "1.1.1"
         }
       },
@@ -70,6 +70,21 @@
           "Microsoft.Extensions.Logging.EventLog": "6.0.0",
           "Microsoft.Extensions.Logging.EventSource": "6.0.0",
           "Microsoft.Extensions.Options": "6.0.0"
+        }
+      },
+      "Roslynator.Analyzers": {
+        "type": "Direct",
+        "requested": "[4.1.0, )",
+        "resolved": "4.1.0",
+        "contentHash": "xTSs7KdwhIUOTqEubcfW043o0dpSjKpNF+C6Aj5OuJv69rVJ0ypjChNeeXRALB2I1S9W1+qmgbVWYg7qftgoCA=="
+      },
+      "StyleCop.Analyzers": {
+        "type": "Direct",
+        "requested": "[1.2.0-beta.406, )",
+        "resolved": "1.2.0-beta.406",
+        "contentHash": "YbsYoczQPZyz+4nmQ7bBiU9uQkk7Q2KUizQWEv01S4/ImCdJFiHvJfm8HAINNS0cvSLOA7xM9Y+KWQ2FOYjgkA==",
+        "dependencies": {
+          "StyleCop.Analyzers.Unstable": "1.2.0.406"
         }
       },
       "System.CommandLine": {
@@ -302,8 +317,8 @@
       },
       "Endjin.RecommendedPractices": {
         "type": "Transitive",
-        "resolved": "2.1.0",
-        "contentHash": "2h0r1wg2Oc0LPzsW9VAI+yf4hNOk37oi/zi1SmjlCmT1Jin+4dFxbRXc3uTRvD2mrTGC8VOb0OBnyoZ1Qg41dA==",
+        "resolved": "2.1.1",
+        "contentHash": "GfoEmy/55R7LmnBQbxIbYdGAxYfMaOQCTCOeVS9WKpPBA37YO/vuGMGd0OY8jaolKvsSd02V9jp2qdzQDX6CFw==",
         "dependencies": {
           "Microsoft.Build.Tasks.Git": "1.1.1"
         }
@@ -904,6 +919,11 @@
         "type": "Transitive",
         "resolved": "4.3.0",
         "contentHash": "VB5cn/7OzUfzdnC8tqAIMQciVLiq2epm2NrAm1E9OjNRyG4lVhfR61SMcLizejzQP8R8Uf/0l5qOIbUEi+RdEg=="
+      },
+      "StyleCop.Analyzers.Unstable": {
+        "type": "Transitive",
+        "resolved": "1.2.0.406",
+        "contentHash": "FclNdBR81ynIo9l1QNlo+l0I/PaFIYaPQPlMram8XVIMh6G6G43KTa1aCxfwTj13uKlAJS/LhLy6KjOPOeAU4w=="
       },
       "System.AppContext": {
         "type": "Transitive",
@@ -1751,29 +1771,29 @@
       "marain.tenantmanagement.abstractions": {
         "type": "Project",
         "dependencies": {
-          "Corvus.Tenancy.Abstractions": "3.2.0",
-          "Microsoft.Extensions.Logging.Abstractions": "6.0.1"
+          "Corvus.Tenancy.Abstractions": "[3.2.0, )",
+          "Microsoft.Extensions.Logging.Abstractions": "[6.0.1, )"
         }
       },
       "marain.tenantmanagement.azure.blobstorage": {
         "type": "Project",
         "dependencies": {
-          "Corvus.Storage.Azure.BlobStorage.Tenancy": "3.2.0",
-          "Marain.TenantManagement.Abstractions": "1.0.0"
+          "Corvus.Storage.Azure.BlobStorage.Tenancy": "[3.2.0, )",
+          "Marain.TenantManagement.Abstractions": "[1.0.0, )"
         }
       },
       "marain.tenantmanagement.azure.cosmos": {
         "type": "Project",
         "dependencies": {
-          "Corvus.Storage.Azure.Cosmos.Tenancy": "3.2.0",
-          "Marain.TenantManagement.Abstractions": "1.0.0"
+          "Corvus.Storage.Azure.Cosmos.Tenancy": "[3.2.0, )",
+          "Marain.TenantManagement.Abstractions": "[1.0.0, )"
         }
       },
       "marain.tenantmanagement.azure.tablestorage": {
         "type": "Project",
         "dependencies": {
-          "Corvus.Storage.Azure.TableStorage.Tenancy": "3.2.0",
-          "Marain.TenantManagement.Abstractions": "1.0.0"
+          "Corvus.Storage.Azure.TableStorage.Tenancy": "[3.2.0, )",
+          "Marain.TenantManagement.Abstractions": "[1.0.0, )"
         }
       }
     }
