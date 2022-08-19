@@ -193,10 +193,7 @@ namespace Marain.TenantManagement.Testing
 
             this.tenants.Add(tenant);
 
-            if (this.primaryTransientClient == null)
-            {
-                this.primaryTransientClient = tenant;
-            }
+            this.primaryTransientClient ??= tenant;
 
             return tenant;
         }
