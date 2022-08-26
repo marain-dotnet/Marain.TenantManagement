@@ -1,5 +1,5 @@
 {
-  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest.v3",
+  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest",
   "wellKnownTenantGuid": "31b74bd9-b45d-4402-81cf-13fc6f680a85",
   "serviceName": "Manifest with dependencies",
   "dependsOnServiceTenants": [

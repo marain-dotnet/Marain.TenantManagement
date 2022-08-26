@@ -1,6 +1,6 @@
 {
   "$schema": "./ServiceManifestSchema.json",
-  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest.v3",
+  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest",
   "wellKnownTenantGuid": "da0c39ae-1ed5-4709-ba3a-c6313c09442c", // 3633754ac4c9be44b55bfe791b1780f1ae390cdad51e0947ba3ac6313c09442c
   "serviceName": "SvcC1V3orV2D(C1D())",
   "dependsOnServiceTenants": [

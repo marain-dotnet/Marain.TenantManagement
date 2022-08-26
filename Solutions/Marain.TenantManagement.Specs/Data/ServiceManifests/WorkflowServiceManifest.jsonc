@@ -1,6 +1,6 @@
 {
   "$schema": "./ServiceManifestSchema.json",
-  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest.v3",
+  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest",
   "wellKnownTenantGuid": "8664b477-3403-4c77-abb2-f9d1b95b0c18", // 3633754ac4c9be44b55bfe791b1780f177b464860334774cabb2f9d1b95b0c18
   "serviceName": "Workflow v1",
   "dependsOnServiceTenants": [
