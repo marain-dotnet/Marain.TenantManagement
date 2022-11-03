@@ -12,7 +12,7 @@ resources:
       type: github
       name: endjin/Endjin.RecommendedPractices.AzureDevopsPipelines.GitHub
       endpoint: marain-dotnet-github
-      
+
 
 jobs:
 - template: templates/build.and.release.scripted.yml@recommended_practices
@@ -31,5 +31,7 @@ jobs:
           ENDJIN_AZURESERVICESAUTHCONNECTIONSTRING: $(Endjin_AzureServicesAuthConnectionString)
           ENDJIN_TENANCYSERVICEBASEURI: $(Endjin_TenancyServiceBaseUri)
           ENDJIN_TENANCYSERVICERESOUCEIDFORMSIAUTHENTICATION: $(Endjin_TenancyServiceResourceIdForMsiAuthentication)
-    netSdkVersion: '3.x'
+    netSdkVersion: '6.x'
+    additionalNetSdkVersions: 
+    - '3.x'
     compileTasksServiceConnection: endjin-acr-reader 
