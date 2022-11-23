@@ -341,5 +341,8 @@ appsettings.json
 
 *.feature.cs
 *.ncrunchsolution
+
+# Scripted build migration 
 /_codeCoverage
 /_packages
+*.sbom.*
