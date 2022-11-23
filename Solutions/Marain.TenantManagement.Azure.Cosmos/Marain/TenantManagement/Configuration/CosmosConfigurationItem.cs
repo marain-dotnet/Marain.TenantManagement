@@ -4,10 +4,7 @@
 
 namespace Marain.TenantManagement.Configuration;
 
-using System.Collections.Generic;
-
 using Corvus.Storage.Azure.Cosmos;
-using Corvus.Storage.Azure.Cosmos.Tenancy;
 
 /// <summary>
 /// Enrollment configuration item for tenanted cosmos storage config.
@@ -26,12 +23,4 @@ public class CosmosConfigurationItem : StorageConfigurationItem<CosmosContainerC
 
     /// <inheritdoc/>
     public override string ContentType => RegisteredContentType;
-
-    /// <inheritdoc/>
-    public override IEnumerable<KeyValuePair<string, object>> AddConfiguration(IEnumerable<KeyValuePair<string, object>> values)
-    {
-        return values.AddCosmosConfiguration(
-            this.ConfigurationKey,
-            this.Configuration);
-    }
 }

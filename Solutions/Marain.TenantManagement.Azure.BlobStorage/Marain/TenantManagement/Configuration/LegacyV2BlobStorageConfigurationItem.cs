@@ -4,8 +4,6 @@
 
 namespace Marain.TenantManagement.Configuration;
 
-using System.Collections.Generic;
-
 using Corvus.Storage.Azure.BlobStorage.Tenancy;
 
 /// <summary>
@@ -20,12 +18,4 @@ public class LegacyV2BlobStorageConfigurationItem : LegacyV2StorageConfiguration
 
     /// <inheritdoc/>
     public override string ContentType => RegisteredContentType;
-
-    /// <inheritdoc/>
-    public override IEnumerable<KeyValuePair<string, object>> AddConfiguration(
-        IEnumerable<KeyValuePair<string, object>> values)
-    {
-        return values.Append(new KeyValuePair<string, object>(
-            this.Definition.GetConfigurationKey(), this.Configuration));
-    }
 }

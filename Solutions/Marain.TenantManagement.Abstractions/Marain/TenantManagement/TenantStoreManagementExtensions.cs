@@ -243,33 +243,6 @@ namespace Marain.TenantManagement
         }
 
         /// <summary>
-        /// Add or updates arbitrary storage configuration for a tenant.
-        /// </summary>
-        /// <param name="tenantStore">The <see cref="ITenantStore"/>.</param>
-        /// <param name="tenantId">The ID of the tenant to enroll.</param>
-        /// <param name="configurationItems">Configuration to add.</param>
-        /// <returns>A task which completes when the configuration has been added.</returns>
-        public static async Task AddOrUpdateStorageConfigurationAsync(
-            this ITenantStore tenantStore,
-            string tenantId,
-            ConfigurationItem[] configurationItems)
-        {
-            ArgumentNullException.ThrowIfNull(tenantId);
-            if (string.IsNullOrWhiteSpace(tenantId))
-            {
-                throw new ArgumentException("Tenant id must not be empty", nameof(tenantId));
-            }
-
-            ArgumentNullException.ThrowIfNull(configurationItems);
-
-            ITenant tenant = await tenantStore.GetTenantOfTypeAsync(
-                tenantId,
-                MarainTenantType.Client).ConfigureAwait(false);
-
-            await tenantStore.AddOrUpdateStorageConfigurationAsync(tenant, configurationItems).ConfigureAwait(false);
-        }
-
-        /// <summary>
         /// Creates a new tenant representing a client, using a well known Guid.
         /// </summary>
         /// <param name="tenantStore">The tenant store.</param>
@@ -761,57 +734,6 @@ namespace Marain.TenantManagement
             return new ServiceManifestRequiredConfigurationEntryIncludingDescendants(
                 serviceManifest.RequiredConfigurationEntries,
                 dependentServicesConfigRequirements.ToDictionary(x => x.Id, x => x.DependencyRequirements));
-        }
-
-        /// <summary>
-        /// Add or updates arbitrary storage configuration for a tenant.
-        /// </summary>
-        /// <param name="tenantStore">The tenant store.</param>
-        /// <param name="tenant">The tenant to enroll.</param>
-        /// <param name="configurationItems">Configuration to add.</param>
-        /// <param name="logger">Optional logger.</param>
-        /// <returns>A task which completes when the configuration has been added.</returns>
-        public static async Task AddOrUpdateStorageConfigurationAsync(this ITenantStore tenantStore, ITenant tenant, ConfigurationItem[] configurationItems, ILogger? logger = null)
-        {
-            ArgumentNullException.ThrowIfNull(tenant);
-
-            tenant.EnsureTenantIsOfType(MarainTenantType.Client);
-
-            ArgumentNullException.ThrowIfNull(configurationItems);
-
-            logger?.LogDebug(
-                "Add configuration for tenant '{tenantName}' with Id '{tenantId}'",
-                tenant.Name,
-                tenant.Id);
-
-            configurationItems.ValidateAndThrow();
-
-            IEnumerable<KeyValuePair<string, object>> propertiesToAddToTenant = PropertyBagValues.Empty;
-
-            foreach (ConfigurationItem configurationItem in configurationItems)
-            {
-                logger?.LogDebug(
-                    "Adding configuration entry to tenant '{tenantName}' with Id '{tenantId}'",
-                    tenant.Name,
-                    tenant.Id);
-
-                propertiesToAddToTenant = configurationItem.AddConfiguration(propertiesToAddToTenant);
-            }
-
-            logger?.LogDebug(
-                "Updating tenant '{tenantName}' with Id '{tenantId}'",
-                tenant.Name,
-                tenant.Id);
-
-            tenant = await tenantStore.UpdateTenantAsync(
-                tenant.Id,
-                propertiesToSetOrAdd: propertiesToAddToTenant)
-                .ConfigureAwait(false);
-
-            logger?.LogInformation(
-                "Successfully added configuration to tenant '{tenantName}' with Id '{tenantId}'",
-                tenant.Name,
-                tenant.Id);
         }
 
         private static async Task<ITenant> CreateDelegatedTenant(this ITenantStore tenantStore, ITenant accessingTenant, ITenant serviceTenant, ILogger? logger = null)
