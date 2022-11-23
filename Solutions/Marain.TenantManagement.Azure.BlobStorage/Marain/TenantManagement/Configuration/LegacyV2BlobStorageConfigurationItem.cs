@@ -9,7 +9,7 @@ using Corvus.Storage.Azure.BlobStorage.Tenancy;
 /// <summary>
 /// Enrollment configuration item for tenanted blob storage config.
 /// </summary>
-public class LegacyV2BlobStorageConfigurationItem : LegacyV2StorageConfigurationItem<LegacyV2BlobStorageContainerDefinition, LegacyV2BlobStorageConfiguration>
+public class LegacyV2BlobStorageConfigurationItem : ConfigurationItem<LegacyV2BlobStorageConfiguration>
 {
     /// <summary>
     /// The content type of the configuration item.

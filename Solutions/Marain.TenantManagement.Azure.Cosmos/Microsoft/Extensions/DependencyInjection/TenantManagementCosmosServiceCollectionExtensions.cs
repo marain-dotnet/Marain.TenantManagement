@@ -36,7 +36,7 @@ namespace Microsoft.Extensions.DependencyInjection
             factory.RegisterTransientContent<ServiceManifestCosmosDbConfigurationEntry>();
             factory.RegisterTransientContent<ServiceManifestLegacyV2CosmosDbConfigurationEntry>();
 
-            factory.RegisterTransientContent<CosmosConfigurationItem>();
+            factory.RegisterTransientContent<CosmosContainerConfigurationItem>();
             factory.RegisterTransientContent<LegacyV2CosmosConfigurationItem>();
         }
     }

@@ -78,7 +78,7 @@ namespace Marain.TenantManagement.Specs.Steps
             {
                 enrollmentConfigurationSet.ConfigurationItems.Add(
                     row["Key"],
-                    new BlobStorageConfigurationItem
+                    new BlobContainerConfigurationItem
                     {
                         Configuration = new BlobContainerConfiguration
                         {
@@ -124,7 +124,7 @@ namespace Marain.TenantManagement.Specs.Steps
             {
                 enrollmentConfigurationSet.ConfigurationItems.Add(
                     row["Key"],
-                    new TableStorageConfigurationItem
+                    new TableConfigurationItem
                     {
                         Configuration = new TableConfiguration
                         {
@@ -170,7 +170,7 @@ namespace Marain.TenantManagement.Specs.Steps
             {
                 enrollmentConfigurationSet.ConfigurationItems.Add(
                     row["Key"],
-                    new CosmosConfigurationItem
+                    new CosmosContainerConfigurationItem
                     {
                         Configuration = new CosmosContainerConfiguration
                         {

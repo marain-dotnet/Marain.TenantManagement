@@ -9,7 +9,7 @@ using Corvus.Storage.Azure.TableStorage.Tenancy;
 /// <summary>
 /// Enrollment configuration item for tenanted table storage config.
 /// </summary>
-public class LegacyV2TableStorageConfigurationItem : LegacyV2StorageConfigurationItem<LegacyV2TableStorageTableDefinition, LegacyV2TableConfiguration>
+public class LegacyV2TableStorageConfigurationItem : ConfigurationItem<LegacyV2TableConfiguration>
 {
     /// <summary>
     /// The content type of the configuration item.

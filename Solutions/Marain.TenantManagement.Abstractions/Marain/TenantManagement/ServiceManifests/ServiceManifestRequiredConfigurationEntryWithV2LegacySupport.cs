@@ -33,9 +33,9 @@ public abstract class ServiceManifestRequiredConfigurationEntryWithV2LegacySuppo
     TV2LegacyConfigurationItem>
     : ServiceManifestRequiredConfigurationEntry
     where TConfiguration : class
-    where TConfigurationItem : StorageConfigurationItem<TConfiguration>
+    where TConfigurationItem : ConfigurationItem<TConfiguration>
     where TV2LegacyConfiguration : class
-    where TV2LegacyConfigurationItem : LegacyV2StorageConfigurationItem<TV2LegacyConfiguration>
+    where TV2LegacyConfigurationItem : ConfigurationItem<TV2LegacyConfiguration>
 {
     /// <summary>
     /// Gets or sets the key under which this service supports legacy V2 style configuration

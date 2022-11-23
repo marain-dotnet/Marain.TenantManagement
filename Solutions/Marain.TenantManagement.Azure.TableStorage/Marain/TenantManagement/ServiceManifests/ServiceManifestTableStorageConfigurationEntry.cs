@@ -14,17 +14,17 @@ namespace Marain.TenantManagement.ServiceManifests
     /// </summary>
     public class ServiceManifestTableStorageConfigurationEntry :
         ServiceManifestRequiredConfigurationEntryWithV2LegacySupport<
-            TableConfiguration, TableStorageConfigurationItem, LegacyV2TableConfiguration, LegacyV2TableStorageConfigurationItem>
+            TableConfiguration, TableConfigurationItem, LegacyV2TableConfiguration, LegacyV2TableStorageConfigurationItem>
     {
         /// <summary>
         /// The content type of the configuration entry.
         /// </summary>
         public const string RegisteredContentType = BaseContentType + "azuretablestorage.v3";
 
-        private static readonly string[] ConfigurationItemContentType = { TableStorageConfigurationItem.RegisteredContentType };
+        private static readonly string[] ConfigurationItemContentType = { TableConfigurationItem.RegisteredContentType };
         private static readonly string[] ConfigurationItemContentTypesWithLegacySupport =
         {
-            TableStorageConfigurationItem.RegisteredContentType,
+            TableConfigurationItem.RegisteredContentType,
             LegacyV2TableStorageConfigurationItem.RegisteredContentType,
         };
 

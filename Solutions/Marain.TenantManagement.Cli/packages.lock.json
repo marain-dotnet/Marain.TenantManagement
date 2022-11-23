@@ -99,8 +99,8 @@
       },
       "Azure.Core": {
         "type": "Transitive",
-        "resolved": "1.24.0",
-        "contentHash": "+/qI1j2oU1S4/nvxb2k/wDsol00iGf1AyJX5g3epV7eOpQEP/2xcgh/cxgKMeFgn3U2fmgSiBnQZdkV+l5y0Uw==",
+        "resolved": "1.25.0",
+        "contentHash": "X8Dd4sAggS84KScWIjEbFAdt2U1KDolQopTPoHVubG2y3CM54f9l6asVrP5Uy384NWXjsspPYaJgz5xHc+KvTA==",
         "dependencies": {
           "Microsoft.Bcl.AsyncInterfaces": "1.1.1",
           "System.Diagnostics.DiagnosticSource": "4.6.0",
@@ -113,10 +113,10 @@
       },
       "Azure.Data.Tables": {
         "type": "Transitive",
-        "resolved": "12.4.0",
-        "contentHash": "xzGwkZ1s9qM77uoNZWneeJIG0q+fMceRi3qGjZaiBGF9mrORL4+TnW59JiOozOZqAOdpUpt9ELKGWTRqOVKxgA==",
+        "resolved": "12.6.1",
+        "contentHash": "EnbcshkRrDHlBGz6LcFlfDVOtd8P+atSREfStLzjnzzIZXY+N6xPldtPQPVda2s93ENdoE9oW0azTyju2ek3Ag==",
         "dependencies": {
-          "Azure.Core": "1.22.0",
+          "Azure.Core": "1.25.0",
           "System.Text.Json": "4.7.2"
         }
       },
@@ -147,19 +147,20 @@
       },
       "Azure.Storage.Blobs": {
         "type": "Transitive",
-        "resolved": "12.10.0",
-        "contentHash": "yaijs9DPfn34C/X4TX+0TAxANEhuKSrFE650gkF9g1pz/nQljv86zOOtDwNwD5UsAY5LyrOiCASGo2dhuIxvdg==",
+        "resolved": "12.13.1",
+        "contentHash": "bEJUFBS9wTk/ZJmJBsm/GktZenl2GVkxLHNC7SkeCd0cfKC1MP11EXV7e0NDySsFDEEjjGACb8Fau6lPTmXdsg==",
         "dependencies": {
-          "Azure.Storage.Common": "12.9.0",
-          "System.Text.Json": "4.6.0"
+          "Azure.Storage.Common": "12.12.0",
+          "System.Text.Json": "4.7.2"
         }
       },
       "Azure.Storage.Common": {
         "type": "Transitive",
-        "resolved": "12.9.0",
-        "contentHash": "GuoigTmzz9HrCGdcdu7LyjD4pDr2XPt72LlWWTDyno+nYrjyuNwpwRFBvK/brxJvQFRHofQcBskf8vOxVxnI8g==",
+        "resolved": "12.12.0",
+        "contentHash": "Ms0XsZ/D9Pcudfbqj+rWeCkhx/ITEq8isY0jkor9JFmDAEHsItFa2XrWkzP3vmJU6EsXQrk4snH63HkW/Jksvg==",
         "dependencies": {
-          "Azure.Core": "1.19.0"
+          "Azure.Core": "1.25.0",
+          "System.IO.Hashing": "6.0.0"
         }
       },
       "CacheCow.Client": {
@@ -184,39 +185,39 @@
       },
       "Corvus.ContentHandling": {
         "type": "Transitive",
-        "resolved": "2.0.11",
-        "contentHash": "W4yuYfITGgwPg8KRFlLurwUp9aAsOggedBbtbLPPSmJTJzDK3BMiJnEJh/j0Rc2P37oqv3j8jhf3aOfvn7s5XQ==",
+        "resolved": "2.0.13",
+        "contentHash": "3c2989ocHqJmQDV/PRN0Oo55+/Zuiw5nz9BoBS66DgUeCM1oCE9SB7yuur4OCFiOZZG+P93yl4lg5lNOg/J64A==",
         "dependencies": {
-          "Microsoft.CodeAnalysis.CSharp": "3.11.0",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.20",
+          "Microsoft.CodeAnalysis.CSharp": "4.3.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.28",
           "System.Runtime.Loader": "4.3.0"
         }
       },
       "Corvus.ContentHandling.Json": {
         "type": "Transitive",
-        "resolved": "2.0.11",
-        "contentHash": "aYnqiQB7nCe+Pq4szhsdBYRpaXcdZX0u77JL57YAKg/Jfty9p5xVB+9cwi+O7z6boD/xOyYjkr44qMvt06i/ng==",
+        "resolved": "2.0.13",
+        "contentHash": "y+3TerKbvASv+bDujKxs/gbpBcF8Weib7wpJPRD2jJosk8NEWa/IplGEhkO8yC2sX2hun1NlfMq/9KWQZXrJjg==",
         "dependencies": {
-          "Corvus.ContentHandling": "2.0.11",
-          "Corvus.Extensions.Newtonsoft.Json": "2.0.5",
+          "Corvus.ContentHandling": "2.0.13",
+          "Corvus.Extensions.Newtonsoft.Json": "2.0.6",
           "Newtonsoft.Json": "11.0.2"
         }
       },
       "Corvus.Extensions": {
         "type": "Transitive",
-        "resolved": "1.1.4",
-        "contentHash": "WGwNzQDNrlxfH82iRSSXcG92yKhE8xlBMWoSC4dycp0MnH2Mle0TF+Y4keRgDAdDwXg8VC+3paZx64jVG1Jazg==",
+        "resolved": "1.1.10",
+        "contentHash": "F43KpxsKXQhdxYPV6DRgHy2GfOJiB6/Jlg4gZzE/IQN/G1tasxWaqwUWVj+fk9HKNiDOJkcVRgxactkwD6/E3w==",
         "dependencies": {
           "System.Interactive": "3.2.0"
         }
       },
       "Corvus.Extensions.Newtonsoft.Json": {
         "type": "Transitive",
-        "resolved": "2.0.5",
-        "contentHash": "d9g6XjfyU5z2gffGNuOD4veWzCEUibioxvYyQkiwOmt+0SL5M0j4C6TNE6015LzEVYtnjLHXM+3op3NUqLtK7g==",
+        "resolved": "2.0.6",
+        "contentHash": "6yXJ7xbflSB3c0G7hdNExwlhbEChMRcSn6fX4k8ghhWyADrDSY6jJp9Ce6guxo1c4gVjZwgCVIDhA3JgO8KyHA==",
         "dependencies": {
-          "Corvus.Json.Abstractions": "2.0.5",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.18",
+          "Corvus.Json.Abstractions": "2.0.6",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.20",
           "Newtonsoft.Json": "11.0.2"
         }
       },
@@ -239,79 +240,79 @@
       },
       "Corvus.Json.Abstractions": {
         "type": "Transitive",
-        "resolved": "2.0.5",
-        "contentHash": "fUuuUwktUoCQNwR2+bvi2AcOPzJkU51o8Js37vCTdXBg4aDLQZaFIuyO9Dg9Sm9NW1hVhK5nBFkBaqbmF5rutg=="
+        "resolved": "2.0.6",
+        "contentHash": "ixx72ttlP/Ck+UMWyfiRWVBFKU5XjJySMG33ZWofJp9yy65VF3uOJyGPujr3OedUMo6Uq9umftmHRqhOmUyQ8g=="
       },
       "Corvus.Storage.Azure.BlobStorage": {
         "type": "Transitive",
-        "resolved": "1.2.0",
-        "contentHash": "IG5s7+mnoLBKQunhBClm7tZub19UlR/QOVgmoY1WGxDTzz3OF1ZICBuVR0mWK2BSiHh9Mu5sq3Yvypnzvrs5pg==",
+        "resolved": "1.3.0",
+        "contentHash": "6cmpDsV/Wjq+UG5WYv+aAic3b7tizxqb33EMmO5GZuW93+6WPGh9AVud9YM1VZEa6uQkA3U812HpArEnMCWPyg==",
         "dependencies": {
-          "Azure.Storage.Blobs": "12.10.0",
-          "Corvus.Storage.Common": "1.2.0"
+          "Azure.Storage.Blobs": "12.13.1",
+          "Corvus.Storage.Common": "1.3.0"
         }
       },
       "Corvus.Storage.Azure.BlobStorage.Tenancy": {
         "type": "Transitive",
-        "resolved": "3.2.0",
-        "contentHash": "sOPoL0kY6h7aTADgt8F5NIJs/Sik6WzrukzF8OjX/q2+kaunhWO0hW3boItiBlG51iQLg3/pQnUWhk8j5colQg==",
+        "resolved": "3.4.0-PullRequest0448.9",
+        "contentHash": "+ChsZ+FipKgU+NGjJy2b/32zs0sEZzco+pHL2YUL3Rl9LOJt+HdQiIVp6xiMxwdB/fLHUc/vvXVzouEloSolGg==",
         "dependencies": {
-          "Corvus.Storage.Azure.BlobStorage": "1.2.0",
-          "Corvus.Tenancy.Abstractions": "3.2.0"
+          "Corvus.Storage.Azure.BlobStorage": "1.3.0",
+          "Corvus.Tenancy.Abstractions": "3.4.0-PullRequest0448.9"
         }
       },
       "Corvus.Storage.Azure.Cosmos": {
         "type": "Transitive",
-        "resolved": "1.2.0",
-        "contentHash": "t85kEG8pTTB782W+xV8aAtFljyqkqCCnobCfDy02OwO5QRG0vWeSUFdC+WV858Kdq/O/W4fib1Vj3brQwcrQew==",
+        "resolved": "1.3.0",
+        "contentHash": "NkwRnUoZTdrdhL1T6fFzEey1Bvwuv6Js1tZzH7jnANZ0Czuf/VPpCNxkit4sM/pwteeFa1CPvx7oI96gQDAbqA==",
         "dependencies": {
-          "Corvus.Storage.Common": "1.2.0",
-          "Microsoft.Azure.Cosmos": "3.24.0"
+          "Corvus.Storage.Common": "1.3.0",
+          "Microsoft.Azure.Cosmos": "3.30.1"
         }
       },
       "Corvus.Storage.Azure.Cosmos.Tenancy": {
         "type": "Transitive",
-        "resolved": "3.2.0",
-        "contentHash": "2umDlQq/25C6vSvOIhWBskKS18K9QnSenSYagNK4ExBHyNeRwxOt8V+c7FW/EnkYM7MInAO42JSuTFbcYck1Hg==",
+        "resolved": "3.4.0-PullRequest0448.9",
+        "contentHash": "97g4LgE60paBWHIBryEWW3nUUdhmkkddCPIlxO1E3DNzLJs/O4rUPjfn2ZffbAS1rNu4Xhhkz2oLUq8pOP5KMQ==",
         "dependencies": {
-          "Corvus.Storage.Azure.Cosmos": "1.2.0",
-          "Corvus.Tenancy.Abstractions": "3.2.0"
+          "Corvus.Storage.Azure.Cosmos": "1.3.0",
+          "Corvus.Tenancy.Abstractions": "3.4.0-PullRequest0448.9"
         }
       },
       "Corvus.Storage.Azure.TableStorage": {
         "type": "Transitive",
-        "resolved": "1.2.0",
-        "contentHash": "MzEIW/BBDJgM/eQ2tYqo9qTXw/iVcF7xZN6TaZc7NKWG3XTsK++Gii8wn/mX1qMPattEsK3xqc9Cp0YZDBjQIg==",
+        "resolved": "1.3.0",
+        "contentHash": "Pw1YcZft8x4DwYFPV4NvUNSRDTmJ8aVozMixZ610Nul8NGykuCtfjESJvpmjfHnImYatkE1SOoqRADN0wjrmiA==",
         "dependencies": {
-          "Azure.Data.Tables": "12.4.0",
-          "Corvus.Storage.Common": "1.2.0"
+          "Azure.Data.Tables": "12.6.1",
+          "Corvus.Storage.Common": "1.3.0"
         }
       },
       "Corvus.Storage.Azure.TableStorage.Tenancy": {
         "type": "Transitive",
-        "resolved": "3.2.0",
-        "contentHash": "4rrE1SDiy5B/pSJxp4ltTJaPDvLJLxXlcuyKd5gzADvSwYyrxmZx0yTgfthuK8wDI1I2SPO4U2SoAE+MBo4qQw==",
+        "resolved": "3.4.0-PullRequest0448.9",
+        "contentHash": "MT0YlQeIkyqLbUpDULjUPbwogLl3TxOrQjx3SYDDotkCjxEN3vMUcWnDt75XXOlf4lwZTB9TJkQpcktpvNGTRw==",
         "dependencies": {
-          "Corvus.Storage.Azure.TableStorage": "1.2.0",
-          "Corvus.Tenancy.Abstractions": "3.2.0"
+          "Corvus.Storage.Azure.TableStorage": "1.3.0",
+          "Corvus.Tenancy.Abstractions": "3.4.0-PullRequest0448.9"
         }
       },
       "Corvus.Storage.Common": {
         "type": "Transitive",
-        "resolved": "1.2.0",
-        "contentHash": "0xUPG6FTBTpftK2HyPtp4FX6dws1Isho3Dtj3D8YfrXMXySv+ooBXMrAwhsxU8zqSwkGML4sVzRR1mO8kNSrRQ==",
+        "resolved": "1.3.0",
+        "contentHash": "EDFns/5MmUc2BiuZCixP7he4IhN5QlpgpZGk97JtM6VK2L1YYg2Oo3k5nYeMeyQNm5dAxMW8PMxWa/pvpNpGgA==",
         "dependencies": {
-          "Corvus.Identity.Azure": "3.0.0",
-          "Microsoft.Extensions.Configuration.Binder": "3.1.22"
+          "Corvus.Identity.Azure": "3.1.0",
+          "Microsoft.Extensions.Configuration.Binder": "3.1.29"
         }
       },
       "Corvus.Tenancy.Abstractions": {
         "type": "Transitive",
-        "resolved": "3.2.0",
-        "contentHash": "2LWZRu7Br72l+4Cp1+VUHCZgJP2dWbLWrVPK36XUFo+Z/cghByBd8rKkx6FqXTd1+dsLYME5Yi9nORWTEvkq9g==",
+        "resolved": "3.4.0-PullRequest0448.9",
+        "contentHash": "7u7usJdvsuBfC8OeiAsDueHwJqTnhNhOmeukrWWDlVmHFeSQNq9xKl9qgXKYsjIcH87A/lURe3YZYA+UCWENAQ==",
         "dependencies": {
-          "Corvus.ContentHandling.Json": "2.0.11",
-          "Corvus.Extensions": "1.1.4",
+          "Corvus.ContentHandling.Json": "2.0.13",
+          "Corvus.Extensions": "1.1.10",
           "Microsoft.Extensions.Primitives": "6.0.0"
         }
       },
@@ -356,19 +357,19 @@
       },
       "Microsoft.Azure.Cosmos": {
         "type": "Transitive",
-        "resolved": "3.24.0",
-        "contentHash": "QpUe5ho6OzlXwgcJVgAmOR7t3XLC9RI4t8T96RZY61pSOIllPOJdp30L0LwA16tKcqi5r2KayEgWO/MS9fh/6A==",
+        "resolved": "3.30.1",
+        "contentHash": "8q0qZiji27JMZ8zDbW7ZUPomNnUhRHJr17aZpXhuZYxMGQicRpxPgC6xUduh8c76kkyPrK4LpQ64khUXgjvOAA==",
         "dependencies": {
-          "Azure.Core": "1.3.0",
+          "Azure.Core": "1.19.0",
           "Microsoft.Bcl.AsyncInterfaces": "1.0.0",
           "Microsoft.Bcl.HashCode": "1.1.0",
           "Newtonsoft.Json": "10.0.2",
           "System.Buffers": "4.5.1",
           "System.Collections.Immutable": "1.7.0",
-          "System.Configuration.ConfigurationManager": "4.7.0",
+          "System.Configuration.ConfigurationManager": "6.0.0",
           "System.Memory": "4.5.4",
           "System.Numerics.Vectors": "4.5.0",
-          "System.Runtime.CompilerServices.Unsafe": "4.5.3",
+          "System.Runtime.CompilerServices.Unsafe": "4.6.0",
           "System.Threading.Tasks.Extensions": "4.5.4",
           "System.ValueTuple": "4.5.0"
         }
@@ -390,29 +391,29 @@
       },
       "Microsoft.CodeAnalysis.Analyzers": {
         "type": "Transitive",
-        "resolved": "3.3.2",
-        "contentHash": "7xt6zTlIEizUgEsYAIgm37EbdkiMmr6fP6J9pDoKEpiGM4pi32BCPGr/IczmSJI9Zzp0a6HOzpr9OvpMP+2veA=="
+        "resolved": "3.3.3",
+        "contentHash": "j/rOZtLMVJjrfLRlAMckJLPW/1rze9MT1yfWqSIbUPGRu1m1P0fuo9PmqapwsmePfGB5PJrudQLvmUOAMF0DqQ=="
       },
       "Microsoft.CodeAnalysis.Common": {
         "type": "Transitive",
-        "resolved": "3.11.0",
-        "contentHash": "FDKSkRRXnaEWMa2ONkLMo0ZAt/uiV1XIXyodwKIgP1AMIKA7JJKXx/OwFVsvkkUT4BeobLwokoxFw70fICahNg==",
+        "resolved": "4.3.0",
+        "contentHash": "Hhaw6DKZHiR+vgOdIqvndfUntJhmDR7MjylUJ55EvWtDyJFLDf2eij8r9tcwXP35FLD+bVNNCO0+KIYuvJjNnA==",
         "dependencies": {
-          "Microsoft.CodeAnalysis.Analyzers": "3.3.2",
-          "System.Collections.Immutable": "5.0.0",
+          "Microsoft.CodeAnalysis.Analyzers": "3.3.3",
+          "System.Collections.Immutable": "6.0.0",
           "System.Memory": "4.5.4",
           "System.Reflection.Metadata": "5.0.0",
-          "System.Runtime.CompilerServices.Unsafe": "5.0.0",
-          "System.Text.Encoding.CodePages": "4.5.1",
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0",
+          "System.Text.Encoding.CodePages": "6.0.0",
           "System.Threading.Tasks.Extensions": "4.5.4"
         }
       },
       "Microsoft.CodeAnalysis.CSharp": {
         "type": "Transitive",
-        "resolved": "3.11.0",
-        "contentHash": "aDRRb7y/sXoJyDqFEQ3Il9jZxyUMHkShzZeCRjQf3SS84n2J0cTEi3TbwVZE9XJvAeMJhGfVVxwOdjYBg6ljmw==",
+        "resolved": "4.3.0",
+        "contentHash": "0PU4a2h7L6N9SlF/oNHwj2A/+n0LK/7n6PEGvXyIZq8hc7r/TztB+47mhVLvapT6bWSV7nMT78cNxbQuC6tk6g==",
         "dependencies": {
-          "Microsoft.CodeAnalysis.Common": "[3.11.0]"
+          "Microsoft.CodeAnalysis.Common": "[4.3.0]"
         }
       },
       "Microsoft.CSharp": {
@@ -700,8 +701,8 @@
       },
       "Microsoft.NETCore.Platforms": {
         "type": "Transitive",
-        "resolved": "3.1.0",
-        "contentHash": "z7aeg8oHln2CuNulfhiLYxCVMPEwBl3rzicjvIX+4sUuCwvXw5oXQEtbiU2c0z4qYL5L3Kmx0mMA/+t/SbY67w=="
+        "resolved": "1.1.0",
+        "contentHash": "kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A=="
       },
       "Microsoft.NETCore.Targets": {
         "type": "Transitive",
@@ -742,11 +743,8 @@
       },
       "Microsoft.Win32.SystemEvents": {
         "type": "Transitive",
-        "resolved": "4.7.0",
-        "contentHash": "mtVirZr++rq+XCDITMUdnETD59XoeMxSpLRIII7JRI6Yj0LEDiO1pPn0ktlnIj12Ix8bfvQqQDMMIF9wC98oCA==",
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "3.1.0"
-        }
+        "resolved": "6.0.0",
+        "contentHash": "hqTM5628jSsQiv+HGpiq3WKBl2c8v1KZfby2J6Pr7pEPlK9waPdgEO6b8A/+/xn/yZ9ulv8HuqK71ONy2tg67A=="
       },
       "NETStandard.Library": {
         "type": "Transitive",
@@ -967,16 +965,19 @@
       },
       "System.Collections.Immutable": {
         "type": "Transitive",
-        "resolved": "5.0.0",
-        "contentHash": "FXkLXiK0sVVewcso0imKQoOxjoPAj42R8HtjjbSjVPAzwDfzoyoznWxgA3c38LDbN9SJux1xXoXYAhz98j7r2g=="
+        "resolved": "6.0.0",
+        "contentHash": "l4zZJ1WU2hqpQQHXz1rvC3etVZN+2DLmQMO79FhOTZHMn8tDRr+WU287sbomD0BETlmKDn0ygUgVy9k5xkkJdA==",
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+        }
       },
       "System.Configuration.ConfigurationManager": {
         "type": "Transitive",
-        "resolved": "4.7.0",
-        "contentHash": "/anOTeSZCNNI2zDilogWrZ8pNqCmYbzGNexUnNhjW8k0sHqEZ2nHJBp147jBV3hGYswu5lINpNg1vxR7bnqvVA==",
+        "resolved": "6.0.0",
+        "contentHash": "7T+m0kDSlIPTHIkPMIu6m6tV6qsMqJpvQWW2jIc2qi7sn40qxFo0q+7mEQAhMPXZHMKnWrnv47ntGlM/ejvw3g==",
         "dependencies": {
-          "System.Security.Cryptography.ProtectedData": "4.7.0",
-          "System.Security.Permissions": "4.7.0"
+          "System.Security.Cryptography.ProtectedData": "6.0.0",
+          "System.Security.Permissions": "6.0.0"
         }
       },
       "System.Console": {
@@ -1036,11 +1037,10 @@
       },
       "System.Drawing.Common": {
         "type": "Transitive",
-        "resolved": "4.7.0",
-        "contentHash": "v+XbyYHaZjDfn0ENmJEV1VYLgGgCTx1gnfOBcppowbpOAriglYgGCvFCPr2EEZyBvXlpxbEsTwkOlInl107ahA==",
+        "resolved": "6.0.0",
+        "contentHash": "NfuoKUiP2nUWwKZN6twGqXioIe1zVD0RIj2t976A+czLHr2nY454RwwXs6JU9Htc6mwqL6Dn/nEL3dpVf2jOhg==",
         "dependencies": {
-          "Microsoft.NETCore.Platforms": "3.1.0",
-          "Microsoft.Win32.SystemEvents": "4.7.0"
+          "Microsoft.Win32.SystemEvents": "6.0.0"
         }
       },
       "System.Globalization": {
@@ -1154,6 +1154,11 @@
         "dependencies": {
           "System.Runtime": "4.3.0"
         }
+      },
+      "System.IO.Hashing": {
+        "type": "Transitive",
+        "resolved": "6.0.0",
+        "contentHash": "Rfm2jYCaUeGysFEZjDe7j1R4x6Z6BzumS/vUT5a1AA/AWJuGX71PoGB0RmpyX3VmrGqVnAwtfMn39OHR8Y/5+g=="
       },
       "System.Linq": {
         "type": "Transitive",
@@ -1455,12 +1460,8 @@
       },
       "System.Security.AccessControl": {
         "type": "Transitive",
-        "resolved": "4.7.0",
-        "contentHash": "JECvTt5aFF3WT3gHpfofL2MNNP6v84sxtXxpqhLBCcDRzqsPBmHhQ6shv4DwwN2tRlzsUxtb3G9M3763rbXKDg==",
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "3.1.0",
-          "System.Security.Principal.Windows": "4.7.0"
-        }
+        "resolved": "6.0.0",
+        "contentHash": "AUADIc0LIEQe7MzC+I0cl0rAT8RrTAKFHl53yHjEUzNVIaUlhFY11vc2ebiVJzVBuOzun6F7FBA+8KAbGTTedQ=="
       },
       "System.Security.Cryptography.Algorithms": {
         "type": "Transitive",
@@ -1576,8 +1577,8 @@
       },
       "System.Security.Cryptography.ProtectedData": {
         "type": "Transitive",
-        "resolved": "4.7.0",
-        "contentHash": "ehYW0m9ptxpGWvE4zgqongBVWpSDU/JCFD4K7krxkQwSz/sFQjEXCUqpvencjy6DYDbn7Ig09R8GFffu8TtneQ=="
+        "resolved": "6.0.0",
+        "contentHash": "rp1gMNEZpvx9vP0JW0oHLxlf8oSiQgtno77Y4PLUBjSiDYoD77Y8uXHr1Ea5XG4/pIKhqAdxZ8v8OTUtqo9PeQ=="
       },
       "System.Security.Cryptography.X509Certificates": {
         "type": "Transitive",
@@ -1613,17 +1614,12 @@
       },
       "System.Security.Permissions": {
         "type": "Transitive",
-        "resolved": "4.7.0",
-        "contentHash": "dkOV6YYVBnYRa15/yv004eCGRBVADXw8qRbbNiCn/XpdJSUXkkUeIvdvFHkvnko4CdKMqG8yRHC4ox83LSlMsQ==",
+        "resolved": "6.0.0",
+        "contentHash": "T/uuc7AklkDoxmcJ7LGkyX1CcSviZuLCa4jg3PekfJ7SU0niF0IVTXwUiNVP9DSpzou2PpxJ+eNY2IfDM90ZCg==",
         "dependencies": {
-          "System.Security.AccessControl": "4.7.0",
-          "System.Windows.Extensions": "4.7.0"
+          "System.Security.AccessControl": "6.0.0",
+          "System.Windows.Extensions": "6.0.0"
         }
-      },
-      "System.Security.Principal.Windows": {
-        "type": "Transitive",
-        "resolved": "4.7.0",
-        "contentHash": "ojD0PX0XhneCsUbAZVKdb7h/70vyYMDYs85lwEI+LngEONe/17A0cFaRFqZU+sOEidcVswYWikYOQ9PPfjlbtQ=="
       },
       "System.Text.Encoding": {
         "type": "Transitive",
@@ -1637,11 +1633,10 @@
       },
       "System.Text.Encoding.CodePages": {
         "type": "Transitive",
-        "resolved": "4.5.1",
-        "contentHash": "4J2JQXbftjPMppIHJ7IC+VXQ9XfEagN92vZZNoG12i+zReYlim5dMoXFC1Zzg7tsnKDM7JPo5bYfFK4Jheq44w==",
+        "resolved": "6.0.0",
+        "contentHash": "ZFCILZuOvtKPauZ/j/swhvw68ZRi9ATCfvGbk1QfydmcXBkIWecWKn/250UH7rahZ5OoDBaiAudJtPvLwzw85A==",
         "dependencies": {
-          "Microsoft.NETCore.Platforms": "2.1.2",
-          "System.Runtime.CompilerServices.Unsafe": "4.5.2"
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         }
       },
       "System.Text.Encoding.Extensions": {
@@ -1721,10 +1716,10 @@
       },
       "System.Windows.Extensions": {
         "type": "Transitive",
-        "resolved": "4.7.0",
-        "contentHash": "CeWTdRNfRaSh0pm2gDTJFwVaXfTq6Xwv/sA887iwPTneW7oMtMlpvDIO+U60+3GWTB7Aom6oQwv5VZVUhQRdPQ==",
+        "resolved": "6.0.0",
+        "contentHash": "IXoJOXIqc39AIe+CIR7koBtRGMiCt/LPM3lI+PELtDIy9XdyeSrwXFdWV9dzJ2Awl0paLWUaknLxFQ5HpHZUog==",
         "dependencies": {
-          "System.Drawing.Common": "4.7.0"
+          "System.Drawing.Common": "6.0.0"
         }
       },
       "System.Xml.ReaderWriter": {
@@ -1771,28 +1766,28 @@
       "marain.tenantmanagement.abstractions": {
         "type": "Project",
         "dependencies": {
-          "Corvus.Tenancy.Abstractions": "[3.2.0, )",
+          "Corvus.Tenancy.Abstractions": "[3.4.0-PullRequest0448.9, )",
           "Microsoft.Extensions.Logging.Abstractions": "[6.0.1, )"
         }
       },
       "marain.tenantmanagement.azure.blobstorage": {
         "type": "Project",
         "dependencies": {
-          "Corvus.Storage.Azure.BlobStorage.Tenancy": "[3.2.0, )",
+          "Corvus.Storage.Azure.BlobStorage.Tenancy": "[3.4.0-PullRequest0448.9, )",
           "Marain.TenantManagement.Abstractions": "[1.0.0, )"
         }
       },
       "marain.tenantmanagement.azure.cosmos": {
         "type": "Project",
         "dependencies": {
-          "Corvus.Storage.Azure.Cosmos.Tenancy": "[3.2.0, )",
+          "Corvus.Storage.Azure.Cosmos.Tenancy": "[3.4.0-PullRequest0448.9, )",
           "Marain.TenantManagement.Abstractions": "[1.0.0, )"
         }
       },
       "marain.tenantmanagement.azure.tablestorage": {
         "type": "Project",
         "dependencies": {
-          "Corvus.Storage.Azure.TableStorage.Tenancy": "[3.2.0, )",
+          "Corvus.Storage.Azure.TableStorage.Tenancy": "[3.4.0-PullRequest0448.9, )",
           "Marain.TenantManagement.Abstractions": "[1.0.0, )"
         }
       }

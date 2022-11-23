@@ -67,7 +67,6 @@ namespace Marain.TenantManagement.ServiceManifests
 
                 foreach ((string dependencyKey, ServiceManifestRequiredConfigurationEntryIncludingDescendants? dependencyRequiredConfig) in currentRequiredConfiguration.Dependencies)
                 {
-                    // TODO: walk dependencies!
                     if (!currentProvidedConfiguration.Dependencies.TryGetValue(dependencyKey, out EnrollmentConfigurationEntry? dependencyConfiguration))
                     {
                         // It's not necessarily an error when the supplied configuration contains

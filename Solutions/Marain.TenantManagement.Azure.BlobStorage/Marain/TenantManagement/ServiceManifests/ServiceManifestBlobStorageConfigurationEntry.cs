@@ -14,17 +14,17 @@ namespace Marain.TenantManagement.ServiceManifests
     /// </summary>
     public class ServiceManifestBlobStorageConfigurationEntry :
         ServiceManifestRequiredConfigurationEntryWithV2LegacySupport<
-            BlobContainerConfiguration, BlobStorageConfigurationItem, LegacyV2BlobStorageConfiguration, LegacyV2BlobStorageConfigurationItem>
+            BlobContainerConfiguration, BlobContainerConfigurationItem, LegacyV2BlobStorageConfiguration, LegacyV2BlobStorageConfigurationItem>
     {
         /// <summary>
         /// The content type of the configuration entry.
         /// </summary>
         public const string RegisteredContentType = BaseContentType + "azureblobstorage.v3";
 
-        private static readonly string[] ConfigurationItemContentType = { BlobStorageConfigurationItem.RegisteredContentType };
+        private static readonly string[] ConfigurationItemContentType = { BlobContainerConfigurationItem.RegisteredContentType };
         private static readonly string[] ConfigurationItemContentTypesWithLegacySupport =
         {
-            BlobStorageConfigurationItem.RegisteredContentType,
+            BlobContainerConfigurationItem.RegisteredContentType,
             LegacyV2BlobStorageConfigurationItem.RegisteredContentType,
         };
 

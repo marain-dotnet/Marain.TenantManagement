@@ -36,7 +36,7 @@ namespace Microsoft.Extensions.DependencyInjection
             factory.RegisterTransientContent<ServiceManifestTableStorageConfigurationEntry>();
             factory.RegisterTransientContent<ServiceManifestLegacyV2TableStorageConfigurationEntry>();
 
-            factory.RegisterTransientContent<TableStorageConfigurationItem>();
+            factory.RegisterTransientContent<TableConfigurationItem>();
             factory.RegisterTransientContent<LegacyV2TableStorageConfigurationItem>();
         }
     }
