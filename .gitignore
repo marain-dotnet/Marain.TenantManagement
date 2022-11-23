@@ -343,6 +343,6 @@ appsettings.json
 *.ncrunchsolution
 
 # Scripted build migration 
-/_codeCoverage
-/_packages
+_codeCoverage
+_packages
 *.sbom.*

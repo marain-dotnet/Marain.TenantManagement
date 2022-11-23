@@ -45,7 +45,7 @@
       },
       "Microsoft.Extensions.Hosting": {
         "type": "Direct",
-        "requested": "[6.0.1, )",
+        "requested": "[6.0.*, )",
         "resolved": "6.0.1",
         "contentHash": "hbmizc9KPWOacLU8Z8YMaBG6KWdZFppczYV/KwnPGU/8xebWxQxdDeJmLOgg968prb7g2oQgnp6JVLX6lgby8g==",
         "dependencies": {
