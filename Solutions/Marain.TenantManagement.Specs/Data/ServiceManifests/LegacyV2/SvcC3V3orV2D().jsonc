@@ -1,0 +1,26 @@
+{
+  "$schema": "./ServiceManifestSchema.json",
+  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest",
+  "wellKnownTenantGuid": "19f30a02-527d-4abf-ac35-aa29abc985cc", // 3633754ac4c9be44b55bfe791b1780f1020af3197d52bf4aac35aa29abc985cc
+  "serviceName": "SvcC3V3orV2D()",
+  "requiredConfigurationEntries": [
+    {
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage.v3",
+      "key": "V3WithV2Migration:BlobContainerConfiguration:myblobs",
+      "legacyV2Key": "StorageConfiguration__mycontainer",
+      "description": "Stores blobs"
+    },
+    {
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb.v3",
+      "key": "V3WithV2Migration:CosmosContainerConfiguration:mycontainer",
+      "legacyV2Key": "StorageConfiguration__mydb__mycontainer",
+      "description": "Stores docs"
+    },
+    {
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azuretablestorage.v3",
+      "key": "V3WithV2Migration:TableConfiguration:mytable",
+      "legacyV2Key": "StorageConfiguration__mytable",
+      "description": "Stores rows"
+    }
+  ]
+}

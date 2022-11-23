@@ -1,0 +1,11 @@
+{
+  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest",
+  "wellKnownTenantGuid": "72e6c650-ce40-4b05-a019-a53400f3e10a", // 3633754ac4c9be44b55bfe791b1780f150c6e67240ce054ba019a53400f3e10a
+  "serviceName": "SvcC0D(C0D())",
+  "dependsOnServiceTenants": [
+    {
+      "id": "3633754ac4c9be44b55bfe791b1780f1e452ddb4cda67b4e842f059528a23153",
+      "expectedName": "SvcC0D()"
+    }
+  ]
+}

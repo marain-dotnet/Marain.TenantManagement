@@ -22,7 +22,9 @@ namespace Marain.TenantManagement.Specs.Steps
         }
 
         [Given("No tenants have been created")]
+#pragma warning disable CA1822 // Mark members as static - called via reflection
         public void GivenNoTenantsHaveBeenCreated()
+#pragma warning restore CA1822 // Mark members as static
         {
             // No-op
         }

@@ -6,9 +6,9 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     using Corvus.ContentHandling;
     using Corvus.Tenancy;
-    using Marain.TenantManagement.Configuration;
-    using Marain.TenantManagement.EnrollmentConfiguration;
+
     using Marain.TenantManagement.ServiceManifests;
+
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
 
@@ -42,17 +42,6 @@ namespace Microsoft.Extensions.DependencyInjection
         private static void AddTenantManagementContentTypes(ContentFactory factory)
         {
             factory.RegisterTransientContent<ServiceManifest>();
-            factory.RegisterTransientContent<ServiceManifestBlobStorageConfigurationEntry>();
-            factory.RegisterTransientContent<ServiceManifestTableStorageConfigurationEntry>();
-            factory.RegisterTransientContent<ServiceManifestCosmosDbConfigurationEntry>();
-
-            factory.RegisterTransientContent<EnrollmentBlobStorageConfigurationItem>();
-            factory.RegisterTransientContent<EnrollmentTableStorageConfigurationItem>();
-            factory.RegisterTransientContent<EnrollmentCosmosConfigurationItem>();
-
-            factory.RegisterTransientContent<BlobStorageConfigurationItem>();
-            factory.RegisterTransientContent<TableStorageConfigurationItem>();
-            factory.RegisterTransientContent<CosmosConfigurationItem>();
         }
     }
 }

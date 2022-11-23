@@ -28,10 +28,7 @@ namespace Marain.TenantManagement.ServiceManifests
             this ServiceManifest manifest,
             ITenantStore tenantStore)
         {
-            if (tenantStore == null)
-            {
-                throw new ArgumentNullException(nameof(tenantStore));
-            }
+            ArgumentNullException.ThrowIfNull(tenantStore);
 
             IList<string> errors = await manifest.ValidateAsync(tenantStore).ConfigureAwait(false);
 

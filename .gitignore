@@ -339,6 +339,9 @@ appsettings.json
 
 **/MsDeploy
 
+*.feature.cs
+*.ncrunchsolution
+
 # Scripted build migration 
 _codeCoverage/
 _packages/

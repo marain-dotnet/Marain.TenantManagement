@@ -11,23 +11,15 @@
   ],
   "requiredConfigurationEntries": [
     {
-      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb",
-      "type": "cosmosContainerConfiguration",
-      "key": "workflowStore",
-      "containerDefinition": {
-        "databaseName": "workflow",
-        "containerName": "definitions"
-      },
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage.v3",
+      "key": "Marain:Workflow:BlobContainerConfiguration:Definitions",
+      "legacyV2Key": "StorageConfiguration__workflowdefinitions",
       "description": "Workflow definitions"
     },
     {
-      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb",
-      "type": "cosmosContainerConfiguration",
-      "key": "workflowInstanceStore",
-      "containerDefinition": {
-        "databaseName": "workflow",
-        "containerName": "instances"
-      },
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb.v3",
+      "key": "Marain:Workflow:CosmosContainerConfiguration:Instances",
+      "legacyV2Key": "StorageConfiguration__workflow__instances",
       "description": "Workflow instances"
     }
   ]

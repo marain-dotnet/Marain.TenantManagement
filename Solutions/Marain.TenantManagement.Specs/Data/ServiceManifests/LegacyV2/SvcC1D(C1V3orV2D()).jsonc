@@ -1,0 +1,19 @@
+{
+  "$schema": "./ServiceManifestSchema.json",
+  "contentType": "application/vnd.marain.tenancy.servicemanifests.servicemanifest",
+  "wellKnownTenantGuid": "86c2054e-e1de-4432-a0cd-0cc5047ea57b", // 3633754ac4c9be44b55bfe791b1780f14e05c286dee13244a0cd0cc5047ea57b
+  "serviceName": "SvcC1D(C1V3orV2D())",
+  "dependsOnServiceTenants": [
+    {
+      "id": "3633754ac4c9be44b55bfe791b1780f190edecacd823a544a97932be586b6053",
+      "expectedName": "SvcC1V3orV2D()"
+    }
+  ],
+  "requiredConfigurationEntries": [
+    {
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage.v3",
+      "key": "V3WithDependencyWithV3V2Migration:BlobContainerConfiguration:myblobs",
+      "description": "Stores blobs"
+    }
+  ]
+}

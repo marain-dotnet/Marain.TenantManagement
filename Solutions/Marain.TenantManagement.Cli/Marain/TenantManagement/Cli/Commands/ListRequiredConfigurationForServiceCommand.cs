@@ -41,17 +41,18 @@ namespace Marain.TenantManagement.Cli.Commands
 
         private async Task HandleCommand(string serviceTenantId)
         {
-            ServiceManifestRequiredConfigurationEntry[] configRequirements =
+            ServiceManifestRequiredConfigurationEntryIncludingDescendants configRequirements =
                 await this.tenantStore.GetServiceEnrollmentConfigurationRequirementsAsync(serviceTenantId).ConfigureAwait(false);
 
-            if (configRequirements.Length == 0)
+            // TODO: Dependencies?
+            if (configRequirements.RequiredConfigurationEntries.Count == 0)
             {
                 Console.WriteLine($"The service '{serviceTenantId}' does not have any configuration requirements for enrollment.");
             }
             else
             {
                 var table = new ConsoleTable(new[] { "Key", "Description", "Content Type" });
-                foreach (ServiceManifestRequiredConfigurationEntry current in configRequirements)
+                foreach (ServiceManifestRequiredConfigurationEntry current in configRequirements.RequiredConfigurationEntries)
                 {
                     table.AddRow(new[] { current.Key, current.Description, current.ContentType });
                 }

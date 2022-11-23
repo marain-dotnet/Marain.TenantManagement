@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29905.134
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marain.TenantManagement.Abstractions", "Marain.TenantManagement.Abstractions\Marain.TenantManagement.Abstractions.csproj", "{0ABA615E-512F-4F38-863C-149708DDD1A5}"
 EndProject
@@ -18,6 +18,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marain.TenantManagement.Cli
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevOps", "DevOps", "{D7C56021-2BF5-4A76-ACD2-28994C6F993C}"
 	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
 		..\azure-pipelines.release.yml = ..\azure-pipelines.release.yml
 		..\azure-pipelines.yml = ..\azure-pipelines.yml
 		..\GitVersion.yml = ..\GitVersion.yml
@@ -43,6 +44,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marain.Services.Tenancy", "Marain.Services.Tenancy\Marain.Services.Tenancy.csproj", "{8BCE0531-3326-41B2-892A-455A258F79DC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marain.Services.Tenancy.Testing", "Marain.Services.Tenancy.Testing\Marain.Services.Tenancy.Testing.csproj", "{1CF467A5-33F9-488C-B165-57173CC780D2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marain.TenantManagement.Azure.BlobStorage", "Marain.TenantManagement.Azure.BlobStorage\Marain.TenantManagement.Azure.BlobStorage.csproj", "{864AF550-04EF-412B-8D15-BD94ACBB8B52}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marain.TenantManagement.Azure.Cosmos", "Marain.TenantManagement.Azure.Cosmos\Marain.TenantManagement.Azure.Cosmos.csproj", "{8AA5865E-6642-410F-AE37-1DB772C7C979}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marain.TenantManagement.Azure.TableStorage", "Marain.TenantManagement.Azure.TableStorage\Marain.TenantManagement.Azure.TableStorage.csproj", "{853E6C12-1D4F-408C-9C92-F6CD727951FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -70,6 +77,18 @@ Global
 		{1CF467A5-33F9-488C-B165-57173CC780D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CF467A5-33F9-488C-B165-57173CC780D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CF467A5-33F9-488C-B165-57173CC780D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{864AF550-04EF-412B-8D15-BD94ACBB8B52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{864AF550-04EF-412B-8D15-BD94ACBB8B52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{864AF550-04EF-412B-8D15-BD94ACBB8B52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{864AF550-04EF-412B-8D15-BD94ACBB8B52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AA5865E-6642-410F-AE37-1DB772C7C979}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AA5865E-6642-410F-AE37-1DB772C7C979}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AA5865E-6642-410F-AE37-1DB772C7C979}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AA5865E-6642-410F-AE37-1DB772C7C979}.Release|Any CPU.Build.0 = Release|Any CPU
+		{853E6C12-1D4F-408C-9C92-F6CD727951FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{853E6C12-1D4F-408C-9C92-F6CD727951FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{853E6C12-1D4F-408C-9C92-F6CD727951FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{853E6C12-1D4F-408C-9C92-F6CD727951FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

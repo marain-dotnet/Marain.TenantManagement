@@ -32,6 +32,9 @@ namespace Marain.TenantManagement.Specs.Bindings
                 collection.AddSingleton<JsonConverter>(new StringEnumConverter(true));
 
                 collection.AddMarainTenantManagement();
+                collection.AddMarainTenantManagementForBlobStorage();
+                collection.AddMarainTenantManagementForTableStorage();
+                collection.AddMarainTenantManagementForCosmosDb();
             });
         }
 

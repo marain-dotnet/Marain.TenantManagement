@@ -166,17 +166,17 @@ namespace Marain.TenantManagement.Testing
         /// </summary>
         /// <param name="enrollingTenantId">The Id of the tenant to enroll.</param>
         /// <param name="serviceTenantId">The Id of the service to enroll in.</param>
-        /// <param name="configurationItems">Configuration for the enrollment.</param>
+        /// <param name="configuration">Configuration for the enrollment.</param>
         /// <returns>A task which completes when the enrollment has finished.</returns>
         public async Task AddEnrollmentAsync(
             string enrollingTenantId,
             string serviceTenantId,
-            EnrollmentConfigurationItem[] configurationItems)
+            EnrollmentConfigurationEntry configuration)
         {
             await this.tenantStore.EnrollInServiceAsync(
                 enrollingTenantId,
                 serviceTenantId,
-                configurationItems).ConfigureAwait(false);
+                configuration).ConfigureAwait(false);
 
             this.enrollments.Add((enrollingTenantId, serviceTenantId));
         }
@@ -193,10 +193,7 @@ namespace Marain.TenantManagement.Testing
 
             this.tenants.Add(tenant);
 
-            if (this.primaryTransientClient == null)
-            {
-                this.primaryTransientClient = tenant;
-            }
+            this.primaryTransientClient ??= tenant;
 
             return tenant;
         }
