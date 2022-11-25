@@ -24,11 +24,11 @@
       },
       "Endjin.RecommendedPractices.GitHub": {
         "type": "Direct",
-        "requested": "[2.1.2, )",
-        "resolved": "2.1.2",
-        "contentHash": "mBUCmeSdWWrIQKuuYd9zflcwupRDmpF39dsbb07e6azlNIQqaE1J5TQa17c3SFVRXn9IZrClsmKoMporRTAWwQ==",
+        "requested": "[2.1.3, )",
+        "resolved": "2.1.3",
+        "contentHash": "s9VnymeP3idpWqXaIvQGjmtRls4BXS/kcI7IskPbha+2s3oeY+xtHBNwF0NkwsdwECcCiakjkixM6w8/KcwhUw==",
         "dependencies": {
-          "Endjin.RecommendedPractices": "2.1.2",
+          "Endjin.RecommendedPractices": "2.1.3",
           "Microsoft.SourceLink.GitHub": "1.1.1"
         }
       },
@@ -74,9 +74,9 @@
       },
       "Roslynator.Analyzers": {
         "type": "Direct",
-        "requested": "[4.1.1, )",
-        "resolved": "4.1.1",
-        "contentHash": "3cPVlrB1PytlO1ztZZBOExDKQWpMZgI15ZDa0BqLu0l6xv+xIRfEpqjNRcpvUy3aLxWTkPgSKZbbaO+VoFEJ1g=="
+        "requested": "[4.1.2, )",
+        "resolved": "4.1.2",
+        "contentHash": "bNl3GRSBFjJymYnwq/IRDD9MOSZz9VKdGk9RsN0MWIXoSRnVKQv84f6s9nLE13y20lZgMZKlDqGw2uInBH4JgA=="
       },
       "StyleCop.Analyzers": {
         "type": "Direct",
@@ -254,11 +254,11 @@
       },
       "Corvus.Storage.Azure.BlobStorage.Tenancy": {
         "type": "Transitive",
-        "resolved": "3.4.0-PullRequest0448.9",
-        "contentHash": "+ChsZ+FipKgU+NGjJy2b/32zs0sEZzco+pHL2YUL3Rl9LOJt+HdQiIVp6xiMxwdB/fLHUc/vvXVzouEloSolGg==",
+        "resolved": "3.4.0",
+        "contentHash": "MJSPI/r8Jyuw1ulIZsZaH44K68uVZjuThbpDWjFyKv7248xXnfOPWKkLCRO+kW3ZVxCikuIHR506iFy6KzraIw==",
         "dependencies": {
           "Corvus.Storage.Azure.BlobStorage": "1.3.0",
-          "Corvus.Tenancy.Abstractions": "3.4.0-PullRequest0448.9"
+          "Corvus.Tenancy.Abstractions": "3.4.0"
         }
       },
       "Corvus.Storage.Azure.Cosmos": {
@@ -272,11 +272,11 @@
       },
       "Corvus.Storage.Azure.Cosmos.Tenancy": {
         "type": "Transitive",
-        "resolved": "3.4.0-PullRequest0448.9",
-        "contentHash": "97g4LgE60paBWHIBryEWW3nUUdhmkkddCPIlxO1E3DNzLJs/O4rUPjfn2ZffbAS1rNu4Xhhkz2oLUq8pOP5KMQ==",
+        "resolved": "3.4.0",
+        "contentHash": "gfkaCrKKfhCfAA/czZkuOveJitR8Iz9wqiMF76jCR7RiFEM+N5WHWqWTDMjK1RcMPwimBrx9XQEtEkDY0lLHxQ==",
         "dependencies": {
           "Corvus.Storage.Azure.Cosmos": "1.3.0",
-          "Corvus.Tenancy.Abstractions": "3.4.0-PullRequest0448.9"
+          "Corvus.Tenancy.Abstractions": "3.4.0"
         }
       },
       "Corvus.Storage.Azure.TableStorage": {
@@ -290,11 +290,11 @@
       },
       "Corvus.Storage.Azure.TableStorage.Tenancy": {
         "type": "Transitive",
-        "resolved": "3.4.0-PullRequest0448.9",
-        "contentHash": "MT0YlQeIkyqLbUpDULjUPbwogLl3TxOrQjx3SYDDotkCjxEN3vMUcWnDt75XXOlf4lwZTB9TJkQpcktpvNGTRw==",
+        "resolved": "3.4.0",
+        "contentHash": "jzDdMFrnpvv6dqJoBqYu/WfuW6oDwEMqFpbSfiCyslThQTGQCiuWoyaOkf6n75czqDx0dimnuf88SYSk52b5IA==",
         "dependencies": {
           "Corvus.Storage.Azure.TableStorage": "1.3.0",
-          "Corvus.Tenancy.Abstractions": "3.4.0-PullRequest0448.9"
+          "Corvus.Tenancy.Abstractions": "3.4.0"
         }
       },
       "Corvus.Storage.Common": {
@@ -308,8 +308,8 @@
       },
       "Corvus.Tenancy.Abstractions": {
         "type": "Transitive",
-        "resolved": "3.4.0-PullRequest0448.9",
-        "contentHash": "7u7usJdvsuBfC8OeiAsDueHwJqTnhNhOmeukrWWDlVmHFeSQNq9xKl9qgXKYsjIcH87A/lURe3YZYA+UCWENAQ==",
+        "resolved": "3.4.0",
+        "contentHash": "PuJAIcyWCwzDUALJaHOVGAbQEqNXMMl3Yscej0UXAa1SNVa2bccvd2ZnJPORlZKc5W92jn/B5uYpwm1I4ZW4FA==",
         "dependencies": {
           "Corvus.ContentHandling.Json": "2.0.13",
           "Corvus.Extensions": "1.1.10",
@@ -318,8 +318,8 @@
       },
       "Endjin.RecommendedPractices": {
         "type": "Transitive",
-        "resolved": "2.1.2",
-        "contentHash": "Nbj0WS3zVDD2wjfU2/nbkWIWS9Ljg8VN+SSpaCuf5lHBOIEb0Ra201lGcyJHtRHybAciz+hQA9lHj7TnG52qqw==",
+        "resolved": "2.1.3",
+        "contentHash": "QGtkNwaXuuXw1bakDHscGReAP3c/JnzH9zTYj2YdONs1V/tD26m5GKle3nXAs9JCps3nXbUIIlYjsJsgDHNcmA==",
         "dependencies": {
           "Microsoft.Build.Tasks.Git": "1.1.1"
         }
@@ -580,8 +580,8 @@
       },
       "Microsoft.Extensions.Logging.Abstractions": {
         "type": "Transitive",
-        "resolved": "6.0.1",
-        "contentHash": "dzB2Cgg+JmrouhjkcQGzSFjjvpwlq353i8oBQO2GWNjCXSzhbtBRUf28HSauWe7eib3wYOdb3tItdjRwAdwCSg=="
+        "resolved": "6.0.3",
+        "contentHash": "SUpStcdjeBbdKjPKe53hVVLkFjylX0yIXY8K+xWa47+o1d+REDyOMZjHZa+chsQI1K9qZeiHWk9jos0TFU7vGg=="
       },
       "Microsoft.Extensions.Logging.Configuration": {
         "type": "Transitive",
@@ -1766,28 +1766,28 @@
       "marain.tenantmanagement.abstractions": {
         "type": "Project",
         "dependencies": {
-          "Corvus.Tenancy.Abstractions": "[3.4.0-PullRequest0448.9, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[6.0.1, )"
+          "Corvus.Tenancy.Abstractions": "[3.4.0, )",
+          "Microsoft.Extensions.Logging.Abstractions": "[6.0.3, )"
         }
       },
       "marain.tenantmanagement.azure.blobstorage": {
         "type": "Project",
         "dependencies": {
-          "Corvus.Storage.Azure.BlobStorage.Tenancy": "[3.4.0-PullRequest0448.9, )",
+          "Corvus.Storage.Azure.BlobStorage.Tenancy": "[3.4.0, )",
           "Marain.TenantManagement.Abstractions": "[1.0.0, )"
         }
       },
       "marain.tenantmanagement.azure.cosmos": {
         "type": "Project",
         "dependencies": {
-          "Corvus.Storage.Azure.Cosmos.Tenancy": "[3.4.0-PullRequest0448.9, )",
+          "Corvus.Storage.Azure.Cosmos.Tenancy": "[3.4.0, )",
           "Marain.TenantManagement.Abstractions": "[1.0.0, )"
         }
       },
       "marain.tenantmanagement.azure.tablestorage": {
         "type": "Project",
         "dependencies": {
-          "Corvus.Storage.Azure.TableStorage.Tenancy": "[3.4.0-PullRequest0448.9, )",
+          "Corvus.Storage.Azure.TableStorage.Tenancy": "[3.4.0, )",
           "Marain.TenantManagement.Abstractions": "[1.0.0, )"
         }
       }
