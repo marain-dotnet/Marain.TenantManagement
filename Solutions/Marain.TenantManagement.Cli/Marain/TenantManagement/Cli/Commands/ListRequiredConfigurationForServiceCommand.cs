@@ -44,7 +44,6 @@ namespace Marain.TenantManagement.Cli.Commands
             ServiceManifestRequiredConfigurationEntryIncludingDescendants configRequirements =
                 await this.tenantStore.GetServiceEnrollmentConfigurationRequirementsAsync(serviceTenantId).ConfigureAwait(false);
 
-            // TODO: Dependencies?
             if (configRequirements.RequiredConfigurationEntries.Count == 0)
             {
                 Console.WriteLine($"The service '{serviceTenantId}' does not have any configuration requirements for enrollment.");
