@@ -70,11 +70,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
             LegacyAzureServiceTokenProviderOptions serviceTokenProviderOptions = config.Get<LegacyAzureServiceTokenProviderOptions>();
 
-            // 'ServiceIdentityServiceCollectionExtensions.AddAzureManagedIdentityBasedTokenSource(IServiceCollection, AzureManagedIdentityTokenSourceOptions?)' is obsolete:
-            // 'Consider using Corvus.Identity.Azure's
-            // AddServiceIdentityAzureTokenCredentialSourceFromLegacyConnectionString,
-            // optionally with LegacyAzureServiceTokenProviderOptions, or Corvus.Identity.MicrosoftRest's
-            // AddMicrosoftRestAdapterForServiceIdentityAccessTokenSource instead'
             services.AddServiceIdentityAzureTokenCredentialSourceFromLegacyConnectionString(serviceTokenProviderOptions);
             services.AddMicrosoftRestAdapterForServiceIdentityAccessTokenSource();
 
