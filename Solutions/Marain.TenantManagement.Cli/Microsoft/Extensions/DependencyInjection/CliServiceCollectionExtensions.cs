@@ -16,6 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
+    using Newtonsoft.Json.Serialization;
 
     /// <summary>
     /// Extension methods to configure the DI container used by the CLI.
@@ -65,7 +66,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddJsonNetPropertyBag();
             services.AddJsonNetCultureInfoConverter();
             services.AddJsonNetDateTimeOffsetToIso8601AndUnixTimeConverter();
-            services.AddSingleton<JsonConverter>(new StringEnumConverter(true));
+            services.AddSingleton<JsonConverter>(new StringEnumConverter(new CamelCaseNamingStrategy()));
 
             LegacyAzureServiceTokenProviderOptions serviceTokenProviderOptions = config.Get<LegacyAzureServiceTokenProviderOptions>();
 

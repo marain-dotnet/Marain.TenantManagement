@@ -56,7 +56,7 @@ namespace Marain.TenantManagement.Cli.Commands
 
             string manifestJson = File.ReadAllText(manifestFile.FullName);
             ServiceManifest manifest =
-                JsonConvert.DeserializeObject<ServiceManifest>(manifestJson, this.serializerSettingsProvider.Instance);
+                JsonConvert.DeserializeObject<ServiceManifest>(manifestJson, this.serializerSettingsProvider.Instance)!;
 
             try
             {

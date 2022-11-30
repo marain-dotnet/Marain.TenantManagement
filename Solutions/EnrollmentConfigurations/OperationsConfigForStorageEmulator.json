@@ -4,7 +4,7 @@
     "Marain:Operations:BlobContainerConfiguration:Operations": {
       "contentType": "application/vnd.marain.tenancy.configurationitem.azureblobstorage.v3",
       "configuration": {
-        "accountName": "",
+        "connectionStringPlainText": "UseDevelopmentStorage=true",
         "container": "operations"
       }
     }

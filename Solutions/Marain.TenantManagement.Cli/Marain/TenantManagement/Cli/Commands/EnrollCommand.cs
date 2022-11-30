@@ -77,7 +77,7 @@ namespace Marain.TenantManagement.Cli.Commands
             {
                 string configJson = File.ReadAllText(config.FullName);
                 enrollmentConfig =
-                    JsonConvert.DeserializeObject<EnrollmentConfigurationEntry>(configJson, this.serializerSettingsProvider.Instance);
+                    JsonConvert.DeserializeObject<EnrollmentConfigurationEntry>(configJson, this.serializerSettingsProvider.Instance)!;
             }
             else
             {

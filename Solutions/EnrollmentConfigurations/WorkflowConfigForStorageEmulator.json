@@ -4,8 +4,8 @@
     "Marain:Workflow:BlobContainerConfiguration:Definitions": {
       "contentType": "application/vnd.marain.tenancy.configurationitem.azureblobstorage.v3",
       "configuration": {
-        "accountName": "",
-        "container": "operations"
+        "connectionStringPlainText": "UseDevelopmentStorage=true",
+        "container": "workflow-definitions"
       }
     },
     "Marain:Workflow:CosmosContainerConfiguration:Instances": {
@@ -25,7 +25,7 @@
           "contentType": "application/vnd.marain.tenancy.configurationitem.azureblobstorage.v3",
           "configuration": {
             "accountName": "",
-            "container": "operations"
+            "container": "workflow-operations"
           }
         }
       }
