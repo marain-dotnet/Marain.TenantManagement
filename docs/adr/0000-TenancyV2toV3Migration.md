@@ -1,4 +1,10 @@
-#
+# Tenancy V2 to V3 migration
+
+## Status
+
+Draft
+
+## Context
 
 Version 2 of `Marain.TenantManagement` is aligned with version 2 of `Corvus.Tenancy` and associated libraries. Version 3 `Marain.TenantManagement` moves to version 2 of `Corvus.Tenancy`, and this entails some significant changes, notably:
 
@@ -24,7 +30,7 @@ For example, storage configuration for `Marain.Operations` in the V2 model looks
 but in the V3 world, an exact equivalent might look like this:
 
 ```json
-"StorageConfigurationV3__operations": {
+"Marain:Operations:BlobContainerConfiguration:Operations": {
     "accountName": "maridgoperationsy3qxmrir",
     "container": "513162c27e77e52411ececa40f1e615455b01fc5",
     "accessKeyInKeyVault": {
@@ -41,14 +47,12 @@ The most substantial change, though, is that the `container` no longer contains 
 [Corvus.Tenancy ADR 0004](https://github.com/corvus-dotnet/Corvus.Tenancy/blob/main/docs/adr/0004-v2-to-v3-transition.md) describes the V2 to V3 transition from the perspective of a single service, but `Marain.TenantManagement` necessarily takes a broader view.
 
 
-What do we do if there are systems out there that require V2-style config? E.g., someone is using Marain.Operations but hasn't yet deployed an update to the version that is aware of V3-style config? One response to this might be: "Tough! If that's your situation, use V2 of `Marain.TenantManagement`. However, a problem with that is that it means that until every Marain service in the deployment has been upgraded to be V3-capable, nothing can start using the V3 approach. In cases where customers are using
+What do we do if there are systems out there that require V2-style config? E.g., someone is using Marain.Operations but hasn't yet deployed an update to the version that is aware of V3-style config? One response to this might be: "Tough! If that's your situation, use V2 of `Marain.TenantManagement`. However, a problem with that is that it means that until every Marain service in the deployment has been upgraded to be V3-capable, nothing can start using the V3 approach. We want it to be possible to upgrade individual services piecemeal.
 
+Prior to `Marain.Tenancy` V3, a ServiceManifest's `requiredConfigurationEntries` contains only V2-style entries.
+A newly-implemented version would want to live in a V3-only world, so it would have only V3-style required configuration. But what about a formerly V2-style service that has been upgraded to support V3 configuration? Existing tenants may well have V2 configuration, and that needs to continue to work. More subtly, we need to be able to enrol tenants, and that needs to work when V2-style enrolment configuration items are supplied. This is especially important for automated onboarding scenarios—we don't want these to break when services start to get upgraded.
 
-Enrollment config files with only 
-
-
-Today, a ServiceManifest's `requiredConfigurationEntries` contains only V2-style entries.
-A newly-implemented version would want to live in a V3-only world, so it would have only V3-style required configuration. But what about a formerly V2-style service that has been upgraded to support V3 configuration? Existing tenants may well have V2 configuration, and that needs to continue to work. More subtly, we need to be able to enrol tenants, and that needs to work when V2-style enrolment configuration items are supplied.
+So we can't just pretend that V3 is the only thing. The following combinations of supplied configuration vs what the service actually requires are conceivable:
 
 | Supplied | Req: V2 only | Req: V3 only | Req: V3 with V2 fallback |
 |---|---|---|---|
@@ -78,3 +82,10 @@ Might need three modes in cases where automatic V2 to V3 conversion is possible 
 2. Do it but issue a warning
 3. Fail
 
+The current plan for all the Marain services we have implemented is that as we upgrade to tenancy V3, we support both V2 and V3 configuration, so the "V3 only" case in the table above won't arise.
+
+## Decision
+
+For now, we are simply accepting and storing V2 setting if that's what's supplied during enrollment, if the service manifest says it's acceptable. This works because all our services accept V2 configuration.
+
+However, this ADR is in draft status because this is probably not the final word in this. We want to get V3 released, and this is the quickest path to release. But we will revisit this and might decide to build V2 to V3 conversion into the command line tool.
