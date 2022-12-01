@@ -48,7 +48,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Marain.Tenancy.ClientTenantProvider" Version="1.1.15" />
+    <PackageReference Include="Marain.Tenancy.ClientTenantProvider" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="[3.1.*,)" />
     <PackageReference Include="Corvus.Identity.ManagedServiceIdentity.ClientAuthentication" Version="1.0.7" />
     <PackageReference Include="ConsoleTables" Version="2.4.2" />
