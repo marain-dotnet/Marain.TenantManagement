@@ -2,131 +2,145 @@
 @useInMemoryTenantProvider
 
 Feature: Unenrollment
-	In order to disallow a currently allowed a client from using a Marain service
-	As an administrator
-	I want to unenroll a tenant from a service
+    In order to disallow a currently allowed a client from using a Marain service
+    As an administrator
+    I want to unenroll a tenant from a service
 
 Background:
-	Given the tenancy provider has been initialised for use with Marain
-	And I have loaded the manifest called 'SimpleManifestWithNoDependenciesOrConfiguration'
-	And I have used the tenant store to create a service tenant with manifest 'SimpleManifestWithNoDependenciesOrConfiguration'
-	And I have loaded the manifest called 'FooBarServiceManifest'
-	And I have used the tenant store to create a service tenant with manifest 'FooBarServiceManifest'
-	And I have loaded the manifest called 'OperationsServiceManifest'
-	And I have used the tenant store to create a service tenant with manifest 'OperationsServiceManifest'
-	And I have loaded the manifest called 'WorkflowServiceManifest'
-	And I have used the tenant store to create a service tenant with manifest 'WorkflowServiceManifest'
-	And I have used the tenant store to create a new client tenant called 'Litware'
-	And I have used the tenant store to create a new client tenant called 'Contoso'
+    Given the tenancy provider has been initialised for use with Marain
+    And I have loaded the manifest called 'ServiceManifestC0D()' and used the tenant store to create a service tenant with it
+    And I have loaded the manifest called 'ServiceManifestC1D()' and used the tenant store to create a service tenant with it
+    And I have loaded the manifest called 'ServiceManifestC1D(C1D())' and used the tenant store to create a service tenant with it
+    And I have loaded the manifest called 'ServiceManifestC3D(C1D(C1D()))' and used the tenant store to create a service tenant with it
+    And I have loaded the manifest called 'WorkflowServiceManifest' and used the tenant store to create a service tenant with it
+    And I have used the tenant store to create a new client tenant called 'Litware'
+    And I have used the tenant store to create a new client tenant called 'Contoso'
 
 Scenario: Unenroll from a service that the client has not previously enrolled in
-	When I use the tenant store to unenroll the tenant called 'Litware' from the service called 'Simple manifest with no dependencies or configuration'
-	Then an 'InvalidOperationException' is thrown
+    When I use the tenant store to unenroll the tenant called 'Litware' from the service called 'SvcC0D()'
+    Then an 'InvalidOperationException' is thrown
 
 Scenario: Basic unenrollment with no dependencies or configuration
-	Given I have used the tenant store to enroll the tenant called 'Litware' in the service called 'Simple manifest with no dependencies or configuration'
-	When I use the tenant store to unenroll the tenant called 'Litware' from the service called 'Simple manifest with no dependencies or configuration'
-	Then the tenant called 'Litware' should not have the id of the tenant called 'Simple manifest with no dependencies or configuration' in its enrollments
+    Given I have used the tenant store to enroll the tenant called 'Litware' in the service called 'SvcC0D()'
+    When I use the tenant store to unenroll the tenant called 'Litware' from the service called 'SvcC0D()'
+    Then the tenant called 'Litware' should not have the id of the tenant called 'SvcC0D()' in its enrollments
 
 Scenario: Basic unenrollment with configuration
-	Given I have enrollment configuration called 'FooBar config'
-	And the enrollment configuration called 'FooBar config' contains the following Blob Storage configuration items
-	| Key         | Account Name | Container     |
-	| fooBarStore | blobaccount  | blobcontainer |
-	And I have used the tenant store with the enrollment configuration called 'FooBar config' to enroll the tenant called 'Litware' in the service called 'FooBar v1'
-	When I use the tenant store to unenroll the tenant called 'Litware' from the service called 'FooBar v1'
-	Then the tenant called 'Litware' should not have the id of the tenant called 'FooBar v1' in its enrollments
-	And the tenant called 'Litware' should not contain blob storage configuration for a blob storage container definition with container name 'foobar'
+    Given I have enrollment configuration called 'FooBar config'
+    And the enrollment configuration called 'FooBar config' contains the following Blob Storage configuration items
+    | Key                            | Account Name | Container     |
+    | TestServices:C1D():FooBarStore | blobaccount  | blobcontainer |
+    And I have used the tenant store with the enrollment configuration called 'FooBar config' to enroll the tenant called 'Litware' in the service called 'SvcC1D()'
+    When I use the tenant store to unenroll the tenant called 'Litware' from the service called 'SvcC1D()'
+    Then the tenant called 'Litware' should not have the id of the tenant called 'SvcC1D()' in its enrollments
+    And the tenant called 'Litware' should not contain blob storage configuration under key 'TestServices:C1D():FooBarStore'
 
+# Dependency graph prior to unenrollment:
+#
+# +---------+         +------------------+
+# |         |         | Service with     |
+# | Litware +---------> 1 Configuration  +--+
+# |         |         | 1 Dependency     |  |
+# +----|----+         +------------------+  |
+#      |                                    |
+#      |                                    |
+#      |                           +--------v---------+
+#      |                           | Service with     |
+#      +---------------------------> 1 Configuration  +--+
+#                                  | 1 Dependencies   |  |
+#                                  +------------------+  |
+#                                                        |
+#                                                        |
+#                                               +--------v---------+
+#                                               | Service with     |
+#                                               | 1 Configurations |
+#                                               | 0 Dependencies   |
+#                                               +------------------+
+#
+# Tenant tree prior to unenrollment:
+#
+## Root tenant
+#  |
+#  +-> Client Tenants
+#  |     |
+#  |     +-> Litware
+#  |
+#  +-> Service Tenants
+#        |
+#        +-> SvcC3D(C1D(C1D()))
+#        |     |
+#        |     +-> SvcC3D(C1D(C1D()))\Litware
+#        |
+#        +-> SvcC1D(C1D())
+#        |     |
+#        |     +-> SvcC1D(C1D())\SvcC3D(C1D(C1D()))\Litware
+#        |     +-> SvcC1D(C1D())\Litware
+#        |
+#        +-> SvcC1D()
+
+# Expected tenant tree after unenrollment:
+#
+# Root tenant
+#  |
+#  +-> Client Tenants
+#  |     |
+#  |     +-> Litware
+#  |
+#  +-> Service Tenants
+#        |
+#        +-> SvcC3D(C1D(C1D()))
+#        |
+#        +-> SvcC1D(C1D())
+#        |     |
+#        |     +-> SvcC1D(C1D())\Litware
+#        |
+#        +-> SvcC1D()
+#
 Scenario: Unenrollment with multiple levels of dependency and with the client tenant remaining directly enrolled in one of the dependent services
-	# Dependency graph prior to unenrollment:
-	#
-	# +---------+        +------------+
-	# |         |        |            |
-	# | Litware +--------> WORKFLOW   +------+
-	# |         |        |            |      |
-	# +-----+---+        +------------+      |
-	#       |                                |
-	#       |                                |
-	#       |                          +-----v------+
-	#       |                          |            |
-	#       +--------------------------> OPERATIONS +------+
-	#                                  |            |      |
-	#                                  +------------+      |
-	#                                                      |
-	#                                                      |
-	#                                                +-----v------+
-	#                                                |            |
-	#                                                | FOOBAR     |
-	#                                                |            |
-	#                                                +------------+
-	#
-	# Tenant tree prior to unenrollment:
-	#
-	# Root tenant
-	#  |
-	#  +-> Client Tenants
-	#  |     |
-	#  |     +-> Litware
-	#  |
-	#  +-> Service Tenants
-	#        |
-	#        +-> Workflow v1
-	#        |     |
-	#        |     +-> Workflow v1\Litware
-	#        |
-	#        +-> Operations v1
-	#        |     |
-	#        |     +-> Operations v1\Workflow v1\Litware
-	#        |     |
-	#        |     +-> Operations v1\Litware
-	#        |
-	#        +-> FooBar
-	#
-	# Expected tenant tree after unenrollment:
-	#
-	# Root tenant
-	#  |
-	#  +-> Client Tenants
-	#  |     |
-	#  |     +-> Litware
-	#  |
-	#  +-> Service Tenants
-	#        |
-	#        +-> Workflow v1
-	#        |
-	#        +-> Operations v1
-	#        |     |
-	#        |     +-> Operations v1\Litware
-	#        |
-	#        +-> FooBar
-	#
-	Given I have enrollment configuration called 'Workflow config'
-	And the enrollment configuration called 'Workflow config' contains the following Blob Storage configuration items
-	| Key             | Account Name   | Container        |
-	| fooBarStore     | fbblobaccount  | fbblobcontainer  |
-	| operationsStore | opsblobaccount | opsblobcontainer |
-	And the enrollment configuration called 'Workflow config' contains the following Cosmos configuration items
-	| Key                   | Account Uri | Database Name | Container Name      |
-	| workflowStore         | wfaccount   | wfdb          | wfcontainer         |
-	| workflowInstanceStore | wfaccount   | wfdb          | wfinstancecontainer |
-	And I have enrollment configuration called 'Operations config'
-	And the enrollment configuration called 'Operations config' contains the following Blob Storage configuration items
-	| Key             | Account Name    | Container         |
-	| fooBarStore     | fbblobaccount2  | fbblobcontainer2  |
-	| operationsStore | opsblobaccount2 | opsblobcontainer2 |
-	And I have used the tenant store with the enrollment configuration called 'Workflow config' to enroll the tenant called 'Litware' in the service called 'Workflow v1'
-	And I have used the tenant store with the enrollment configuration called 'Operations config' to enroll the tenant called 'Litware' in the service called 'Operations v1'
-	When I use the tenant store to unenroll the tenant called 'Litware' from the service called 'Workflow v1'
-	Then the tenant called 'Litware' should not have the id of the tenant called 'Workflow v1' in its enrollments
-	And the tenant called 'Litware' should not contain Cosmos configuration for a Cosmos container definition with database name 'workflow' and container name 'definitions'
-	And the tenant called 'Litware' should not contain Cosmos configuration for a Cosmos container definition with database name 'workflow' and container name 'instances'
-	And the tenant called 'Litware' should have the id of the tenant called 'Operations v1' added to its enrollments
-	And the tenant called 'Litware' should contain blob storage configuration for a blob storage container definition with container name 'operations'
-	And there should not be a child tenant called 'Workflow v1\Litware' of the service tenant called 'Workflow v1'
-	And the tenant called 'Litware' should not have a delegated tenant for the service called 'Workflow v1'
-	And there should not be a child tenant called 'Operations v1\Workflow v1\Litware' of the service tenant called 'Operations v1'
-	And a new child tenant called 'Operations v1\Litware' of the service tenant called 'Operations v1' has been created
-	And the tenant called 'Operations v1\Litware' should have the id of the tenant called 'FooBar v1' added to its enrollments
-	And the tenant called 'Operations v1\Litware' should contain blob storage configuration for a blob storage container definition with container name 'foobar'
-	And the tenant called 'Litware' should have the id of the tenant called 'Operations v1\Litware' set as the delegated tenant for the service called 'Operations v1'
+    Given I have enrollment configuration called 'ConfigSvcC3D(C1D(C1D()))'
+    And I have enrollment configuration called 'ConfigSvcC1D(C1D())Direct'
+    And I have enrollment configuration called 'ConfigSvcC1D(C1D())Indirect'
+    And I have enrollment configuration called 'ConfigSvcC1D()Indirect'
+    And I have enrollment configuration called 'ConfigSvcC1D()DoublyIndirect'
+    And the 'ConfigSvcC3D(C1D(C1D()))' enrollment has a dependency on the service tenant called 'SvcC1D(C1D())' using configuration 'ConfigSvcC1D(C1D())Indirect'
+    And the 'ConfigSvcC1D(C1D())Indirect' enrollment has a dependency on the service tenant called 'SvcC1D()' using configuration 'ConfigSvcC1D()DoublyIndirect'
+    And the 'ConfigSvcC1D(C1D())Direct' enrollment has a dependency on the service tenant called 'SvcC1D()' using configuration 'ConfigSvcC1D()Indirect'
+    And the enrollment configuration called 'ConfigSvcC3D(C1D(C1D()))' contains the following Blob Storage configuration items
+    | Key                                        | Account Name           | Container                 |
+    | TestServices:C3D(C1D(C1D())):manglewurzles | rootvegblobaccount     | mangleworzleblobcontainer |
+	And the enrollment configuration called 'ConfigSvcC3D(C1D(C1D()))' contains the following Cosmos configuration items
+	| Key                                        | Account Uri          | Database Name | Container Name  |
+	| TestServices:C3D(C1D(C1D())):RootAggregate | rootvegcosmosaccount | rvdb          | aggregatedroots |
+	And the enrollment configuration called 'ConfigSvcC3D(C1D(C1D()))' contains the following Table Storage configuration items
+	| Key                                    | Account Name   | Table      |
+	| TestServices:C3D(C1D(C1D())):AuditLogs | rvtableaccount | audittable |
+    And the enrollment configuration called 'ConfigSvcC1D(C1D())Direct' contains the following Blob Storage configuration items
+    | Key                                | Account Name         | Container              |
+    | TestServices:C1D(C1D()):operations | opsblobaccountdirect | opsblobcontainerdirect |
+    And the enrollment configuration called 'ConfigSvcC1D(C1D())Indirect' contains the following Blob Storage configuration items
+    | Key                                        | Account Name           | Container                 |
+    | TestServices:C1D(C1D()):operations         | opsblobaccountindirect | opsblobcontainerindirect  |
+    And the enrollment configuration called 'ConfigSvcC1D()Indirect' contains the following Blob Storage configuration items
+    | Key                            | Account Name        | Container             |
+    | TestServices:C1D():FooBarStore | fbblobaccountdirect | fbblobcontainerdirect |
+    And the enrollment configuration called 'ConfigSvcC1D()DoublyIndirect' contains the following Blob Storage configuration items
+    | Key                            | Account Name          | Container               |
+    | TestServices:C1D():FooBarStore | fbblobaccountindirect | fbblobcontainerindirect |
+    And I have used the tenant store with the enrollment configuration called 'ConfigSvcC3D(C1D(C1D()))' to enroll the tenant called 'Litware' in the service called 'SvcC3D(C1D(C1D()))'
+    And I have used the tenant store with the enrollment configuration called 'ConfigSvcC1D(C1D())Direct' to enroll the tenant called 'Litware' in the service called 'SvcC1D(C1D())'
+    When I use the tenant store to unenroll the tenant called 'Litware' from the service called 'SvcC3D(C1D(C1D()))'
+    Then the tenant called 'Litware' should not have the id of the tenant called 'SvcC3D(C1D(C1D()))' in its enrollments
+    And the tenant called 'Litware' should have the id of the tenant called 'SvcC1D(C1D())' added to its enrollments
+    And the tenant called 'Litware' should not contain Cosmos configuration for a Cosmos container definition under the key 'TestServices:C3D(C1D(C1D())):RootAggregate'
+    And the tenant called 'Litware' should contain blob storage configuration under the key 'TestServices:C1D(C1D()):operations' for the account 'opsblobaccountdirect' and container name 'opsblobcontainerdirect'
+    And there should not be a child tenant called 'SvcC3D(C1D(C1D()))\Litware' of the service tenant called 'SvcC3D(C1D(C1D()))'
+    And the tenant called 'Litware' should not have a delegated tenant for the service called 'SvcC3D(C1D(C1D()))'
+    And there should not be a child tenant called 'SvcC1D(C1D())\SvcC3D(C1D(C1D()))\Litware' of the service tenant called 'SvcC1D(C1D())'
+    And a new child tenant called 'SvcC1D(C1D())\Litware' of the service tenant called 'SvcC1D(C1D())' has been created
+    And the tenant called 'SvcC1D(C1D())\Litware' should have the id of the tenant called 'SvcC1D()' added to its enrollments
+    And the tenant called 'SvcC1D(C1D())\Litware' should contain blob storage configuration under the key 'TestServices:C1D():FooBarStore' for the account 'fbblobaccountdirect' and container name 'fbblobcontainerdirect'
+    And the tenant called 'Litware' should have the id of the tenant called 'SvcC1D(C1D())\Litware' set as the delegated tenant for the service called 'SvcC1D(C1D())'
+    And the tenant called 'Litware' should not contain blob storage configuration under key 'TestServices:C3D(C1D(C1D())):manglewurzles'
+    And the tenant called 'Litware' should not contain Cosmos configuration for a Cosmos container definition under the key 'TestServices:C3D(C1D(C1D())):RootAggregate'
+    And the tenant called 'Litware' should not contain table storage configuration under key 'TestServices:C3D(C1D(C1D())):AuditLogs'
+    And the tenant called 'Litware' should not have a delegated tenant for the service called 'SvcC3D(C1D(C1D()))'

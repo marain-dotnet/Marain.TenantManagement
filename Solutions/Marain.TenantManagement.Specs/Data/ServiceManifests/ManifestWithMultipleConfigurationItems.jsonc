@@ -4,28 +4,18 @@
   "serviceName": "Manifest with multiple configuration items",
   "requiredConfigurationEntries": [
     {
-      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage",
-      "key": "operationsStore",
-      "containerDefinition": {
-        "containerName": "operations"
-      },
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage.v3",
+      "key": "Marain:Operations:BlobContainerConfiguration:Operations",
       "description": "Stores the status of all current operations"
     },
     {
-      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb",
-      "key": "workflowStore",
-      "containerDefinition": {
-        "databaseName": "workflow",
-        "containerName": "definitions"
-      },
-      "description": "Workflow definitions"
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb.v3",
+      "key": "Marain:Workflow:CosmosContainerConfiguration:Instances",
+      "description": "Workflow instances"
     },
     {
-      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azuretablestorage",
-      "key": "auditStore",
-      "containerDefinition": {
-        "tableName": "audit"
-      },
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azuretablestorage.v3",
+      "key": "Marain:Workflow:TableStorageConfiguration:AuditLogs",
       "description": "Stores audit logs"
     }
   ]

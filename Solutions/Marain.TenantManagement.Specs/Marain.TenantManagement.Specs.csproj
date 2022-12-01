@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="$(EndjinProjectPropsPath)" Condition="$(EndjinProjectPropsPath) != ''" />
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <RootNamespace>Marain.TenantManagement.Specs</RootNamespace>
@@ -40,37 +40,49 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Data\ServiceManifests\FooBarServiceManifest.jsonc" />
-    <None Remove="Data\ServiceManifests\ManifestWithConfiguration.jsonc" />
-    <None Remove="Data\ServiceManifests\ManifestWithConfigurationWithUnknownContentType.jsonc" />
-    <None Remove="Data\ServiceManifests\ManifestWithDependencies.jsonc" />
-    <None Remove="Data\ServiceManifests\ManifestWithMultipleConfigurationItems.jsonc" />
-    <None Remove="Data\ServiceManifests\OperationsServiceManifest.jsonc" />
-    <None Remove="Data\ServiceManifests\SimpleManifestWithNoDependenciesOrConfiguration.jsonc" />
-    <None Remove="Data\ServiceManifests\WorkflowServiceManifest.jsonc" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Data\ServiceManifests\ManifestWithConfigurationWithUnknownContentType.jsonc" />
-    <EmbeddedResource Include="Data\ServiceManifests\ManifestWithMultipleConfigurationItems.jsonc" />
-    <EmbeddedResource Include="Data\ServiceManifests\ManifestWithConfiguration.jsonc" />
-    <EmbeddedResource Include="Data\ServiceManifests\ManifestWithDependencies.jsonc" />
-    <EmbeddedResource Include="Data\ServiceManifests\FooBarServiceManifest.jsonc" />
-    <EmbeddedResource Include="Data\ServiceManifests\OperationsServiceManifest.jsonc" />
-    <EmbeddedResource Include="Data\ServiceManifests\SimpleManifestWithNoDependenciesOrConfiguration.jsonc" />
-    <EmbeddedResource Include="Data\ServiceManifests\WorkflowServiceManifest.jsonc" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Endjin.RecommendedPractices.GitHub" Version="2.1.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="[3.1.*,)" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="[6.0.*,)" />
     <PackageReference Include="Corvus.Testing.SpecFlow.NUnit" Version="1.6.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Marain.Services.Tenancy.Testing\Marain.Services.Tenancy.Testing.csproj" />
-    <ProjectReference Include="..\Marain.TenantManagement.Abstractions\Marain.TenantManagement.Abstractions.csproj" />
+    <ProjectReference Include="..\Marain.TenantManagement.Azure.BlobStorage\Marain.TenantManagement.Azure.BlobStorage.csproj" />
+    <ProjectReference Include="..\Marain.TenantManagement.Azure.Cosmos\Marain.TenantManagement.Azure.Cosmos.csproj" />
+    <ProjectReference Include="..\Marain.TenantManagement.Azure.TableStorage\Marain.TenantManagement.Azure.TableStorage.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\SvcC1D%28C1V3orV2D%28%29%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\SvcC1D%28C1V2D%28%29%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\SvcC1V2D%28C1V2D%28%29%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\SvcC1V2D%28%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\SvcC1V2D%28C1V3orV2D%28%29%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\SvcC1V2D%28C1D%28%29%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\SvcC1V3orV2D%28C1V3orV2D%28%29%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\SvcC1V3orV2D%28C1V2D%28%29%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\SvcC1V3orV2D%28C1D%28%29%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\SvcC3V3orV2D%28%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\SvcC3V2D%28%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\LegacyV2\SvcC1V3orV2D%28%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\ManifestWithConfigurationWithUnknownContentType.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\ServiceManifestC0D%28C0D%28%29%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\ManifestWithMultipleConfigurationItems.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\ManifestWithConfiguration.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\ManifestWithDependencies.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\ServiceManifestC0D%28C0D%28C0D%28%29%29%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\ServiceManifestC3D%28%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\ServiceManifestC3D%28C1D%28C1D%28%29%29%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\ServiceManifestC1D%28%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\ServiceManifestC1D%28C1D%28%29%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\ServiceManifestC0D%28%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\ServiceManifestC0D%28C1D%28%29%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\ServiceManifestC1D%28C0D%28%29%29.jsonc" />
+    <EmbeddedResource Include="Data\ServiceManifests\WorkflowServiceManifest.jsonc" />
+  </ItemGroup>
+  
   <ItemGroup>
     <None Update="specflow.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

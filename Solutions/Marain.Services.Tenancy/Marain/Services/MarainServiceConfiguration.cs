@@ -4,8 +4,6 @@
 
 namespace Marain.Services
 {
-    using System;
-
     /// <summary>
     /// Standard configuration that all Marain services will have.
     /// </summary>

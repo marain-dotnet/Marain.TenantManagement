@@ -67,14 +67,10 @@ namespace Marain.TenantManagement
         /// <returns>True if the tenant is enrolled for the service, false otherwise.</returns>
         public static bool IsEnrolledForService(this ITenant tenant, string serviceTenantId)
         {
-            if (serviceTenantId == null)
-            {
-                throw new ArgumentNullException(nameof(serviceTenantId));
-            }
-
+            ArgumentNullException.ThrowIfNull(serviceTenantId);
             if (string.IsNullOrWhiteSpace(serviceTenantId))
             {
-                throw new ArgumentException(nameof(serviceTenantId));
+                throw new ArgumentException("Service tenant id must not be empty", nameof(serviceTenantId));
             }
 
             if (tenant.Properties.TryGet(TenantPropertyKeys.Enrollments, out IList<string> enrollments))
@@ -99,9 +95,10 @@ namespace Marain.TenantManagement
         {
             tenant.EnsureTenantIsOfType(MarainTenantType.Client, MarainTenantType.Delegated);
 
+            ArgumentNullException.ThrowIfNull(serviceTenantId);
             if (string.IsNullOrWhiteSpace(serviceTenantId))
             {
-                throw new ArgumentException(nameof(serviceTenantId));
+                throw new ArgumentException("Service tenant id must not be empty", nameof(serviceTenantId));
             }
 
             if (tenant.Properties.TryGet(TenantPropertyKeys.DelegatedTenantId(serviceTenantId), out string delegatedTenantId))
@@ -164,10 +161,7 @@ namespace Marain.TenantManagement
             this IEnumerable<KeyValuePair<string, object>> values,
             ServiceManifest manifest)
         {
-            if (manifest == null)
-            {
-                throw new ArgumentNullException(nameof(manifest));
-            }
+            ArgumentNullException.ThrowIfNull(manifest);
 
             return values.Append(new KeyValuePair<string, object>(TenantPropertyKeys.ServiceManifest, manifest));
         }
@@ -192,14 +186,10 @@ namespace Marain.TenantManagement
             ITenant tenant,
             string serviceTenantId)
         {
-            if (serviceTenantId == null)
-            {
-                throw new ArgumentNullException(nameof(serviceTenantId));
-            }
-
+            ArgumentNullException.ThrowIfNull(serviceTenantId);
             if (string.IsNullOrWhiteSpace(serviceTenantId))
             {
-                throw new ArgumentException(nameof(serviceTenantId));
+                throw new ArgumentException("Service tenant id must not be empty", nameof(serviceTenantId));
             }
 
             // TODO: We should check that the tenant is allowed to enroll (i.e they are not either the root tenant or a
@@ -237,14 +227,10 @@ namespace Marain.TenantManagement
             this ITenant tenant,
             string serviceTenantId)
         {
-            if (serviceTenantId == null)
-            {
-                throw new ArgumentNullException(nameof(serviceTenantId));
-            }
-
+            ArgumentNullException.ThrowIfNull(serviceTenantId);
             if (string.IsNullOrWhiteSpace(serviceTenantId))
             {
-                throw new ArgumentException(nameof(serviceTenantId));
+                throw new ArgumentException("Service tenant id must not be empty", nameof(serviceTenantId));
             }
 
             if (tenant.Properties.TryGet(TenantPropertyKeys.Enrollments, out IList<string> enrollments))
@@ -286,17 +272,11 @@ namespace Marain.TenantManagement
         {
             tenant.EnsureTenantIsOfType(MarainTenantType.Client, MarainTenantType.Delegated);
 
-            if (serviceTenant == null)
-            {
-                throw new ArgumentNullException(nameof(serviceTenant));
-            }
+            ArgumentNullException.ThrowIfNull(serviceTenant);
 
             serviceTenant.EnsureTenantIsOfType(MarainTenantType.Service);
 
-            if (delegatedTenant == null)
-            {
-                throw new ArgumentNullException(nameof(delegatedTenant));
-            }
+            ArgumentNullException.ThrowIfNull(delegatedTenant);
 
             delegatedTenant.EnsureTenantIsOfType(MarainTenantType.Delegated);
 
@@ -325,10 +305,7 @@ namespace Marain.TenantManagement
         {
             tenant.EnsureTenantIsOfType(MarainTenantType.Client, MarainTenantType.Delegated);
 
-            if (serviceTenant == null)
-            {
-                throw new ArgumentNullException(nameof(serviceTenant));
-            }
+            ArgumentNullException.ThrowIfNull(serviceTenant);
 
             serviceTenant.EnsureTenantIsOfType(MarainTenantType.Service);
 

@@ -6,8 +6,10 @@ namespace Marain.TenantManagement.ServiceManifests
 {
     using System;
     using System.Collections.Generic;
+
     using Corvus.Tenancy;
-    using Marain.TenantManagement.EnrollmentConfiguration;
+
+    using Marain.TenantManagement.Configuration;
 
     /// <summary>
     /// Base class for the different supported types of configuration entry.
@@ -25,10 +27,10 @@ namespace Marain.TenantManagement.ServiceManifests
         public abstract string ContentType { get; }
 
         /// <summary>
-        /// Gets the expected content type of the <see cref="EnrollmentConfigurationItem"/> that should be provided for
+        /// Gets the expected content type of the <see cref="ConfigurationItem"/> that should be provided for
         /// this configuration entry.
         /// </summary>
-        public abstract string ExpectedConfigurationItemContentType { get; }
+        public abstract string[] ExpectedConfigurationItemContentTypes { get; }
 
         /// <summary>
         /// Gets or sets the key of the configuration entry. This is used to match configuration supplied as part of
@@ -59,7 +61,9 @@ namespace Marain.TenantManagement.ServiceManifests
         /// Properties to pass to
         /// <see cref="ITenantStore.UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>.
         /// </returns>
-        public abstract IEnumerable<KeyValuePair<string, object>> AddToTenantProperties(IEnumerable<KeyValuePair<string, object>> existingValues, EnrollmentConfigurationItem enrollmentConfigurationItem);
+        public abstract IEnumerable<KeyValuePair<string, object>> AddToTenantProperties(
+            IEnumerable<KeyValuePair<string, object>> existingValues,
+            ConfigurationItem enrollmentConfigurationItem);
 
         /// <summary>
         /// Removes any data associated with this required configuration entry from the specified tenant.
@@ -70,7 +74,10 @@ namespace Marain.TenantManagement.ServiceManifests
         /// <see cref="ITenantStore.UpdateTenantAsync(string, string?, IEnumerable{KeyValuePair{string, object}}?, IEnumerable{string}?)"/>
         /// to remove the storage configuration.
         /// </returns>
-        public abstract IEnumerable<string> GetPropertiesToRemoveFromTenant(ITenant tenant);
+        public virtual IEnumerable<string> GetPropertiesToRemoveFromTenant(ITenant tenant)
+        {
+            return new[] { this.Key };
+        }
 
         /// <summary>
         /// Validates the configuration entry.
@@ -79,9 +86,10 @@ namespace Marain.TenantManagement.ServiceManifests
         /// <returns>A list of validation errors. If the entry is valid, the list is empty.</returns>
         public virtual IList<string> Validate(string messagePrefix)
         {
+            ArgumentNullException.ThrowIfNull(messagePrefix);
             if (string.IsNullOrEmpty(messagePrefix))
             {
-                throw new ArgumentException(nameof(messagePrefix));
+                throw new ArgumentException("Message prefix must be non-empty", nameof(messagePrefix));
             }
 
             var errors = new List<string>();

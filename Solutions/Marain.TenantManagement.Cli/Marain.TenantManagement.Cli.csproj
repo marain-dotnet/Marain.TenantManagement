@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <AssemblyName>marain</AssemblyName>
     <IsPackable>true</IsPackable>
@@ -44,19 +44,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Corvus.Identity.MicrosoftRest" Version="3.1.0" />
     <PackageReference Include="Endjin.RecommendedPractices.GitHub" Version="2.1.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Marain.Tenancy.ClientTenantProvider" Version="1.1.15" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="[3.1.*,)" />
-    <PackageReference Include="Corvus.Identity.ManagedServiceIdentity.ClientAuthentication" Version="1.0.7" />
+    <PackageReference Include="Marain.Tenancy.ClientTenantProvider" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="[6.0.*,)" />
     <PackageReference Include="ConsoleTables" Version="2.4.2" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.21308.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Marain.TenantManagement.Abstractions\Marain.TenantManagement.Abstractions.csproj" />
+    <ProjectReference Include="..\Marain.TenantManagement.Azure.BlobStorage\Marain.TenantManagement.Azure.BlobStorage.csproj" />
+    <ProjectReference Include="..\Marain.TenantManagement.Azure.Cosmos\Marain.TenantManagement.Azure.Cosmos.csproj" />
+    <ProjectReference Include="..\Marain.TenantManagement.Azure.TableStorage\Marain.TenantManagement.Azure.TableStorage.csproj" />
   </ItemGroup>
 
   <ItemGroup>

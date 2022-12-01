@@ -53,8 +53,10 @@ namespace Marain.TenantManagement.Cli.Commands
 
         private IList<ITenant> FlattenHierarchy(TenantWithChildren root)
         {
-            List<ITenant> result = new();
-            result.Add(root.Tenant);
+            List<ITenant> result = new()
+            {
+                root.Tenant,
+            };
 
             foreach (TenantWithChildren child in root.Children)
             {

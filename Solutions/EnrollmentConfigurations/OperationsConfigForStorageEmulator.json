@@ -1,11 +1,12 @@
-[
-  {
-    "key": "operationsStore",
-    "contentType": "application/vnd.marain.tenancy.enrollment.configurationitem.azureblobstorage",
-    "configuration": {
-      "accountName": "",
-      "container": "operations",
-      "disableTenantIdPrefix": false
+{
+  "serviceName": "Operations v1",
+  "configurationItems": {
+    "Marain:Operations:BlobContainerConfiguration:Operations": {
+      "contentType": "application/vnd.marain.tenancy.configurationitem.azureblobstorage.v3",
+      "configuration": {
+        "connectionStringPlainText": "UseDevelopmentStorage=true",
+        "container": "operations"
+      }
     }
   }
-]
+}

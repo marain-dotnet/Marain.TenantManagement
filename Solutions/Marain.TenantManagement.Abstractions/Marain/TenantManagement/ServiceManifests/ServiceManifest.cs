@@ -25,7 +25,9 @@ namespace Marain.TenantManagement.ServiceManifests
         /// <summary>
         /// Gets the content type of the Service Manifest.
         /// </summary>
+#pragma warning disable CA1822 // Mark members as static - discovered by Content Handler via reflection, unfortunately
         public string ContentType => RegisteredContentType;
+#pragma warning restore CA1822 // Mark members as static
 
         /// <summary>
         /// Gets or sets the well known Guid that will be used when creating the service tenant.
@@ -61,10 +63,7 @@ namespace Marain.TenantManagement.ServiceManifests
         public async Task<IList<string>> ValidateAsync(
             ITenantStore tenantStore)
         {
-            if (tenantStore == null)
-            {
-                throw new ArgumentNullException(nameof(tenantStore));
-            }
+            ArgumentNullException.ThrowIfNull(tenantStore);
 
             var errors = new ConcurrentBag<string>();
 

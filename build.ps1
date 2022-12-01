@@ -132,6 +132,8 @@ $SkipAnalysis = $false
 $SkipPackage = $false
 $SkipPublish = $false
 
+# Advanced build settings
+$EnableGitVersionAdoVariableWorkaround = $false
 
 #
 # Build process configuration
@@ -145,12 +147,10 @@ $NuSpecFilesToPackage = @(
 )
 
 #
-# Specify files to exclude from code coverage
+# Specify files to exclude from test coverage
 # This option is for excluding generated code
-# - Use file path or directory path with globbing (e.g dir1/*.cs)
-# - Use single or multiple paths (separated by comma) (e.g. **/dir1/class1.cs,**/dir2/*.cs,**/dir3/**/*.cs)
-#
 $ExcludeFilesFromCodeCoverage = ""
+
 
 # Synopsis: Build, Test and Package
 task . FullBuild

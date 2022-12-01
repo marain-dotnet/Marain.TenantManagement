@@ -8,13 +8,15 @@ namespace Microsoft.Extensions.DependencyInjection
     using System.Collections.Generic;
     using System.CommandLine;
     using System.Linq;
-    using Corvus.Identity.ManagedServiceIdentity.ClientAuthentication;
+
+    using Corvus.Identity.ClientAuthentication.Azure;
     using Marain.Tenancy.Client;
     using Marain.TenantManagement.Cli.Commands;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
+    using Newtonsoft.Json.Serialization;
 
     /// <summary>
     /// Extension methods to configure the DI container used by the CLI.
@@ -64,20 +66,20 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddJsonNetPropertyBag();
             services.AddJsonNetCultureInfoConverter();
             services.AddJsonNetDateTimeOffsetToIso8601AndUnixTimeConverter();
-            services.AddSingleton<JsonConverter>(new StringEnumConverter(true));
+            services.AddSingleton<JsonConverter>(new StringEnumConverter(new CamelCaseNamingStrategy()));
 
-            var msiTokenSourceOptions = new AzureManagedIdentityTokenSourceOptions
-            {
-                AzureServicesAuthConnectionString = config["AzureServicesAuthConnectionString"],
-            };
+            LegacyAzureServiceTokenProviderOptions serviceTokenProviderOptions = config.Get<LegacyAzureServiceTokenProviderOptions>();
 
-            services.AddAzureManagedIdentityBasedTokenSource(msiTokenSourceOptions);
+            services.AddServiceIdentityAzureTokenCredentialSourceFromLegacyConnectionString(serviceTokenProviderOptions);
+            services.AddMicrosoftRestAdapterForServiceIdentityAccessTokenSource();
 
             TenancyClientOptions tenancyClientOptions = config.GetSection("TenancyClient").Get<TenancyClientOptions>();
             services.AddSingleton(tenancyClientOptions);
             services.AddTenantProviderServiceClient();
 
-            services.AddMarainTenantManagement();
+            services.AddMarainTenantManagementForBlobStorage();
+            services.AddMarainTenantManagementForTableStorage();
+            services.AddMarainTenantManagementForCosmosDb();
 
             return services;
         }

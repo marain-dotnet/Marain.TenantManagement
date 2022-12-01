@@ -5,6 +5,7 @@
 namespace Marain.TenantManagement.Cli.Commands
 {
     using System;
+    using System.Collections.Immutable;
     using System.CommandLine;
     using System.CommandLine.Invocation;
     using System.IO;
@@ -12,6 +13,8 @@ namespace Marain.TenantManagement.Cli.Commands
     using Corvus.Extensions.Json;
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
+
+    using Marain.TenantManagement.Configuration;
     using Marain.TenantManagement.EnrollmentConfiguration;
     using Marain.TenantManagement.Exceptions;
     using Newtonsoft.Json;
@@ -68,13 +71,17 @@ namespace Marain.TenantManagement.Cli.Commands
 
         private async Task<int> HandleCommand(string enrollingTenantId, string serviceTenantId, FileInfo? config)
         {
-            var enrollmentConfig = new EnrollmentConfigurationItem[0];
+            EnrollmentConfigurationEntry enrollmentConfig;
 
             if (config != null)
             {
                 string configJson = File.ReadAllText(config.FullName);
                 enrollmentConfig =
-                    JsonConvert.DeserializeObject<EnrollmentConfigurationItem[]>(configJson, this.serializerSettingsProvider.Instance);
+                    JsonConvert.DeserializeObject<EnrollmentConfigurationEntry>(configJson, this.serializerSettingsProvider.Instance)!;
+            }
+            else
+            {
+                enrollmentConfig = new(ImmutableDictionary<string, ConfigurationItem>.Empty, null);
             }
 
             try

@@ -6,35 +6,23 @@
   "dependsOnServiceTenants": [
     {
       "id": "3633754ac4c9be44b55bfe791b1780f12429524fe7b6cc48a265a307407ec858",
-      "expectedName": "Operations v1"
+      "expectedName": "SvcC1D(C1D())"
     }
   ],
   "requiredConfigurationEntries": [
     {
-      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb",
-      "key": "workflowStore",
-      "containerDefinition": {
-        "databaseName": "workflow",
-        "containerName": "definitions"
-      },
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb.v3",
+      "key": "MarainWorkflow:CosmosContainerConfiguration:Definitions",
       "description": "Workflow definitions"
     },
     {
-      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb",
-      "key": "workflowInstanceStore",
-      "containerDefinition": {
-        "databaseName": "workflow",
-        "containerName": "instances"
-      },
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb.v3",
+      "key": "MarainWorkflow:CosmosContainerConfiguration:Instances",
       "description": "Workflow instances"
     },
     {
-      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azuretablestorage",
-      "type": "azureTableConfiguration",
-      "key": "auditStore",
-      "containerDefinition": {
-        "tableName": "audit"
-      },
+      "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azuretablestorage.v3",
+      "key": "MarainWorkflow:BlobContainerConfiguration:AuditLogs",
       "description": "Stores audit logs"
     }
   ]
