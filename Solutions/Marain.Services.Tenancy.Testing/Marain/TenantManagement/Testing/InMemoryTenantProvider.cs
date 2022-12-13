@@ -224,7 +224,7 @@ namespace Marain.TenantManagement.Testing
 
             public ITenant Tenant
             {
-                get => JsonConvert.DeserializeObject<Tenant>(this.tenant, this.settings);
+                get => JsonConvert.DeserializeObject<Tenant>(this.tenant, this.settings)!;
                 set => this.tenant = JsonConvert.SerializeObject(value, this.settings);
             }
         }
