@@ -11,6 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
+    using Newtonsoft.Json.Serialization;
 
     /// <summary>
     /// Helper methods to add Marain tenant management features to a service collection.
@@ -35,7 +36,7 @@ namespace Microsoft.Extensions.DependencyInjection
             serviceCollection.AddJsonNetPropertyBag();
             serviceCollection.AddJsonNetCultureInfoConverter();
             serviceCollection.AddJsonNetDateTimeOffsetToIso8601AndUnixTimeConverter();
-            serviceCollection.AddSingleton<JsonConverter>(new StringEnumConverter(true));
+            serviceCollection.AddSingleton<JsonConverter>(new StringEnumConverter(new CamelCaseNamingStrategy()));
             return serviceCollection;
         }
 

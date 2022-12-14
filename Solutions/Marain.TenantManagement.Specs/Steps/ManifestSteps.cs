@@ -311,7 +311,7 @@ namespace Marain.TenantManagement.Specs.Steps
 
             string manifestJson = manifestStreamReader.ReadToEnd();
 
-            return JsonConvert.DeserializeObject<ServiceManifest>(manifestJson, settingsProvider.Instance);
+            return JsonConvert.DeserializeObject<ServiceManifest>(manifestJson, settingsProvider.Instance)!;
         }
     }
 }

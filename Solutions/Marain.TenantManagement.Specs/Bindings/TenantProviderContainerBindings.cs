@@ -9,6 +9,8 @@ namespace Marain.TenantManagement.Specs.Bindings
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
+    using Newtonsoft.Json.Serialization;
+
     using TechTalk.SpecFlow;
 
     [Binding]
@@ -29,7 +31,7 @@ namespace Marain.TenantManagement.Specs.Bindings
                 collection.AddJsonNetPropertyBag();
                 collection.AddJsonNetCultureInfoConverter();
                 collection.AddJsonNetDateTimeOffsetToIso8601AndUnixTimeConverter();
-                collection.AddSingleton<JsonConverter>(new StringEnumConverter(true));
+                collection.AddSingleton<JsonConverter>(new StringEnumConverter(new CamelCaseNamingStrategy()));
 
                 collection.AddMarainTenantManagement();
                 collection.AddMarainTenantManagementForBlobStorage();
