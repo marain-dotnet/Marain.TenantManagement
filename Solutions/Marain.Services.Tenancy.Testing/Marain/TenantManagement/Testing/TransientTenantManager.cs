@@ -136,7 +136,7 @@ namespace Marain.TenantManagement.Testing
         {
             ServiceManifest manifest = JsonConvert.DeserializeObject<ServiceManifest>(
                 serviceManifestJson,
-                this.jsonSerializerSettingsProvider.Instance);
+                this.jsonSerializerSettingsProvider.Instance)!;
 
             return this.CreateTransientServiceTenantAsync(manifest);
         }
