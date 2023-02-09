@@ -33,11 +33,11 @@ namespace Microsoft.Extensions.DependencyInjection
 
         private static void AddTenantManagementContentTypes(ContentFactory factory)
         {
-            factory.RegisterTransientContent<ServiceManifestTableStorageConfigurationEntry>();
-            factory.RegisterTransientContent<ServiceManifestLegacyV2TableStorageConfigurationEntry>();
+            factory.RegisterContent<ServiceManifestTableStorageConfigurationEntry>();
+            factory.RegisterContent<ServiceManifestLegacyV2TableStorageConfigurationEntry>();
 
-            factory.RegisterTransientContent<TableConfigurationItem>();
-            factory.RegisterTransientContent<LegacyV2TableStorageConfigurationItem>();
+            factory.RegisterContent<TableConfigurationItem>();
+            factory.RegisterContent<LegacyV2TableStorageConfigurationItem>();
         }
     }
 }

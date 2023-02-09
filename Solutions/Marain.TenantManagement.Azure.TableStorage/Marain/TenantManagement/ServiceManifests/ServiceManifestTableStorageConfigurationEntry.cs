@@ -12,9 +12,13 @@ namespace Marain.TenantManagement.ServiceManifests
     /// <summary>
     /// Service manifest configuration entry for table storage.
     /// </summary>
-    public class ServiceManifestTableStorageConfigurationEntry :
+    public record ServiceManifestTableStorageConfigurationEntry(
+        string Key,
+        string Description,
+        string? LegacyV2Key = null) :
         ServiceManifestRequiredConfigurationEntryWithV2LegacySupport<
-            TableConfiguration, TableConfigurationItem, LegacyV2TableConfiguration, LegacyV2TableStorageConfigurationItem>
+            TableConfiguration, TableConfigurationItem, LegacyV2TableConfiguration, LegacyV2TableStorageConfigurationItem>(
+        Key, Description, LegacyV2Key)
     {
         /// <summary>
         /// The content type of the configuration entry.

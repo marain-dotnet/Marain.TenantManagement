@@ -14,7 +14,10 @@ using Marain.TenantManagement.Configuration;
 /// <summary>
 /// Service manifest configuration entry for CosmosDb.
 /// </summary>
-public class ServiceManifestLegacyV2CosmosDbConfigurationEntry : ServiceManifestRequiredConfigurationEntry
+public record ServiceManifestLegacyV2CosmosDbConfigurationEntry(
+    string Key,
+    string Description)
+    : ServiceManifestRequiredConfigurationEntry(Key, Description)
 {
     /// <summary>
     /// The content type of the configuration entry.

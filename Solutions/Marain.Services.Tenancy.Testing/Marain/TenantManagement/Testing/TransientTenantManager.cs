@@ -9,15 +9,19 @@ namespace Marain.TenantManagement.Testing
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Text.Json;
     using System.Threading.Tasks;
-    using Corvus.Extensions.Json;
+
+    using Corvus.Json.Serialization;
     using Corvus.Tenancy;
     using Corvus.Testing.SpecFlow;
+
     using Marain.TenantManagement;
     using Marain.TenantManagement.EnrollmentConfiguration;
     using Marain.TenantManagement.ServiceManifests;
+
     using Microsoft.Extensions.DependencyInjection;
-    using Newtonsoft.Json;
+
     using TechTalk.SpecFlow;
 
     /// <summary>
@@ -27,17 +31,17 @@ namespace Marain.TenantManagement.Testing
     public sealed class TransientTenantManager
     {
         private readonly ITenantStore tenantStore;
-        private readonly IJsonSerializerSettingsProvider jsonSerializerSettingsProvider;
+        private readonly IJsonSerializerOptionsProvider serializerOptionsProvider;
         private readonly List<ITenant> tenants = new();
         private readonly List<(string EnrolledTenantId, string ServiceTenantId)> enrollments = new();
         private ITenant? primaryTransientClient;
 
         private TransientTenantManager(
             ITenantStore tenantStore,
-            IJsonSerializerSettingsProvider jsonSerializerSettingsProvider)
+            IJsonSerializerOptionsProvider jsonSerializerSettingsProvider)
         {
             this.tenantStore = tenantStore;
-            this.jsonSerializerSettingsProvider = jsonSerializerSettingsProvider;
+            this.serializerOptionsProvider = jsonSerializerSettingsProvider;
         }
 
         /// <summary>
@@ -63,7 +67,7 @@ namespace Marain.TenantManagement.Testing
         /// <see cref="FeatureContext"/> and used to obtain instances of:
         /// <list type="bullet">
         ///     <item><see cref="ITenantProvider"/></item>
-        ///     <item><see cref="IJsonSerializerSettingsProvider"/></item>
+        ///     <item><see cref="IJsonSerializerOptionsProvider"/></item>
         /// </list>
         /// The <see cref="ITenantStore"/> must already be initialised for use with
         /// Marain.
@@ -76,7 +80,7 @@ namespace Marain.TenantManagement.Testing
 
                 helper = new TransientTenantManager(
                     serviceProvider.GetRequiredService<ITenantStore>(),
-                    serviceProvider.GetRequiredService<IJsonSerializerSettingsProvider>());
+                    serviceProvider.GetRequiredService<IJsonSerializerOptionsProvider>());
 
                 featureContext.Set(helper);
             }
@@ -134,9 +138,9 @@ namespace Marain.TenantManagement.Testing
         /// <returns>The new transient tenant.</returns>
         public Task<ITenant> CreateTransientServiceTenantAsync(string serviceManifestJson)
         {
-            ServiceManifest manifest = JsonConvert.DeserializeObject<ServiceManifest>(
+            ServiceManifest manifest = JsonSerializer.Deserialize<ServiceManifest>(
                 serviceManifestJson,
-                this.jsonSerializerSettingsProvider.Instance)!;
+                this.serializerOptionsProvider.Instance)!;
 
             return this.CreateTransientServiceTenantAsync(manifest);
         }
@@ -149,8 +153,11 @@ namespace Marain.TenantManagement.Testing
         /// <returns>The new transient tenant.</returns>
         public async Task<ITenant> CreateTransientServiceTenantAsync(ServiceManifest manifest)
         {
-            manifest.WellKnownTenantGuid = Guid.NewGuid();
-            manifest.ServiceName = $"{manifest.ServiceName} - {manifest.WellKnownTenantGuid}";
+            manifest = manifest with
+            {
+                WellKnownTenantGuid = Guid.NewGuid(),
+                ServiceName = $"{manifest.ServiceName} - {manifest.WellKnownTenantGuid}",
+            };
 
             ITenant serviceTenant =
                 await this.tenantStore.CreateServiceTenantAsync(manifest).ConfigureAwait(false);

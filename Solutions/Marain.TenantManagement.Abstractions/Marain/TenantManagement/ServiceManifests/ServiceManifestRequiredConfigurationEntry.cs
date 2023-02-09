@@ -12,9 +12,16 @@ namespace Marain.TenantManagement.ServiceManifests
     using Marain.TenantManagement.Configuration;
 
     /// <summary>
-    /// Base class for the different supported types of configuration entry.
+    /// Base type for the different supported types of configuration entry.
     /// </summary>
-    public abstract class ServiceManifestRequiredConfigurationEntry
+    /// <param name="Key">
+    /// Key of the configuration entry. This is used to match configuration supplied as part of
+    /// enrollment with the configuration entry it relates to.
+    /// </param>
+    /// <param name="Description">Description of the configuration entry.</param>
+    public abstract record ServiceManifestRequiredConfigurationEntry(
+        string Key,
+        string Description)
     {
         /// <summary>
         /// Base content type for configuration entries.
@@ -31,21 +38,6 @@ namespace Marain.TenantManagement.ServiceManifests
         /// this configuration entry.
         /// </summary>
         public abstract string[] ExpectedConfigurationItemContentTypes { get; }
-
-        /// <summary>
-        /// Gets or sets the key of the configuration entry. This is used to match configuration supplied as part of
-        /// enrollment with the configuration entry it relates to.
-        /// </summary>
-#nullable disable annotations
-        public string Key { get; set; }
-#nullable restore annotations
-
-        /// <summary>
-        /// Gets or sets the description of the configuration entry.
-        /// </summary>
-#nullable disable annotations
-        public string Description { get; set; }
-#nullable restore annotations
 
         /// <summary>
         /// Adds the configuration entry to the given tenant, using the supplied enrollment configuration item to provide the
