@@ -8,9 +8,10 @@ namespace Marain.TenantManagement.Specs.Steps
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Text.Json;
     using System.Threading.Tasks;
 
-    using Corvus.Extensions.Json;
+    using Corvus.Json.Serialization;
     using Corvus.Tenancy;
     using Corvus.Testing.SpecFlow;
 
@@ -18,11 +19,10 @@ namespace Marain.TenantManagement.Specs.Steps
 
     using Microsoft.Extensions.DependencyInjection;
 
-    using Newtonsoft.Json;
-
     using NUnit.Framework;
 
     using TechTalk.SpecFlow;
+    using TechTalk.SpecFlow.Assist;
 
     [Binding]
     public class ManifestSteps
@@ -46,23 +46,20 @@ namespace Marain.TenantManagement.Specs.Steps
         [Given("I have a legacy V2 service manifest called '([^']*)' with no service name")]
         public void GivenIHaveAServiceManifestCalled(string manifestName)
         {
-            this.GivenIHaveAServiceManifestCalled(manifestName, null!);
+            this.GivenIHaveAServiceManifestCalled(manifestName, null);
         }
 
         [Given("I have a service manifest called '(.*)' for a service called '(.*)'")]
         [Given("I have a legacy V2 service manifest called '([^']*)' for a service called '([^']*)'")]
-        public void GivenIHaveAServiceManifestCalled(string manifestName, string serviceName)
+        public void GivenIHaveAServiceManifestCalled(string manifestName, string? serviceName)
         {
-            if (serviceName != null)
-            {
-                serviceName = serviceName.TrimStart('"').TrimEnd('"');
-            }
+            serviceName = serviceName is null
+                ? string.Empty
+                : serviceName.TrimStart('"').TrimEnd('"');
 
-            var manifest = new ServiceManifest
-            {
-                WellKnownTenantGuid = Guid.NewGuid(),
-                ServiceName = serviceName,
-            };
+            var manifest = new ServiceManifest(
+                WellKnownTenantGuid: Guid.NewGuid(),
+                ServiceName: serviceName);
 
             this.namedManifests.Add(manifestName, manifest);
         }
@@ -71,24 +68,24 @@ namespace Marain.TenantManagement.Specs.Steps
         [Given("the well-known tenant Guid for the legacy V2 manifest called '([^']*)' is '([^']*)'")]
         public void GivenTheWell_KnownTenantGuidForTheManifestCalledIs(string manifestName, Guid wellKnownTenantGuid)
         {
-            ServiceManifest manifest = this.NamedManifest(manifestName);
-            manifest.WellKnownTenantGuid = wellKnownTenantGuid;
+            this.ModifyManifest(
+                manifestName,
+                m => m with { WellKnownTenantGuid = wellKnownTenantGuid });
         }
 
         [Given("the service manifest called '(.*)' has the following dependencies")]
         [Given("the legacy V2 service manifest called '([^']*)' has the following dependencies")]
         public void GivenTheServiceManifestCalledHasTheFollowingDependencies(string manifestName, Table dependencyTable)
         {
-            ServiceManifest manifest = this.NamedManifest(manifestName);
-
-            foreach (TableRow row in dependencyTable.Rows)
-            {
-                manifest.DependsOnServiceTenants.Add(new ServiceDependency
+            this.ModifyManifest(
+                manifestName,
+                m => m with
                 {
-                    Id = row[0],
-                    ExpectedName = row[1],
+                    DependsOnServiceTenants = dependencyTable
+                        .CreateSet<(string Id, string Name)>()
+                        .Select(kd => new ServiceDependency(kd.Id, kd.Name))
+                        .ToList(),
                 });
-            }
         }
 
         [When("I validate the service manifest called '(.*)'")]
@@ -227,82 +224,94 @@ namespace Marain.TenantManagement.Specs.Steps
         public void GivenTheServiceManifestCalledHasTheFollowingAzureBlobStorageConfigurationEntries(
             string manifestName, Table table)
         {
-            ServiceManifest manifest = this.NamedManifest(manifestName);
-
-            manifest.RequiredConfigurationEntries.Add(new ServiceManifestBlobStorageConfigurationEntry
-            {
-                Key = table.Rows[0]["Key"],
-                Description = table.Rows[0]["Description"],
-            });
+            this.ModifyManifest(
+                manifestName,
+                m => m with
+                {
+                    RequiredConfigurationEntries = table
+                        .CreateSet<(string Key, string Description)>()
+                        .Select(kd => new ServiceManifestBlobStorageConfigurationEntry(kd.Key, kd.Description))
+                        .ToList<ServiceManifestRequiredConfigurationEntry>(),
+                });
         }
 
         [Given("the service manifest called '([^']*)' has the following legacy V2 Azure Blob Storage configuration entries")]
         public void GivenTheServiceManifestCalledHasTheFollowingLegacyV2AzureBlobStorageConfigurationEntries(
             string manifestName, Table table)
         {
-            ServiceManifest manifest = this.NamedManifest(manifestName);
-
-            manifest.RequiredConfigurationEntries.Add(new ServiceManifestLegacyV2BlobStorageConfigurationEntry
-            {
-                Key = table.Rows[0]["Key"],
-                Description = table.Rows[0]["Description"],
-            });
+            this.ModifyManifest(
+                manifestName,
+                m => m with
+                {
+                    RequiredConfigurationEntries = table
+                        .CreateSet<(string Key, string Description)>()
+                        .Select(kd => new ServiceManifestLegacyV2BlobStorageConfigurationEntry(kd.Key, kd.Description))
+                        .ToList<ServiceManifestRequiredConfigurationEntry>(),
+                });
         }
 
         [Given("the service manifest called '(.*)' has the following Azure Table Storage configuration entries")]
         public void GivenTheServiceManifestCalledHasTheFollowingAzureTableStorageConfigurationEntries(string manifestName, Table table)
         {
-            ServiceManifest manifest = this.NamedManifest(manifestName);
-
-            manifest.RequiredConfigurationEntries.Add(new ServiceManifestTableStorageConfigurationEntry
-            {
-                Key = table.Rows[0]["Key"],
-                Description = table.Rows[0]["Description"],
-            });
+            this.ModifyManifest(
+                manifestName,
+                m => m with
+                {
+                    RequiredConfigurationEntries = table
+                        .CreateSet<(string Key, string Description)>()
+                        .Select(kd => new ServiceManifestTableStorageConfigurationEntry(kd.Key, kd.Description))
+                        .ToList<ServiceManifestRequiredConfigurationEntry>(),
+                });
         }
 
         [Given("the service manifest called '(.*)' has the following legacy V2 Azure Table Storage configuration entries")]
         public void GivenTheServiceManifestCalledHasTheFollowingLegacyV2AzureTableStorageConfigurationEntries(
             string manifestName, Table table)
         {
-            ServiceManifest manifest = this.NamedManifest(manifestName);
-
-            manifest.RequiredConfigurationEntries.Add(new ServiceManifestLegacyV2TableStorageConfigurationEntry
-            {
-                Key = table.Rows[0]["Key"],
-                Description = table.Rows[0]["Description"],
-            });
+            this.ModifyManifest(
+                manifestName,
+                m => m with
+                {
+                    RequiredConfigurationEntries = table
+                        .CreateSet<(string Key, string Description)>()
+                        .Select(kd => new ServiceManifestLegacyV2TableStorageConfigurationEntry(kd.Key, kd.Description))
+                        .ToList<ServiceManifestRequiredConfigurationEntry>(),
+                });
         }
 
         [Given("the service manifest called '(.*)' has the following Azure CosmosDb Storage configuration entries")]
         public void GivenTheServiceManifestCalledHasTheFollowingAzureCosmosDbStorageConfigurationEntries(string manifestName, Table table)
         {
-            ServiceManifest manifest = this.NamedManifest(manifestName);
-
-            manifest.RequiredConfigurationEntries.Add(new ServiceManifestCosmosDbConfigurationEntry
-            {
-                Key = table.Rows[0]["Key"],
-                Description = table.Rows[0]["Description"],
-            });
+            this.ModifyManifest(
+                manifestName,
+                m => m with
+                {
+                    RequiredConfigurationEntries = table
+                        .CreateSet<(string Key, string Description)>()
+                        .Select(kd => new ServiceManifestCosmosDbConfigurationEntry(kd.Key, kd.Description))
+                        .ToList<ServiceManifestRequiredConfigurationEntry>(),
+                });
         }
 
         [Given("the service manifest called '(.*)' has the following legacy V2 Azure CosmosDb Storage configuration entries")]
         public void GivenTheServiceManifestCalledHasTheFollowingLegacyV2AzureCosmosDbStorageConfigurationEntries(
             string manifestName, Table table)
         {
-            ServiceManifest manifest = this.NamedManifest(manifestName);
-
-            manifest.RequiredConfigurationEntries.Add(new ServiceManifestLegacyV2CosmosDbConfigurationEntry
-            {
-                Key = table.Rows[0]["Key"],
-                Description = table.Rows[0]["Description"],
-            });
+            this.ModifyManifest(
+                manifestName,
+                m => m with
+                {
+                    RequiredConfigurationEntries = table
+                        .CreateSet<(string Key, string Description)>()
+                        .Select(kd => new ServiceManifestLegacyV2CosmosDbConfigurationEntry(kd.Key, kd.Description))
+                        .ToList<ServiceManifestRequiredConfigurationEntry>(),
+                });
         }
 
         private ServiceManifest LoadManifestFile(string manifestName)
         {
-            IJsonSerializerSettingsProvider settingsProvider =
-                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<IJsonSerializerSettingsProvider>();
+            IJsonSerializerOptionsProvider settingsProvider =
+                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<IJsonSerializerOptionsProvider>();
 
             using Stream manifestStream = this.GetType().Assembly.GetManifestResourceStream($"Marain.TenantManagement.Specs.Data.ServiceManifests.{manifestName}.jsonc")
                 ?? throw new ArgumentException($"Could not find a resource in the Marain.TenantManagement.Specs.Data.ServiceManifests namespace called {manifestName}.jsonc");
@@ -311,7 +320,12 @@ namespace Marain.TenantManagement.Specs.Steps
 
             string manifestJson = manifestStreamReader.ReadToEnd();
 
-            return JsonConvert.DeserializeObject<ServiceManifest>(manifestJson, settingsProvider.Instance)!;
+            return JsonSerializer.Deserialize<ServiceManifest>(manifestJson, settingsProvider.Instance)!;
+        }
+
+        private void ModifyManifest(string manifestName, Func<ServiceManifest, ServiceManifest> modify)
+        {
+            this.namedManifests[manifestName] = modify(this.NamedManifest(manifestName));
         }
     }
 }

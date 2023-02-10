@@ -4,14 +4,14 @@
 
 namespace Microsoft.Extensions.DependencyInjection
 {
+    using System.Linq;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
+
     using Corvus.ContentHandling;
     using Corvus.Tenancy;
 
     using Marain.TenantManagement.ServiceManifests;
-
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using Newtonsoft.Json.Serialization;
 
     /// <summary>
     /// Helper methods to add Marain tenant management features to a service collection.
@@ -29,20 +29,33 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </remarks>
         public static IServiceCollection AddMarainTenantManagement(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddContentTypeBasedSerializationSupport();
-            serviceCollection.AddContent(AddTenantManagementContentTypes);
+            if (serviceCollection.Any(d => d.ServiceType == typeof(Sentinel)))
+            {
+                // We've already been called.
+                return serviceCollection;
+            }
 
-            serviceCollection.AddJsonNetSerializerSettingsProvider();
-            serviceCollection.AddJsonNetPropertyBag();
-            serviceCollection.AddJsonNetCultureInfoConverter();
-            serviceCollection.AddJsonNetDateTimeOffsetToIso8601AndUnixTimeConverter();
-            serviceCollection.AddSingleton<JsonConverter>(new StringEnumConverter(new CamelCaseNamingStrategy()));
+            serviceCollection.AddTransient<Sentinel>();
+
+            serviceCollection
+                .AddContentTypeBasedSerializationSupport()
+                .AddContent(AddTenantManagementContentTypes)
+                .AddJsonSerializerOptionsProvider()
+                .AddJsonPropertyBagFactory()
+                .AddJsonCultureInfoConverter()
+                .AddSingleton<JsonConverter>(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+
             return serviceCollection;
         }
 
         private static void AddTenantManagementContentTypes(ContentFactory factory)
         {
-            factory.RegisterTransientContent<ServiceManifest>();
+            factory.RegisterContent<ServiceManifest>();
+            factory.RegisterPolymorphicContentTarget<ServiceManifestRequiredConfigurationEntry>();
+        }
+
+        private class Sentinel
+        {
         }
     }
 }

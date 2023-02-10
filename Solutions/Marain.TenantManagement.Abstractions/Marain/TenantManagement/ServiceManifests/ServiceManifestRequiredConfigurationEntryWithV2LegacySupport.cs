@@ -26,23 +26,29 @@ using Marain.TenantManagement.Configuration;
 /// <typeparam name="TV2LegacyConfigurationItem">
 /// The V2 legacy configuration item type.
 /// </typeparam>
-public abstract class ServiceManifestRequiredConfigurationEntryWithV2LegacySupport<
+/// <param name="Key">
+/// Key of the configuration entry. This is used to match configuration supplied as part of
+/// enrollment with the configuration entry it relates to.
+/// </param>
+/// <param name="Description">Description of the configuration entry.</param>
+/// <param name="LegacyV2Key">
+/// The key under which this service supports legacy V2 style configuration entries to enable V2 to
+/// V3 migration, or null if the service does not support this.
+/// </param>
+public abstract record ServiceManifestRequiredConfigurationEntryWithV2LegacySupport<
     TConfiguration,
     TConfigurationItem,
     TV2LegacyConfiguration,
-    TV2LegacyConfigurationItem>
-    : ServiceManifestRequiredConfigurationEntry
+    TV2LegacyConfigurationItem>(
+        string Key,
+        string Description,
+        string? LegacyV2Key)
+        : ServiceManifestRequiredConfigurationEntry(Key, Description)
     where TConfiguration : class
     where TConfigurationItem : ConfigurationItem<TConfiguration>
     where TV2LegacyConfiguration : class
     where TV2LegacyConfigurationItem : ConfigurationItem<TV2LegacyConfiguration>
 {
-    /// <summary>
-    /// Gets or sets the key under which this service supports legacy V2 style configuration
-    /// entries to enable V2 to V3 migration, or null if the service does not support this.
-    /// </summary>
-    public string? LegacyV2Key { get; set; }
-
     /// <inheritdoc/>
     public override IEnumerable<KeyValuePair<string, object>> AddToTenantProperties(
         IEnumerable<KeyValuePair<string, object>> existingValues,

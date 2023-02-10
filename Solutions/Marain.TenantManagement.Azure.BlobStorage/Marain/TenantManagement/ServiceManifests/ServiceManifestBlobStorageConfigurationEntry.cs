@@ -12,9 +12,13 @@ namespace Marain.TenantManagement.ServiceManifests
     /// <summary>
     /// Service manifest configuration entry for blob storage.
     /// </summary>
-    public class ServiceManifestBlobStorageConfigurationEntry :
-        ServiceManifestRequiredConfigurationEntryWithV2LegacySupport<
-            BlobContainerConfiguration, BlobContainerConfigurationItem, LegacyV2BlobStorageConfiguration, LegacyV2BlobStorageConfigurationItem>
+    public record ServiceManifestBlobStorageConfigurationEntry(
+        string Key,
+        string Description,
+        string? LegacyV2Key = null)
+        : ServiceManifestRequiredConfigurationEntryWithV2LegacySupport<
+            BlobContainerConfiguration, BlobContainerConfigurationItem, LegacyV2BlobStorageConfiguration, LegacyV2BlobStorageConfigurationItem>(
+                Key, Description, LegacyV2Key)
     {
         /// <summary>
         /// The content type of the configuration entry.

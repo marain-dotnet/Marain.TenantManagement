@@ -12,9 +12,13 @@ namespace Marain.TenantManagement.ServiceManifests
     /// <summary>
     /// Service manifest configuration entry for CosmosDb.
     /// </summary>
-    public class ServiceManifestCosmosDbConfigurationEntry :
+    public record ServiceManifestCosmosDbConfigurationEntry(
+        string Key,
+        string Description,
+        string? LegacyV2Key = null) :
         ServiceManifestRequiredConfigurationEntryWithV2LegacySupport<
-            CosmosContainerConfiguration, CosmosContainerConfigurationItem, LegacyV2CosmosContainerConfiguration, LegacyV2CosmosConfigurationItem>
+            CosmosContainerConfiguration, CosmosContainerConfigurationItem, LegacyV2CosmosContainerConfiguration, LegacyV2CosmosConfigurationItem>(
+            Key, Description, LegacyV2Key)
     {
         /// <summary>
         /// The content type of the configuration entry.

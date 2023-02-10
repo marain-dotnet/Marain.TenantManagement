@@ -14,7 +14,10 @@ using Marain.TenantManagement.Configuration;
 /// <summary>
 /// Service manifest configuration entry for blob storage.
 /// </summary>
-public class ServiceManifestLegacyV2BlobStorageConfigurationEntry : ServiceManifestRequiredConfigurationEntry
+public record ServiceManifestLegacyV2BlobStorageConfigurationEntry(
+        string Key,
+        string Description)
+    : ServiceManifestRequiredConfigurationEntry(Key, Description)
 {
     /// <summary>
     /// The content type of the configuration entry.

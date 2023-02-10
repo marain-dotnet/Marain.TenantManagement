@@ -7,14 +7,13 @@ namespace Marain.TenantManagement.Testing
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text.Json;
     using System.Threading.Tasks;
 
-    using Corvus.Extensions.Json;
     using Corvus.Json;
+    using Corvus.Json.Serialization;
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
-
-    using Newtonsoft.Json;
 
     /// <summary>
     /// In-memory implementation of ITenantProvider.
@@ -40,7 +39,7 @@ namespace Marain.TenantManagement.Testing
     /// </remarks>
     public class InMemoryTenantProvider : ITenantStore
     {
-        private readonly IJsonSerializerSettingsProvider jsonSerializerSettingsProvider;
+        private readonly IJsonSerializerOptionsProvider serializerOptionsProvider;
         private readonly List<StoredTenant> allTenants = new();
         private readonly Dictionary<string, List<string>> tenantsByParent = new();
         private readonly IPropertyBagFactory propertyBagFactory;
@@ -49,15 +48,15 @@ namespace Marain.TenantManagement.Testing
         /// Creates a new instance of the <see cref="InMemoryTenantProvider"/> class.
         /// </summary>
         /// <param name="rootTenant">The root tenant.</param>
-        /// <param name="jsonSerializerSettingsProvider">The serialization settings provider.</param>
+        /// <param name="serializerOptionsProvider">The serialization settings provider.</param>
         /// <param name="propertyBagFactory">Provides the ability to create and modify property bags.</param>
         public InMemoryTenantProvider(
             RootTenant rootTenant,
-            IJsonSerializerSettingsProvider jsonSerializerSettingsProvider,
+            IJsonSerializerOptionsProvider serializerOptionsProvider,
             IPropertyBagFactory propertyBagFactory)
         {
             this.Root = rootTenant;
-            this.jsonSerializerSettingsProvider = jsonSerializerSettingsProvider;
+            this.serializerOptionsProvider = serializerOptionsProvider;
             this.propertyBagFactory = propertyBagFactory;
         }
 
@@ -81,7 +80,7 @@ namespace Marain.TenantManagement.Testing
 
             List<string> childrenList = this.GetChildren(parent.Id);
             childrenList.Add(newTenant.Id);
-            this.allTenants.Add(new StoredTenant(newTenant, this.jsonSerializerSettingsProvider.Instance));
+            this.allTenants.Add(new StoredTenant(newTenant, this.serializerOptionsProvider.Instance));
 
             return newTenant;
         }
@@ -207,10 +206,10 @@ namespace Marain.TenantManagement.Testing
         /// </summary>
         private class StoredTenant
         {
-            private readonly JsonSerializerSettings settings;
+            private readonly JsonSerializerOptions settings;
             private string tenant = string.Empty;
 
-            public StoredTenant(ITenant tenant, JsonSerializerSettings settings)
+            public StoredTenant(ITenant tenant, JsonSerializerOptions settings)
             {
                 this.settings = settings;
                 this.Id = tenant.Id;
@@ -224,8 +223,8 @@ namespace Marain.TenantManagement.Testing
 
             public ITenant Tenant
             {
-                get => JsonConvert.DeserializeObject<Tenant>(this.tenant, this.settings)!;
-                set => this.tenant = JsonConvert.SerializeObject(value, this.settings);
+                get => JsonSerializer.Deserialize<Tenant>(this.tenant, this.settings)!;
+                set => this.tenant = JsonSerializer.Serialize(value, this.settings);
             }
         }
     }
