@@ -48,8 +48,8 @@ Scenario: V3 dependency configuration
     And I have enrollment configuration called 'ConfigSvcC1V3orV2D()'
     And the 'ConfigSvcC1V2D(C1V3orV2D())' enrollment has a dependency on the service tenant called 'SvcC1V3orV2D()' using configuration 'ConfigSvcC1V3orV2D()'
     And the enrollment configuration called 'ConfigSvcC1V2D(C1V3orV2D())' contains the following legacy V2 Blob Storage configuration items
-    | Key                               | Account Name | Container      |
-    | StorageConfiguration__mycontainer | blobaccount1 | blobcontainer1 |
+    | Key         | Account Name | Container      |
+    | mycontainer | blobaccount1 | blobcontainer1 |
     And the enrollment configuration called 'ConfigSvcC1V3orV2D()' contains the following Blob Storage configuration items
     | Key                                                  | Account Name | Container      |
     | V3WithV2Migration:BlobContainerConfiguration:myblobs | blobaccount2 | blobcontainer2 |
@@ -66,8 +66,8 @@ Scenario: V2 dependency configuration
     And I have enrollment configuration called 'ConfigSvcC1V3orV2D()'
     And the 'ConfigSvcC1V2D(C1V3orV2D())' enrollment has a dependency on the service tenant called 'SvcC1V3orV2D()' using configuration 'ConfigSvcC1V3orV2D()'
     And the enrollment configuration called 'ConfigSvcC1V2D(C1V3orV2D())' contains the following legacy V2 Blob Storage configuration items
-    | Key                               | Account Name | Container      |
-    | StorageConfiguration__mycontainer | blobaccount1 | blobcontainer1 |
+    | Key         | Account Name | Container      |
+    | mycontainer | blobaccount1 | blobcontainer1 |
     And the enrollment configuration called 'ConfigSvcC1V3orV2D()' contains the following legacy V2 Blob Storage configuration items
     | Key                                                  | Account Name | Container      |
     | V3WithV2Migration:BlobContainerConfiguration:myblobs | blobaccount2 | blobcontainer2 |

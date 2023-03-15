@@ -12,7 +12,7 @@
   "requiredConfigurationEntries": [
     {
       "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage",
-      "key": "StorageConfiguration__mycontainer",
+      "key": "mycontainer",
       "description": "Stores blobs"
     }
   ]

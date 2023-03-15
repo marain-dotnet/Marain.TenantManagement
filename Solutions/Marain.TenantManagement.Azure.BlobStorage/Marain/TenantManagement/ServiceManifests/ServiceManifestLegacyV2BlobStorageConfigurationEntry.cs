@@ -14,7 +14,7 @@ using Marain.TenantManagement.Configuration;
 /// <summary>
 /// Service manifest configuration entry for blob storage.
 /// </summary>
-public class ServiceManifestLegacyV2BlobStorageConfigurationEntry : ServiceManifestRequiredConfigurationEntry
+public class ServiceManifestLegacyV2BlobStorageConfigurationEntry : ServiceManifestRequiredLegacyConfigurationEntry
 {
     /// <summary>
     /// The content type of the configuration entry.
@@ -44,13 +44,13 @@ public class ServiceManifestLegacyV2BlobStorageConfigurationEntry : ServiceManif
         }
 
         return existingValues.Append(new KeyValuePair<string, object>(
-            this.Key,
+            this.LegacyConfigurationEntryKey,
             blobStorageConfigurationItem.Configuration));
     }
 
     /// <inheritdoc/>
     public override IEnumerable<string> GetPropertiesToRemoveFromTenant(ITenant tenant)
     {
-        return new string[] { this.Key };
+        return new string[] { this.LegacyConfigurationEntryKey };
     }
 }

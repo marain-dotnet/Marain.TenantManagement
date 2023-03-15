@@ -6,17 +6,17 @@
   "requiredConfigurationEntries": [
     {
       "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azureblobstorage",
-      "key": "StorageConfiguration__mycontainer",
+      "key": "mycontainer",
       "description": "Stores blobs"
     },
     {
       "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.cosmosdb",
-      "key": "StorageConfiguration__mydb__mycontainer",
+      "key": "mydb__mycontainer",
       "description": "Stores docs"
     },
     {
       "contentType": "application/vnd.marain.tenancy.servicemanifests.requiredconfigurationentries.azuretablestorage",
-      "key": "StorageConfiguration__mytable",
+      "key": "mytable",
       "description": "Stores rows"
     }
   ]

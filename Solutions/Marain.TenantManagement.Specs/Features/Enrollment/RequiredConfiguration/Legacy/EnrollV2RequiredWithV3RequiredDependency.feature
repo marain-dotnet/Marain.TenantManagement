@@ -48,8 +48,8 @@ Scenario: Enroll
     And I have enrollment configuration called 'ConfigSvcC1D()'
     And the 'ConfigSvcC1V2D(C1D())' enrollment has a dependency on the service tenant called 'SvcC1D()' using configuration 'ConfigSvcC1D()'
     And the enrollment configuration called 'ConfigSvcC1V2D(C1D())' contains the following legacy V2 Blob Storage configuration items
-    | Key                               | Account Name | Container      |
-    | StorageConfiguration__mycontainer | blobaccount1 | blobcontainer1 |
+    | Key         | Account Name | Container      |
+    | mycontainer | blobaccount1 | blobcontainer1 |
     And the enrollment configuration called 'ConfigSvcC1D()' contains the following Blob Storage configuration items
     | Key                            | Account Name | Container      |
     | TestServices:C1D():FooBarStore | blobaccount2 | blobcontainer2 |

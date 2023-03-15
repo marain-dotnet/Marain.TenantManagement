@@ -14,7 +14,7 @@ using Marain.TenantManagement.Configuration;
 /// <summary>
 /// Service manifest configuration entry for table storage.
 /// </summary>
-public class ServiceManifestLegacyV2TableStorageConfigurationEntry : ServiceManifestRequiredConfigurationEntry
+public class ServiceManifestLegacyV2TableStorageConfigurationEntry : ServiceManifestRequiredLegacyConfigurationEntry
 {
     /// <summary>
     /// The content type of the configuration entry.
@@ -44,13 +44,13 @@ public class ServiceManifestLegacyV2TableStorageConfigurationEntry : ServiceMani
         }
 
         return existingValues.Append(new KeyValuePair<string, object>(
-            this.Key,
+            this.LegacyConfigurationEntryKey,
             tableStorageConfigurationItem.Configuration));
     }
 
     /// <inheritdoc/>
     public override IEnumerable<string> GetPropertiesToRemoveFromTenant(ITenant tenant)
     {
-        return new string[] { this.Key };
+        return new string[] { this.LegacyConfigurationEntryKey };
     }
 }
