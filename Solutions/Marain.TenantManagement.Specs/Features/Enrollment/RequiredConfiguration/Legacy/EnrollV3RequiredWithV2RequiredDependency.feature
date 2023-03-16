@@ -52,8 +52,8 @@ Scenario: Enroll
     | Key                                                   | Account Name | Container      |
     | V3WithV2Dependency:BlobContainerConfiguration:myblobs | blobaccount1 | blobcontainer1 |
     And the enrollment configuration called 'ConfigSvcC1V2D()' contains the following legacy V2 Blob Storage configuration items
-    | Key         | Account Name | Container      |
-    | mycontainer | blobaccount2 | blobcontainer2 |
+    | Key       | Account Name | Container      |
+    | container | blobaccount2 | blobcontainer2 |
     When I use the tenant store with the enrollment configuration called 'ConfigSvcC1D(C1V2D())' to enroll the tenant called 'Litware' in the service called 'SvcC1D(C1V2D())'
     Then the tenant called 'Litware' should have the id of the tenant called 'SvcC1D(C1V2D())' added to its enrollments
     And the tenant called 'Litware' should contain blob storage configuration under the key 'V3WithV2Dependency:BlobContainerConfiguration:myblobs' for the account 'blobaccount1' and container name 'blobcontainer1'

@@ -6,7 +6,7 @@ namespace Marain.TenantManagement.ServiceManifests;
 
 using System;
 using System.Collections.Generic;
-
+using Corvus.Storage.Azure.Cosmos.Tenancy;
 using Corvus.Tenancy;
 
 using Marain.TenantManagement.Configuration;
@@ -14,7 +14,7 @@ using Marain.TenantManagement.Configuration;
 /// <summary>
 /// Service manifest configuration entry for CosmosDb.
 /// </summary>
-public class ServiceManifestLegacyV2CosmosDbConfigurationEntry : ServiceManifestRequiredLegacyConfigurationEntry
+public class ServiceManifestLegacyV2CosmosDbConfigurationEntry : ServiceManifestRequiredLegacyConfigurationEntry<ServiceManifestLegacyV2CosmosDbContainerDefinition>
 {
     /// <summary>
     /// The content type of the configuration entry.
@@ -44,13 +44,13 @@ public class ServiceManifestLegacyV2CosmosDbConfigurationEntry : ServiceManifest
         }
 
         return existingValues.Append(new KeyValuePair<string, object>(
-            this.LegacyConfigurationEntryKey,
+            LegacyV2CosmosConfigurationKeyNaming.TenantPropertyKeyForLogicalDatabaseAndContainer(this.ContainerDefinition.DatabaseName, this.ContainerDefinition.ContainerName)!,
             cosmosConfigurationItem.Configuration));
     }
 
     /// <inheritdoc/>
     public override IEnumerable<string> GetPropertiesToRemoveFromTenant(ITenant tenant)
     {
-        return new string[] { this.LegacyConfigurationEntryKey };
+        return new string[] { LegacyV2CosmosConfigurationKeyNaming.TenantPropertyKeyForLogicalDatabaseAndContainer(this.ContainerDefinition.DatabaseName, this.ContainerDefinition.ContainerName)! };
     }
 }

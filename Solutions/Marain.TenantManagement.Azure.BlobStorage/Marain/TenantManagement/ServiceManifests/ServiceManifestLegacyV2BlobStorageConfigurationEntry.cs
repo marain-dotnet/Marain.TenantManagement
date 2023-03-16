@@ -6,7 +6,7 @@ namespace Marain.TenantManagement.ServiceManifests;
 
 using System;
 using System.Collections.Generic;
-
+using Corvus.Storage.Azure.BlobStorage.Tenancy;
 using Corvus.Tenancy;
 
 using Marain.TenantManagement.Configuration;
@@ -14,7 +14,7 @@ using Marain.TenantManagement.Configuration;
 /// <summary>
 /// Service manifest configuration entry for blob storage.
 /// </summary>
-public class ServiceManifestLegacyV2BlobStorageConfigurationEntry : ServiceManifestRequiredLegacyConfigurationEntry
+public class ServiceManifestLegacyV2BlobStorageConfigurationEntry : ServiceManifestRequiredLegacyConfigurationEntry<ServiceManifestLegacyV2BlobStorageContainerDefinition>
 {
     /// <summary>
     /// The content type of the configuration entry.
@@ -44,13 +44,13 @@ public class ServiceManifestLegacyV2BlobStorageConfigurationEntry : ServiceManif
         }
 
         return existingValues.Append(new KeyValuePair<string, object>(
-            this.LegacyConfigurationEntryKey,
+            LegacyV2BlobConfigurationKeyNaming.TenantPropertyKeyForLogicalContainer(this.ContainerDefinition.ContainerName),
             blobStorageConfigurationItem.Configuration));
     }
 
     /// <inheritdoc/>
     public override IEnumerable<string> GetPropertiesToRemoveFromTenant(ITenant tenant)
     {
-        return new string[] { this.LegacyConfigurationEntryKey };
+        return new string[] { LegacyV2BlobConfigurationKeyNaming.TenantPropertyKeyForLogicalContainer(this.ContainerDefinition.ContainerName) };
     }
 }

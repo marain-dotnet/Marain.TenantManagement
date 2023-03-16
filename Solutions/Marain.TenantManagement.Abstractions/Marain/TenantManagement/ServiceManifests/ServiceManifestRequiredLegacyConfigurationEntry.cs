@@ -7,19 +7,17 @@ namespace Marain.TenantManagement.ServiceManifests
     /// <summary>
     /// Base class for legacy configuration entry types.
     /// </summary>
-    public abstract class ServiceManifestRequiredLegacyConfigurationEntry : ServiceManifestRequiredConfigurationEntry
+    /// <typeparam name="TContainerDefinition">
+    /// The type of the container definition class that is used to generate the configuration key when adding configuration
+    /// to the target tenant.
+    /// </typeparam>
+    public abstract class ServiceManifestRequiredLegacyConfigurationEntry<TContainerDefinition> : ServiceManifestRequiredConfigurationEntry
     {
         /// <summary>
-        /// The prefix for legacy v2 configuration entries.
+        /// Gets or sets the legacy container definition which will be used to generate the configuration key.
         /// </summary>
-        private const string LegacyV2StorageConfigurationEntryKeyPrefix = "StorageConfiguration__";
-
-        /// <summary>
-        /// Gets the configuration entry key in the style of legacy entries by prefixing it with
-        /// <see cref="LegacyV2StorageConfigurationEntryKeyPrefix"/>.
-        /// </summary>
-        /// <returns>The prefixed key that should be used when adding the configuration to the target tenant.</returns>
-        public string LegacyConfigurationEntryKey =>
-            LegacyV2StorageConfigurationEntryKeyPrefix + this.Key;
+#nullable disable annotations
+        public TContainerDefinition ContainerDefinition { get; set; }
+#nullable restore annotations
     }
 }
