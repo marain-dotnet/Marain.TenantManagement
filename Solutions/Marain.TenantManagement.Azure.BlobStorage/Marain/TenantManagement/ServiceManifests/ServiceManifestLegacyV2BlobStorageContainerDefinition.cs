@@ -6,7 +6,7 @@
 namespace Marain.TenantManagement.ServiceManifests
 {
     /// <summary>
-    /// The container definition used to generate tenant property keys for Cosmos storage configuration.
+    /// The container definition used to generate tenant property keys for Azure blob storage configuration.
     /// </summary>
     public class ServiceManifestLegacyV2BlobStorageContainerDefinition
     {
