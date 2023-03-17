@@ -49,11 +49,11 @@ Scenario: Enroll
     And I have enrollment configuration called 'ConfigSvcC1V2D()'
     And the 'ConfigSvcC1V2D(C1V2D())' enrollment has a dependency on the service tenant called 'SvcC1V2D()' using configuration 'ConfigSvcC1V2D()'
     And the enrollment configuration called 'ConfigSvcC1V2D(C1V2D())' contains the following legacy V2 Blob Storage configuration items
-    | Key                               | Account Name | Container      |
-    | StorageConfiguration__mycontainer | blobaccount1 | blobcontainer1 |
+    | Key       | Account Name | Container      |
+    | container | blobaccount1 | blobcontainer1 |
     And the enrollment configuration called 'ConfigSvcC1V2D()' contains the following legacy V2 Blob Storage configuration items
-    | Key                               | Account Name | Container      |
-    | StorageConfiguration__mycontainer | blobaccount2 | blobcontainer2 |
+    | Key       | Account Name | Container      |
+    | container | blobaccount2 | blobcontainer2 |
     When I use the tenant store with the enrollment configuration called 'ConfigSvcC1V2D(C1V2D())' to enroll the tenant called 'Litware' in the service called 'SvcC1V2D(C1V2D())'
     Then the tenant called 'Litware' should have the id of the tenant called 'SvcC1V2D(C1V2D())' added to its enrollments
     And the tenant called 'Litware' should contain legacy V2 blob storage configuration under the key 'StorageConfiguration__mycontainer' for the account 'blobaccount1' and container name 'blobcontainer1'

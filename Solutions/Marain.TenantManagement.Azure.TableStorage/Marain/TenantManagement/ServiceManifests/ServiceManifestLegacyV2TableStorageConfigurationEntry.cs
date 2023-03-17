@@ -6,7 +6,7 @@ namespace Marain.TenantManagement.ServiceManifests;
 
 using System;
 using System.Collections.Generic;
-
+using Corvus.Storage.Azure.TableStorage.Tenancy;
 using Corvus.Tenancy;
 
 using Marain.TenantManagement.Configuration;
@@ -14,7 +14,7 @@ using Marain.TenantManagement.Configuration;
 /// <summary>
 /// Service manifest configuration entry for table storage.
 /// </summary>
-public class ServiceManifestLegacyV2TableStorageConfigurationEntry : ServiceManifestRequiredConfigurationEntry
+public class ServiceManifestLegacyV2TableStorageConfigurationEntry : ServiceManifestRequiredLegacyConfigurationEntry<ServiceManifestLegacyV2TableStorageTableDefinition>
 {
     /// <summary>
     /// The content type of the configuration entry.
@@ -44,13 +44,13 @@ public class ServiceManifestLegacyV2TableStorageConfigurationEntry : ServiceMani
         }
 
         return existingValues.Append(new KeyValuePair<string, object>(
-            this.Key,
+            LegacyV2TableConfigurationKeyNaming.TenantPropertyKeyForLogicalContainer(this.ContainerDefinition.TableName)!,
             tableStorageConfigurationItem.Configuration));
     }
 
     /// <inheritdoc/>
     public override IEnumerable<string> GetPropertiesToRemoveFromTenant(ITenant tenant)
     {
-        return new string[] { this.Key };
+        return new string[] { LegacyV2TableConfigurationKeyNaming.TenantPropertyKeyForLogicalContainer(this.ContainerDefinition.TableName)! };
     }
 }
