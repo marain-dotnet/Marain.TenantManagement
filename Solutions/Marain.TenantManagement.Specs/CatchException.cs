@@ -6,7 +6,8 @@ namespace Marain.TenantManagement.Specs
 {
     using System;
     using System.Threading.Tasks;
-    using TechTalk.SpecFlow;
+
+    using Reqnroll;
 
     /// <summary>
     /// Helpers for exception handling in specs.

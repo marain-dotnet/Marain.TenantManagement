@@ -7,9 +7,11 @@ namespace Marain.TenantManagement.Specs.Steps
     using System;
     using System.Threading.Tasks;
     using Corvus.Tenancy;
-    using Corvus.Testing.SpecFlow;
+    using Corvus.Testing.ReqnRoll;
+
     using Microsoft.Extensions.DependencyInjection;
-    using TechTalk.SpecFlow;
+
+    using Reqnroll;
 
     [Binding]
     public class InitialisationSteps

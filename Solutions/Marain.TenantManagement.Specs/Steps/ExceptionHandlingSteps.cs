@@ -7,7 +7,8 @@ namespace Marain.TenantManagement.Specs.Steps
     using System;
     using Marain.TenantManagement.Exceptions;
     using NUnit.Framework;
-    using TechTalk.SpecFlow;
+
+    using Reqnroll;
 
     [Binding]
     public class ExceptionHandlingSteps

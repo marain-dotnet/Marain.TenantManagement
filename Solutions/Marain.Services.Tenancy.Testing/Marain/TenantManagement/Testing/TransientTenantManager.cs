@@ -12,13 +12,14 @@ namespace Marain.TenantManagement.Testing
     using System.Threading.Tasks;
     using Corvus.Extensions.Json;
     using Corvus.Tenancy;
-    using Corvus.Testing.SpecFlow;
+    using Corvus.Testing.ReqnRoll;
     using Marain.TenantManagement;
     using Marain.TenantManagement.EnrollmentConfiguration;
     using Marain.TenantManagement.ServiceManifests;
     using Microsoft.Extensions.DependencyInjection;
     using Newtonsoft.Json;
-    using TechTalk.SpecFlow;
+
+    using Reqnroll;
 
     /// <summary>
     /// Helper methods for creating transient client and service tenants. Tenants and enrollments

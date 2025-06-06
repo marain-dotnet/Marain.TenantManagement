@@ -4,14 +4,14 @@
 
 namespace Marain.TenantManagement.Specs.Bindings
 {
-    using Corvus.Testing.SpecFlow;
+    using Corvus.Testing.ReqnRoll;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
     using Newtonsoft.Json.Serialization;
 
-    using TechTalk.SpecFlow;
+    using Reqnroll;
 
     [Binding]
     public static class TenantProviderContainerBindings

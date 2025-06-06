@@ -12,7 +12,7 @@ namespace Marain.TenantManagement.Specs.Steps
 
     using Corvus.Extensions.Json;
     using Corvus.Tenancy;
-    using Corvus.Testing.SpecFlow;
+    using Corvus.Testing.ReqnRoll;
 
     using Marain.TenantManagement.ServiceManifests;
 
@@ -22,7 +22,7 @@ namespace Marain.TenantManagement.Specs.Steps
 
     using NUnit.Framework;
 
-    using TechTalk.SpecFlow;
+    using Reqnroll;
 
     [Binding]
     public class ManifestSteps
@@ -81,7 +81,7 @@ namespace Marain.TenantManagement.Specs.Steps
         {
             ServiceManifest manifest = this.NamedManifest(manifestName);
 
-            foreach (TableRow row in dependencyTable.Rows)
+            foreach (DataTableRow row in dependencyTable.Rows)
             {
                 manifest.DependsOnServiceTenants.Add(new ServiceDependency
                 {

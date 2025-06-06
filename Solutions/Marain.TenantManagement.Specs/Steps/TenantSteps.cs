@@ -15,13 +15,13 @@ namespace Marain.TenantManagement.Specs.Steps
     using Corvus.Storage.Azure.TableStorage.Tenancy;
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
-    using Corvus.Testing.SpecFlow;
+    using Corvus.Testing.ReqnRoll;
     using Marain.TenantManagement;
     using Marain.TenantManagement.ServiceManifests;
     using Marain.TenantManagement.Testing;
     using Microsoft.Extensions.DependencyInjection;
     using NUnit.Framework;
-    using TechTalk.SpecFlow;
+    using Reqnroll;
 
     [Binding]
     public class TenantSteps

@@ -14,7 +14,7 @@ namespace Marain.TenantManagement.Specs.Steps
     using Corvus.Storage.Azure.TableStorage;
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
-    using Corvus.Testing.SpecFlow;
+    using Corvus.Testing.ReqnRoll;
 
     using Marain.TenantManagement.Configuration;
     using Marain.TenantManagement.EnrollmentConfiguration;
@@ -24,7 +24,7 @@ namespace Marain.TenantManagement.Specs.Steps
 
     using NUnit.Framework;
 
-    using TechTalk.SpecFlow;
+    using Reqnroll;
 
     [Binding]
     public class EnrollmentSteps
@@ -74,7 +74,7 @@ namespace Marain.TenantManagement.Specs.Steps
             EnrollmentConfigurationEntryInputs enrollmentConfigurationSet =
                 this.enrollmentConfigurationEntries[enrollmentConfigurationName];
 
-            foreach (TableRow? row in configurationEntries.Rows)
+            foreach (DataTableRow? row in configurationEntries.Rows)
             {
                 enrollmentConfigurationSet.ConfigurationItems.Add(
                     row["Key"],
@@ -97,7 +97,7 @@ namespace Marain.TenantManagement.Specs.Steps
             EnrollmentConfigurationEntryInputs enrollmentConfigurationSet =
                 this.enrollmentConfigurationEntries[enrollmentConfigurationName];
 
-            foreach (TableRow? row in configurationEntries.Rows)
+            foreach (DataTableRow? row in configurationEntries.Rows)
             {
                 enrollmentConfigurationSet.ConfigurationItems.Add(
                     row["Key"],
@@ -120,7 +120,7 @@ namespace Marain.TenantManagement.Specs.Steps
             EnrollmentConfigurationEntryInputs enrollmentConfigurationSet =
                 this.enrollmentConfigurationEntries[enrollmentConfigurationName];
 
-            foreach (TableRow? row in configurationEntries.Rows)
+            foreach (DataTableRow? row in configurationEntries.Rows)
             {
                 enrollmentConfigurationSet.ConfigurationItems.Add(
                     row["Key"],
@@ -143,7 +143,7 @@ namespace Marain.TenantManagement.Specs.Steps
             EnrollmentConfigurationEntryInputs enrollmentConfigurationSet =
                 this.enrollmentConfigurationEntries[enrollmentConfigurationName];
 
-            foreach (TableRow? row in configurationEntries.Rows)
+            foreach (DataTableRow? row in configurationEntries.Rows)
             {
                 enrollmentConfigurationSet.ConfigurationItems.Add(
                     row["Key"],
@@ -166,7 +166,7 @@ namespace Marain.TenantManagement.Specs.Steps
             EnrollmentConfigurationEntryInputs enrollmentConfigurationSet =
                 this.enrollmentConfigurationEntries[enrollmentConfigurationName];
 
-            foreach (TableRow? row in configurationEntries.Rows)
+            foreach (DataTableRow? row in configurationEntries.Rows)
             {
                 enrollmentConfigurationSet.ConfigurationItems.Add(
                     row["Key"],
@@ -190,7 +190,7 @@ namespace Marain.TenantManagement.Specs.Steps
             EnrollmentConfigurationEntryInputs enrollmentConfigurationSet =
                 this.enrollmentConfigurationEntries[enrollmentConfigurationName];
 
-            foreach (TableRow? row in configurationEntries.Rows)
+            foreach (DataTableRow? row in configurationEntries.Rows)
             {
                 enrollmentConfigurationSet.ConfigurationItems.Add(
                     row["Key"],
