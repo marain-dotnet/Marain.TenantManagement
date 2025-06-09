@@ -23,8 +23,7 @@ namespace Marain.TenantManagement.Cli.Commands
         /// Creates a new instance of the <see cref="EnrollCommand"/> class.
         /// </summary>
         /// <param name="tenantStore">The tenant store.</param>
-        public UnenrollCommand(
-            ITenantStore tenantStore)
+        public UnenrollCommand(ITenantStore tenantStore)
             : base("unenroll", "Unenrolls the specified client from the service.")
         {
             this.tenantStore = tenantStore;
