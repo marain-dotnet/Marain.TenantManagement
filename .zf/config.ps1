@@ -69,8 +69,8 @@ task . FullBuild
 # task PostPublish {}
 # task RunLast {}
 
-$DotNetTestFileLoggerProps = "`"/flp:verbosity=$DotNetFileLoggerVerbosity;logfile=$DotNetTestLogFile`""
-task RunTestsWithDotNetCoverage -If {$SolutionToBuild} {
+$__DotNetTestFileLoggerProps = "`"/flp:verbosity=$DotNetFileLoggerVerbosity;logfile=$DotNetTestLogFile`""
+task __RunTestsWithDotNetCoverage -If {$SolutionToBuild} {
     # Setup the appropriate CI/CD platform test logger, unless explicitly disabled
     if (!$DisableCicdServerLogger) {
         if ($script:IsAzureDevOps) {
