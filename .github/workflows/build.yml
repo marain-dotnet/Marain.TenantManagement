@@ -71,7 +71,7 @@ jobs:
       forcePublish: ${{ github.event.inputs.forcePublish == 'true' }}
       skipCleanup: ${{ github.event.inputs.skipCleanup == 'true' }}
       enableCrossOsCaching: true
-      compilePhaseRunnerOs: 'ubuntu-latest'
+      compilePhaseRunnerOs: 'windows-latest'
       testPhaseMatrixJson: |
         {
           "os": ["windows-latest", "ubuntu-latest"],
