@@ -89,7 +89,7 @@ task RunTestsWithDotNetCoverage -If {$SolutionToBuild} {
     # Use InvokeBuild's built-in $Task variable to know where this file is installed and use it to 
     # derive where the root of the module must be.  This method will work when this module has
     # been directly imported as well as when it is used as a ZeroFailed extension.
-    $moduleDir = Split-Path -Parent (Split-Path -Parent $Task.InvocationInfo.ScriptName)
+    $moduleDir = Join-Path $here ".zf/extensions/ZeroFailed.Build.DotNet/main"      # patch the path for this debug copy of the task
     Write-Verbose "ModuleDir: $moduleDir"
 
     # Setup the arguments we need to pass to 'dotnet test'
