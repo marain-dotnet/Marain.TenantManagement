@@ -8,17 +8,17 @@ namespace Marain.TenantManagement.Specs.Steps
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Text.Json;
     using System.Threading.Tasks;
 
     using Corvus.Extensions.Json;
+    using Corvus.Json.Serialization;
     using Corvus.Tenancy;
     using Corvus.Testing.ReqnRoll;
 
     using Marain.TenantManagement.ServiceManifests;
 
     using Microsoft.Extensions.DependencyInjection;
-
-    using Newtonsoft.Json;
 
     using NUnit.Framework;
 
@@ -301,8 +301,7 @@ namespace Marain.TenantManagement.Specs.Steps
 
         private ServiceManifest LoadManifestFile(string manifestName)
         {
-            IJsonSerializerSettingsProvider settingsProvider =
-                ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<IJsonSerializerSettingsProvider>();
+            IJsonSerializerSettingsProvider settingsProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<IJsonSerializerSettingsProvider>();
 
             using Stream manifestStream = this.GetType().Assembly.GetManifestResourceStream($"Marain.TenantManagement.Specs.Data.ServiceManifests.{manifestName}.jsonc")
                 ?? throw new ArgumentException($"Could not find a resource in the Marain.TenantManagement.Specs.Data.ServiceManifests namespace called {manifestName}.jsonc");
@@ -311,7 +310,9 @@ namespace Marain.TenantManagement.Specs.Steps
 
             string manifestJson = manifestStreamReader.ReadToEnd();
 
-            return JsonConvert.DeserializeObject<ServiceManifest>(manifestJson, settingsProvider.Instance)!;
+            var options = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<IJsonSerializerOptionsProvider>().Instance;
+
+            return JsonSerializer.Deserialize<ServiceManifest>(manifestJson, options)!;
         }
     }
 }

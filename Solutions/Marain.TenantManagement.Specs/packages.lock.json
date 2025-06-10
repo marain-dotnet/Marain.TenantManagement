@@ -2,6 +2,17 @@
   "version": 1,
   "dependencies": {
     "net8.0": {
+      "Corvus.Json.PropertyBag": {
+        "type": "Direct",
+        "requested": "[2.0.0, )",
+        "resolved": "2.0.0",
+        "contentHash": "BOqpruU6YOktu8YURl5sPJz1sF9LL8s12k9pPWQubHd1Ie+Rq8S4uiBYVpAh2gJPBVgeJviMGx60EaMQ3ybgcg==",
+        "dependencies": {
+          "Corvus.Json.Abstractions": "3.0.0",
+          "Corvus.Json.Serialization": "2.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.2"
+        }
+      },
       "Corvus.Testing.ReqnRoll.NUnit": {
         "type": "Direct",
         "requested": "[4.0.5, )",
@@ -38,6 +49,21 @@
           "Microsoft.Extensions.Logging.Abstractions": "8.0.2",
           "Microsoft.Extensions.Logging.Configuration": "8.0.1",
           "Microsoft.Extensions.Options": "8.0.2"
+        }
+      },
+      "Roslynator.Analyzers": {
+        "type": "Direct",
+        "requested": "[4.13.1, )",
+        "resolved": "4.13.1",
+        "contentHash": "KZpLy6ZlCebMk+d/3I5KU2R7AOb4LNJ6tPJqPtvFXmO8bEBHQvCIAvJOnY2tu4C9/aVOROTDYUFADxFqw1gh/g=="
+      },
+      "StyleCop.Analyzers": {
+        "type": "Direct",
+        "requested": "[1.2.0-beta.556, )",
+        "resolved": "1.2.0-beta.556",
+        "contentHash": "llRPgmA1fhC0I0QyFLEcjvtM2239QzKr/tcnbsjArLMJxJlu0AA5G7Fft0OI30pHF3MW63Gf4aSSsjc5m82J1Q==",
+        "dependencies": {
+          "StyleCop.Analyzers.Unstable": "1.2.0.556"
         }
       },
       "Azure.Core": {
@@ -750,6 +776,11 @@
         "type": "Transitive",
         "resolved": "4.3.2",
         "contentHash": "leXiwfiIkW7Gmn7cgnNcdtNAU70SjmKW3jxGj1iKHOvdn0zRWsgv/l2OJUO5zdGdiv2VRFnAsxxhDgMzofPdWg=="
+      },
+      "StyleCop.Analyzers.Unstable": {
+        "type": "Transitive",
+        "resolved": "1.2.0.556",
+        "contentHash": "zvn9Mqs/ox/83cpYPignI8hJEM2A93s2HkHs8HYMOAQW0PkampyoErAiIyKxgTLqbbad29HX/shv/6LGSjPJNQ=="
       },
       "System.Buffers": {
         "type": "Transitive",
