@@ -9,15 +9,16 @@ namespace Marain.TenantManagement.Cli.Commands
     using System.CommandLine;
     using System.CommandLine.Invocation;
     using System.IO;
+    using System.Text.Json;
     using System.Threading.Tasks;
-    using Corvus.Extensions.Json;
+
+    using Corvus.Json.Serialization;
     using Corvus.Tenancy;
     using Corvus.Tenancy.Exceptions;
 
     using Marain.TenantManagement.Configuration;
     using Marain.TenantManagement.EnrollmentConfiguration;
     using Marain.TenantManagement.Exceptions;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Enrolls client tenants to use services.
@@ -25,22 +26,20 @@ namespace Marain.TenantManagement.Cli.Commands
     public class EnrollCommand : Command
     {
         private readonly ITenantStore tenantStore;
-        private readonly IJsonSerializerSettingsProvider serializerSettingsProvider;
+        private readonly IJsonSerializerOptionsProvider serializerOptionsProvider;
 
         /// <summary>
         /// Creates a new instance of the <see cref="EnrollCommand"/> class.
         /// </summary>
         /// <param name="tenantStore">The tenant store.</param>
-        /// <param name="serializerSettingsProvider">
-        /// The <see cref="IJsonSerializerSettingsProvider"/> to use when reading manifest files.
+        /// <param name="serializerOptionsProvider">
+        /// The <see cref="IJsonSerializerOptionsProvider"/> to use when reading manifest files.
         /// </param>
-        public EnrollCommand(
-            ITenantStore tenantStore,
-            IJsonSerializerSettingsProvider serializerSettingsProvider)
+        public EnrollCommand(ITenantStore tenantStore, IJsonSerializerOptionsProvider serializerOptionsProvider)
             : base("enroll", "Enrolls the specified client for the service.")
         {
             this.tenantStore = tenantStore;
-            this.serializerSettingsProvider = serializerSettingsProvider;
+            this.serializerOptionsProvider = serializerOptionsProvider;
 
             var clientTenantId = new Argument<string>("clientTenantId")
             {
@@ -65,8 +64,7 @@ namespace Marain.TenantManagement.Cli.Commands
 
             this.AddOption(configFile);
 
-            this.Handler = CommandHandler.Create(
-                (string clientTenantId, string serviceTenantId, FileInfo? config) => this.HandleCommand(clientTenantId, serviceTenantId, config));
+            this.Handler = CommandHandler.Create((string clientTenantId, string serviceTenantId, FileInfo? config) => this.HandleCommand(clientTenantId, serviceTenantId, config));
         }
 
         private async Task<int> HandleCommand(string enrollingTenantId, string serviceTenantId, FileInfo? config)
@@ -75,21 +73,17 @@ namespace Marain.TenantManagement.Cli.Commands
 
             if (config != null)
             {
-                string configJson = File.ReadAllText(config.FullName);
-                enrollmentConfig =
-                    JsonConvert.DeserializeObject<EnrollmentConfigurationEntry>(configJson, this.serializerSettingsProvider.Instance)!;
+                string configJson = await File.ReadAllTextAsync(config.FullName);
+                enrollmentConfig = JsonSerializer.Deserialize<EnrollmentConfigurationEntry>(configJson, this.serializerOptionsProvider.Instance)!;
             }
             else
             {
-                enrollmentConfig = new(ImmutableDictionary<string, ConfigurationItem>.Empty, null);
+                enrollmentConfig = new EnrollmentConfigurationEntry(ImmutableDictionary<string, ConfigurationItem>.Empty, null);
             }
 
             try
             {
-                await this.tenantStore.EnrollInServiceAsync(
-                    enrollingTenantId,
-                    serviceTenantId,
-                    enrollmentConfig).ConfigureAwait(false);
+                await this.tenantStore.EnrollInServiceAsync(enrollingTenantId, serviceTenantId, enrollmentConfig).ConfigureAwait(false);
 
                 return 0;
             }

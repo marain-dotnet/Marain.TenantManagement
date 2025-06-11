@@ -190,16 +190,6 @@
           "System.Interactive": "6.0.1"
         }
       },
-      "Corvus.Extensions.Newtonsoft.Json": {
-        "type": "Transitive",
-        "resolved": "3.0.2",
-        "contentHash": "Htc652U9rb9V6Ik6L18H09cKpVnsk95qU5ZBUfjpk0ehtV3BzhJuVA2xoEtk4vN/vhq2mSf8JZswwznPZilLBw==",
-        "dependencies": {
-          "Corvus.Json.Abstractions": "3.0.2",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.32",
-          "Newtonsoft.Json": "13.0.3"
-        }
-      },
       "Corvus.Identity.Abstractions": {
         "type": "Transitive",
         "resolved": "4.0.1",
@@ -232,6 +222,16 @@
         "resolved": "3.0.2",
         "contentHash": "i3HErZbnQsYwUgS9sA+sQYpVX0r5ETmBSApy13wC5hVqEvI/YVXBztoLMmkEOaJEo1c16H8JT2s+j/hDGqSz6g=="
       },
+      "Corvus.Json.PropertyBag": {
+        "type": "Transitive",
+        "resolved": "2.0.0",
+        "contentHash": "BOqpruU6YOktu8YURl5sPJz1sF9LL8s12k9pPWQubHd1Ie+Rq8S4uiBYVpAh2gJPBVgeJviMGx60EaMQ3ybgcg==",
+        "dependencies": {
+          "Corvus.Json.Abstractions": "3.0.0",
+          "Corvus.Json.Serialization": "2.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.2"
+        }
+      },
       "Corvus.Json.Serialization": {
         "type": "Transitive",
         "resolved": "2.0.0",
@@ -252,11 +252,11 @@
       },
       "Corvus.Storage.Azure.BlobStorage.Tenancy": {
         "type": "Transitive",
-        "resolved": "4.0.0",
-        "contentHash": "cR5OZPKg2MKu9lCiCrQZaRs1pKi+uTDs0f7HaMZsq4qZA6ZxwE8BLyyGaYne1g5gfX9SRP/IUzXX03HwOfrUsQ==",
+        "resolved": "4.0.1",
+        "contentHash": "h4qhd4CetS6K49jcKePlHblUKLSW99S5PDCh6aHhIXVywFxFh4nvhKvryoosXirAvfxFl8NVgD+/uErgcmMP6A==",
         "dependencies": {
           "Corvus.Storage.Azure.BlobStorage": "2.0.3",
-          "Corvus.Tenancy.Abstractions": "4.0.0"
+          "Corvus.Tenancy.Abstractions": "4.0.1"
         }
       },
       "Corvus.Storage.Azure.Cosmos": {
@@ -272,11 +272,11 @@
       },
       "Corvus.Storage.Azure.Cosmos.Tenancy": {
         "type": "Transitive",
-        "resolved": "4.0.0",
-        "contentHash": "OucyC9kbVMvJiZ+YCgb1ZbuJGDujOL7bABsflfrrdJg1g7nS15UvaEnwK39mHmafa9FYf8kTHCidltZyFla7sA==",
+        "resolved": "4.0.1",
+        "contentHash": "RM6PEr2MftffGpBT+k4ESm7pVOWhSdz0eM9CSL6k4vxktYsFvz0oL0+on0Jd6bYWc0fbP2Z9bagrAaA7guwlfA==",
         "dependencies": {
           "Corvus.Storage.Azure.Cosmos": "2.0.3",
-          "Corvus.Tenancy.Abstractions": "4.0.0"
+          "Corvus.Tenancy.Abstractions": "4.0.1"
         }
       },
       "Corvus.Storage.Azure.TableStorage": {
@@ -291,11 +291,11 @@
       },
       "Corvus.Storage.Azure.TableStorage.Tenancy": {
         "type": "Transitive",
-        "resolved": "4.0.0",
-        "contentHash": "OYiKlbkocMv8plok8/W1Li58FT/k4qCkkBpso2rZPPX+I7CKI2mxL6SBXJ89dq3+hl7SNMp61x8msDgX44ShOg==",
+        "resolved": "4.0.1",
+        "contentHash": "zARhWWzuL16SuRhu+qLwFIyKt7a+nhaVeNuTNq3YifZIj1yg4XBGP9cnxcXHiJVop5LtZrdkaybUX1+ChQ5uOA==",
         "dependencies": {
           "Corvus.Storage.Azure.TableStorage": "2.0.3",
-          "Corvus.Tenancy.Abstractions": "4.0.0"
+          "Corvus.Tenancy.Abstractions": "4.0.1"
         }
       },
       "Corvus.Storage.Common": {
@@ -309,14 +309,14 @@
       },
       "Corvus.Tenancy.Abstractions": {
         "type": "Transitive",
-        "resolved": "4.0.0",
-        "contentHash": "hgszatZ+sAgB3cJNLVhcVUT3JGYteFdmFaw5hyoWMCt9anCJTAxFsF6l54tuABzptl/NDDwIKvvEaybb6KLxvA==",
+        "resolved": "4.0.1",
+        "contentHash": "xVZoj0H7YMm57MDzZf0CL/SBChM/YpymLPWMECKlAQeAd0EcvLct/X5DJqF5eNkwukCOjuY24yAooSHQAA7xUQ==",
         "dependencies": {
           "Corvus.ContentHandling": "4.0.0",
           "Corvus.ContentHandling.Json": "4.0.0",
           "Corvus.Extensions": "1.1.13",
-          "Corvus.Extensions.Newtonsoft.Json": "3.0.2",
           "Corvus.Json.Abstractions": "3.0.2",
+          "Corvus.Json.PropertyBag": "2.0.0",
           "Microsoft.Extensions.Primitives": "8.0.0"
         }
       },
@@ -1783,28 +1783,29 @@
       "marain.tenantmanagement.abstractions": {
         "type": "Project",
         "dependencies": {
-          "Corvus.Tenancy.Abstractions": "[4.0.0, )",
+          "Corvus.Json.PropertyBag": "[2.0.0, )",
+          "Corvus.Tenancy.Abstractions": "[4.0.1, )",
           "Microsoft.Extensions.Logging.Abstractions": "[8.0.*, )"
         }
       },
       "marain.tenantmanagement.azure.blobstorage": {
         "type": "Project",
         "dependencies": {
-          "Corvus.Storage.Azure.BlobStorage.Tenancy": "[4.0.0, )",
+          "Corvus.Storage.Azure.BlobStorage.Tenancy": "[4.0.1, )",
           "Marain.TenantManagement.Abstractions": "[1.0.0, )"
         }
       },
       "marain.tenantmanagement.azure.cosmos": {
         "type": "Project",
         "dependencies": {
-          "Corvus.Storage.Azure.Cosmos.Tenancy": "[4.0.0, )",
+          "Corvus.Storage.Azure.Cosmos.Tenancy": "[4.0.1, )",
           "Marain.TenantManagement.Abstractions": "[1.0.0, )"
         }
       },
       "marain.tenantmanagement.azure.tablestorage": {
         "type": "Project",
         "dependencies": {
-          "Corvus.Storage.Azure.TableStorage.Tenancy": "[4.0.0, )",
+          "Corvus.Storage.Azure.TableStorage.Tenancy": "[4.0.1, )",
           "Marain.TenantManagement.Abstractions": "[1.0.0, )"
         }
       }

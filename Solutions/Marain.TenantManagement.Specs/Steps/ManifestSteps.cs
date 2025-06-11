@@ -11,7 +11,6 @@ namespace Marain.TenantManagement.Specs.Steps
     using System.Text.Json;
     using System.Threading.Tasks;
 
-    using Corvus.Extensions.Json;
     using Corvus.Json.Serialization;
     using Corvus.Tenancy;
     using Corvus.Testing.ReqnRoll;
@@ -53,12 +52,12 @@ namespace Marain.TenantManagement.Specs.Steps
         [Given("I have a legacy V2 service manifest called '([^']*)' for a service called '([^']*)'")]
         public void GivenIHaveAServiceManifestCalled(string manifestName, string serviceName)
         {
-            if (serviceName != null)
+            if (serviceName is not null)
             {
                 serviceName = serviceName.TrimStart('"').TrimEnd('"');
             }
 
-            var manifest = new ServiceManifest
+            ServiceManifest manifest = new()
             {
                 WellKnownTenantGuid = Guid.NewGuid(),
                 ServiceName = serviceName,
@@ -98,9 +97,7 @@ namespace Marain.TenantManagement.Specs.Steps
             ITenantStore store = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<ITenantStore>();
             ServiceManifest manifest = this.NamedManifest(manifestName);
 
-            await CatchException.AndStoreInScenarioContextAsync(
-                this.scenarioContext,
-                () => manifest.ValidateAndThrowAsync(store));
+            await CatchException.AndStoreInScenarioContextAsync(this.scenarioContext, () => manifest.ValidateAndThrowAsync(store));
         }
 
         [When("I deserialize the manifest called '(.*)'")]
@@ -112,9 +109,7 @@ namespace Marain.TenantManagement.Specs.Steps
         [When("I deserialize the manifest called '(.*)' anticipating an exception")]
         public void WhenIDeserializeTheManifestCalledAnticipatingException(string manifestName)
         {
-            CatchException.AndStoreInScenarioContext(
-                this.scenarioContext,
-                () => this.manifest = this.LoadManifestFile(manifestName));
+            CatchException.AndStoreInScenarioContext(this.scenarioContext, () => this.manifest = this.LoadManifestFile(manifestName));
         }
 
         [Given("I have loaded the manifest called '(.*)'")]
@@ -176,40 +171,35 @@ namespace Marain.TenantManagement.Specs.Steps
         }
 
         [Then("the ServiceManifestBlobStorageConfigurationEntry at index (.*) should have a null LegacyV2Key")]
-        public void ThenTheServiceManifestBlobStorageConfigurationEntryAtIndexShouldHaveANullLegacyV2Key(
-            int index)
+        public void ThenTheServiceManifestBlobStorageConfigurationEntryAtIndexShouldHaveANullLegacyV2Key(int index)
         {
             var configuration = (ServiceManifestBlobStorageConfigurationEntry)this.Manifest.RequiredConfigurationEntries[index];
             Assert.IsNull(configuration.LegacyV2Key);
         }
 
         [Then("the ServiceManifestBlobStorageConfigurationEntry at index (.*) should have a LegacyV2Key of '([^']*)'")]
-        public void ThenTheServiceManifestBlobStorageConfigurationEntryAtIndexShouldHaveALegacyV2KeyOf(
-            int index, string expectedLegacyV2Key)
+        public void ThenTheServiceManifestBlobStorageConfigurationEntryAtIndexShouldHaveALegacyV2KeyOf(int index, string expectedLegacyV2Key)
         {
             var configuration = (ServiceManifestBlobStorageConfigurationEntry)this.Manifest.RequiredConfigurationEntries[index];
             Assert.AreEqual(expectedLegacyV2Key, configuration.LegacyV2Key);
         }
 
         [Then("the ServiceManifestCosmosDbConfigurationEntry at index (.*) should have a null LegacyV2Key")]
-        public void ThenTheServiceManifestCosmosDbConfigurationEntryAtIndexShouldHaveNullLegacyV2Key(
-            int index)
+        public void ThenTheServiceManifestCosmosDbConfigurationEntryAtIndexShouldHaveNullLegacyV2Key(int index)
         {
             var configuration = (ServiceManifestCosmosDbConfigurationEntry)this.Manifest.RequiredConfigurationEntries[index];
             Assert.IsNull(configuration.LegacyV2Key);
         }
 
         [Then("the ServiceManifestCosmosDbConfigurationEntry at index (.*) should have a LegacyV2Key of '([^']*)'")]
-        public void ThenTheServiceManifestCosmosDbConfigurationEntryAtIndexShouldHaveALegacyV2KeyOf(
-            int index, string expectedLegacyV2Key)
+        public void ThenTheServiceManifestCosmosDbConfigurationEntryAtIndexShouldHaveALegacyV2KeyOf(int index, string expectedLegacyV2Key)
         {
             var configuration = (ServiceManifestCosmosDbConfigurationEntry)this.Manifest.RequiredConfigurationEntries[index];
             Assert.AreEqual(expectedLegacyV2Key, configuration.LegacyV2Key);
         }
 
         [Then("the ServiceManifestTableStorageConfigurationEntry at index (.*) should have a null LegacyV2Key")]
-        public void ThenTheServiceManifestTableStorageConfigurationEntryAtIndexShouldHaveSupportsLegacyVConfigurationOf(
-            int index)
+        public void ThenTheServiceManifestTableStorageConfigurationEntryAtIndexShouldHaveSupportsLegacyVConfigurationOf(int index)
         {
             var configuration = (ServiceManifestTableStorageConfigurationEntry)this.Manifest.RequiredConfigurationEntries[index];
             Assert.IsNull(configuration.LegacyV2Key);
@@ -287,8 +277,7 @@ namespace Marain.TenantManagement.Specs.Steps
         }
 
         [Given("the service manifest called '(.*)' has the following legacy V2 Azure CosmosDb Storage configuration entries")]
-        public void GivenTheServiceManifestCalledHasTheFollowingLegacyV2AzureCosmosDbStorageConfigurationEntries(
-            string manifestName, Table table)
+        public void GivenTheServiceManifestCalledHasTheFollowingLegacyV2AzureCosmosDbStorageConfigurationEntries(string manifestName, Table table)
         {
             ServiceManifest manifest = this.NamedManifest(manifestName);
 
@@ -301,16 +290,16 @@ namespace Marain.TenantManagement.Specs.Steps
 
         private ServiceManifest LoadManifestFile(string manifestName)
         {
-            IJsonSerializerSettingsProvider settingsProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<IJsonSerializerSettingsProvider>();
+            IJsonSerializerOptionsProvider settingsProvider = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<IJsonSerializerOptionsProvider>();
 
             using Stream manifestStream = this.GetType().Assembly.GetManifestResourceStream($"Marain.TenantManagement.Specs.Data.ServiceManifests.{manifestName}.jsonc")
                 ?? throw new ArgumentException($"Could not find a resource in the Marain.TenantManagement.Specs.Data.ServiceManifests namespace called {manifestName}.jsonc");
 
-            using var manifestStreamReader = new StreamReader(manifestStream);
+            using StreamReader manifestStreamReader = new(manifestStream);
 
             string manifestJson = manifestStreamReader.ReadToEnd();
 
-            var options = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<IJsonSerializerOptionsProvider>().Instance;
+            JsonSerializerOptions options = ContainerBindings.GetServiceProvider(this.scenarioContext).GetRequiredService<IJsonSerializerOptionsProvider>().Instance;
 
             return JsonSerializer.Deserialize<ServiceManifest>(manifestJson, options)!;
         }

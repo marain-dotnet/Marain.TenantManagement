@@ -10,13 +10,12 @@ namespace Microsoft.Extensions.DependencyInjection
     using System.Linq;
 
     using Corvus.Identity.ClientAuthentication.Azure;
+
     using Marain.Tenancy.Client;
     using Marain.TenantManagement.Cli.Commands;
+
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using Newtonsoft.Json.Serialization;
 
     /// <summary>
     /// Extension methods to configure the DI container used by the CLI.
@@ -62,11 +61,11 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddLogging(config => config.AddConsole());
 
-            services.AddJsonNetSerializerSettingsProvider();
-            services.AddJsonNetPropertyBag();
-            services.AddJsonNetCultureInfoConverter();
-            services.AddJsonNetDateTimeOffsetToIso8601AndUnixTimeConverter();
-            services.AddSingleton<JsonConverter>(new StringEnumConverter(new CamelCaseNamingStrategy()));
+            services.AddJsonSerializerOptionsProvider();
+            services.AddJsonPropertyBagFactory();
+            services.AddJsonCultureInfoConverter();
+            services.AddJsonDateTimeOffsetToIso8601AndUnixTimeConverter();
+            services.AddCamelCaseConverterForEnums();
 
             LegacyAzureServiceTokenProviderOptions serviceTokenProviderOptions = config.Get<LegacyAzureServiceTokenProviderOptions>()!;
 
