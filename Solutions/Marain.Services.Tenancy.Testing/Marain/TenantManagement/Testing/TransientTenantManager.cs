@@ -140,8 +140,11 @@ namespace Marain.TenantManagement.Testing
         /// <returns>The new transient tenant.</returns>
         public async Task<ITenant> CreateTransientServiceTenantAsync(ServiceManifest manifest)
         {
-            manifest.WellKnownTenantGuid = Guid.NewGuid();
-            manifest.ServiceName = $"{manifest.ServiceName} - {manifest.WellKnownTenantGuid}";
+            manifest = manifest with
+            {
+                WellKnownTenantGuid = Guid.NewGuid(),
+                ServiceName = $"{manifest.ServiceName} - {manifest.WellKnownTenantGuid}",
+            };
 
             ITenant serviceTenant = await this.tenantStore.CreateServiceTenantAsync(manifest).ConfigureAwait(false);
 

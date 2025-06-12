@@ -43,6 +43,7 @@ namespace Microsoft.Extensions.DependencyInjection
         private static void AddTenantManagementContentTypes(ContentFactory factory)
         {
             factory.RegisterTransientContent<ServiceManifest>();
+            factory.RegisterPolymorphicContentTarget<ServiceManifestRequiredConfigurationEntry>();
         }
     }
 }

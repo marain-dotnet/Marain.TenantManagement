@@ -57,11 +57,7 @@ namespace Marain.TenantManagement.Specs.Steps
                 serviceName = serviceName.TrimStart('"').TrimEnd('"');
             }
 
-            ServiceManifest manifest = new()
-            {
-                WellKnownTenantGuid = Guid.NewGuid(),
-                ServiceName = serviceName,
-            };
+            ServiceManifest manifest = new(Guid.NewGuid(), serviceName!);
 
             this.namedManifests.Add(manifestName, manifest);
         }
@@ -70,8 +66,10 @@ namespace Marain.TenantManagement.Specs.Steps
         [Given("the well-known tenant Guid for the legacy V2 manifest called '([^']*)' is '([^']*)'")]
         public void GivenTheWell_KnownTenantGuidForTheManifestCalledIs(string manifestName, Guid wellKnownTenantGuid)
         {
-            ServiceManifest manifest = this.NamedManifest(manifestName);
-            manifest.WellKnownTenantGuid = wellKnownTenantGuid;
+            ServiceManifest manifest = this.NamedManifest(manifestName) with
+            {
+                WellKnownTenantGuid = wellKnownTenantGuid,
+            };
         }
 
         [Given("the service manifest called '(.*)' has the following dependencies")]
