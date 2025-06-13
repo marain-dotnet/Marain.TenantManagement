@@ -50,7 +50,7 @@ public class ListRequiredConfigurationForServiceCommand : AsyncCommand<ListRequi
             AnsiConsole.MarkupLine("[bold green]Required Configuration Entries:[/]");
             AnsiConsole.WriteLine();
 
-            var table = new Table();
+            Table table = new();
             table.AddColumn("[bold]Key[/]");
             table.AddColumn("[bold]Description[/]");
             table.AddColumn("[bold]Content Type[/]");
@@ -60,10 +60,7 @@ public class ListRequiredConfigurationForServiceCommand : AsyncCommand<ListRequi
 
             foreach (ServiceManifestRequiredConfigurationEntry current in configRequirements.RequiredConfigurationEntries)
             {
-                table.AddRow(
-                    $"[cyan]{current.Key}[/]",
-                    current.Description ?? "[dim]No description[/]",
-                    $"[yellow]{current.ContentType}[/]");
+                table.AddRow($"[cyan]{current.Key}[/]", current.Description ?? "[dim]No description[/]", $"[yellow]{current.ContentType}[/]");
             }
 
             AnsiConsole.Write(table);
