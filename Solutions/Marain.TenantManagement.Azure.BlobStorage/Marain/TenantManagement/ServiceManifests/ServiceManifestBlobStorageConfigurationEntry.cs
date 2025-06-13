@@ -12,9 +12,19 @@ namespace Marain.TenantManagement.ServiceManifests
     /// <summary>
     /// Service manifest configuration entry for blob storage.
     /// </summary>
-    public class ServiceManifestBlobStorageConfigurationEntry :
+    /// <param name="Key">
+    /// The configuration entry key. This is used to match configuration supplied as part of
+    /// enrollment with the configuration entry it relates to.
+    /// </param>
+    /// <param name="Description">
+    /// The description of the configuration entry.
+    /// </param>
+    public record ServiceManifestBlobStorageConfigurationEntry(
+        string Key,
+        string Description) :
         ServiceManifestRequiredConfigurationEntryWithV2LegacySupport<
-            BlobContainerConfiguration, BlobContainerConfigurationItem, LegacyV2BlobStorageConfiguration, LegacyV2BlobStorageConfigurationItem>
+            BlobContainerConfiguration, BlobContainerConfigurationItem, LegacyV2BlobStorageConfiguration, LegacyV2BlobStorageConfigurationItem>(
+            Key, Description)
     {
         /// <summary>
         /// The content type of the configuration entry.

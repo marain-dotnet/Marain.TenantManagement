@@ -14,7 +14,17 @@ using Marain.TenantManagement.Configuration;
 /// <summary>
 /// Service manifest configuration entry for table storage.
 /// </summary>
-public class ServiceManifestLegacyV2TableStorageConfigurationEntry : ServiceManifestRequiredLegacyConfigurationEntry<ServiceManifestLegacyV2TableStorageTableDefinition>
+/// <param name="Key">
+/// The configuration entry key. This is used to match configuration supplied as part of
+/// enrollment with the configuration entry it relates to.
+/// </param>
+/// <param name="Description">
+/// The description of the configuration entry.
+/// </param>
+public record ServiceManifestLegacyV2TableStorageConfigurationEntry(
+        string Key,
+        string Description)
+    : ServiceManifestRequiredLegacyConfigurationEntry<ServiceManifestLegacyV2TableStorageTableDefinition>(Key, Description)
 {
     /// <summary>
     /// The content type of the configuration entry.

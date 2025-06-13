@@ -4,6 +4,7 @@
 
 namespace Microsoft.Extensions.DependencyInjection
 {
+    using System.Linq;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
@@ -28,6 +29,14 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </remarks>
         public static IServiceCollection AddMarainTenantManagement(this IServiceCollection serviceCollection)
         {
+            if (serviceCollection.Any(d => d.ServiceType == typeof(Sentinel)))
+            {
+                // We've already been called.
+                return serviceCollection;
+            }
+
+            serviceCollection.AddTransient<Sentinel>();
+
             serviceCollection.AddContentTypeBasedSerializationSupport();
             serviceCollection.AddContent(AddTenantManagementContentTypes);
 
@@ -42,8 +51,12 @@ namespace Microsoft.Extensions.DependencyInjection
 
         private static void AddTenantManagementContentTypes(ContentFactory factory)
         {
-            factory.RegisterTransientContent<ServiceManifest>();
+            factory.RegisterContent<ServiceManifest>();
             factory.RegisterPolymorphicContentTarget<ServiceManifestRequiredConfigurationEntry>();
+        }
+
+        private class Sentinel
+        {
         }
     }
 }

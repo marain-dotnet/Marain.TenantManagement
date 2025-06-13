@@ -41,6 +41,18 @@ namespace Marain.TenantManagement.Specs.Steps
             ? serviceManifest
             : throw new InvalidOperationException($"This test has not loaded or deserialized a ServiceManifest called {name}");
 
+        public void UpdateNamedManifest(string name, Func<ServiceManifest, ServiceManifest> updater)
+        {
+            if (this.namedManifests.TryGetValue(name, out ServiceManifest? currentManifest))
+            {
+                this.namedManifests[name] = updater(currentManifest);
+            }
+            else
+            {
+                throw new InvalidOperationException($"This test has not loaded or deserialized a ServiceManifest called {name}");
+            }
+        }
+
         [Given("I have a service manifest called '(.*)' with no service name")]
         [Given("I have a legacy V2 service manifest called '([^']*)' with no service name")]
         public void GivenIHaveAServiceManifestCalled(string manifestName)
@@ -66,10 +78,12 @@ namespace Marain.TenantManagement.Specs.Steps
         [Given("the well-known tenant Guid for the legacy V2 manifest called '([^']*)' is '([^']*)'")]
         public void GivenTheWell_KnownTenantGuidForTheManifestCalledIs(string manifestName, Guid wellKnownTenantGuid)
         {
-            ServiceManifest manifest = this.NamedManifest(manifestName) with
-            {
-                WellKnownTenantGuid = wellKnownTenantGuid,
-            };
+            this.UpdateNamedManifest(
+                manifestName,
+                manifest => manifest with
+                {
+                    WellKnownTenantGuid = wellKnownTenantGuid,
+                });
         }
 
         [Given("the service manifest called '(.*)' has the following dependencies")]
@@ -217,11 +231,9 @@ namespace Marain.TenantManagement.Specs.Steps
         {
             ServiceManifest manifest = this.NamedManifest(manifestName);
 
-            manifest.RequiredConfigurationEntries.Add(new ServiceManifestBlobStorageConfigurationEntry
-            {
-                Key = table.Rows[0]["Key"],
-                Description = table.Rows[0]["Description"],
-            });
+            manifest.RequiredConfigurationEntries.Add(new ServiceManifestBlobStorageConfigurationEntry(
+                Key: table.Rows[0]["Key"],
+                Description: table.Rows[0]["Description"]));
         }
 
         [Given("the service manifest called '([^']*)' has the following legacy V2 Azure Blob Storage configuration entries")]
@@ -230,11 +242,9 @@ namespace Marain.TenantManagement.Specs.Steps
         {
             ServiceManifest manifest = this.NamedManifest(manifestName);
 
-            manifest.RequiredConfigurationEntries.Add(new ServiceManifestLegacyV2BlobStorageConfigurationEntry
-            {
-                Key = table.Rows[0]["Key"],
-                Description = table.Rows[0]["Description"],
-            });
+            manifest.RequiredConfigurationEntries.Add(new ServiceManifestLegacyV2BlobStorageConfigurationEntry(
+                Key: table.Rows[0]["Key"],
+                Description: table.Rows[0]["Description"]));
         }
 
         [Given("the service manifest called '(.*)' has the following Azure Table Storage configuration entries")]
@@ -242,11 +252,9 @@ namespace Marain.TenantManagement.Specs.Steps
         {
             ServiceManifest manifest = this.NamedManifest(manifestName);
 
-            manifest.RequiredConfigurationEntries.Add(new ServiceManifestTableStorageConfigurationEntry
-            {
-                Key = table.Rows[0]["Key"],
-                Description = table.Rows[0]["Description"],
-            });
+            manifest.RequiredConfigurationEntries.Add(new ServiceManifestTableStorageConfigurationEntry(
+                Key: table.Rows[0]["Key"],
+                Description: table.Rows[0]["Description"]));
         }
 
         [Given("the service manifest called '(.*)' has the following legacy V2 Azure Table Storage configuration entries")]
@@ -255,11 +263,9 @@ namespace Marain.TenantManagement.Specs.Steps
         {
             ServiceManifest manifest = this.NamedManifest(manifestName);
 
-            manifest.RequiredConfigurationEntries.Add(new ServiceManifestLegacyV2TableStorageConfigurationEntry
-            {
-                Key = table.Rows[0]["Key"],
-                Description = table.Rows[0]["Description"],
-            });
+            manifest.RequiredConfigurationEntries.Add(new ServiceManifestLegacyV2TableStorageConfigurationEntry(
+                Key: table.Rows[0]["Key"],
+                Description: table.Rows[0]["Description"]));
         }
 
         [Given("the service manifest called '(.*)' has the following Azure CosmosDb Storage configuration entries")]
@@ -267,11 +273,9 @@ namespace Marain.TenantManagement.Specs.Steps
         {
             ServiceManifest manifest = this.NamedManifest(manifestName);
 
-            manifest.RequiredConfigurationEntries.Add(new ServiceManifestCosmosDbConfigurationEntry
-            {
-                Key = table.Rows[0]["Key"],
-                Description = table.Rows[0]["Description"],
-            });
+            manifest.RequiredConfigurationEntries.Add(new ServiceManifestCosmosDbConfigurationEntry(
+                Key: table.Rows[0]["Key"],
+                Description: table.Rows[0]["Description"]));
         }
 
         [Given("the service manifest called '(.*)' has the following legacy V2 Azure CosmosDb Storage configuration entries")]
@@ -279,11 +283,9 @@ namespace Marain.TenantManagement.Specs.Steps
         {
             ServiceManifest manifest = this.NamedManifest(manifestName);
 
-            manifest.RequiredConfigurationEntries.Add(new ServiceManifestLegacyV2CosmosDbConfigurationEntry
-            {
-                Key = table.Rows[0]["Key"],
-                Description = table.Rows[0]["Description"],
-            });
+            manifest.RequiredConfigurationEntries.Add(new ServiceManifestLegacyV2CosmosDbConfigurationEntry(
+                Key: table.Rows[0]["Key"],
+                Description: table.Rows[0]["Description"]));
         }
 
         private ServiceManifest LoadManifestFile(string manifestName)
