@@ -2,78 +2,60 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-namespace Marain.TenantManagement.Cli.Commands
+namespace Marain.TenantManagement.Cli.Commands;
+
+using System.Collections.Immutable;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+using Corvus.Json.Serialization;
+using Corvus.Tenancy;
+using Corvus.Tenancy.Exceptions;
+
+using Marain.TenantManagement.Configuration;
+using Marain.TenantManagement.EnrollmentConfiguration;
+using Marain.TenantManagement.Exceptions;
+
+using Spectre.Console;
+using Spectre.Console.Cli;
+
+/// <summary>
+/// Enrolls client tenants to use services.
+/// </summary>
+public class EnrollCommand : AsyncCommand<EnrollCommand.Settings>
 {
-    using System;
-    using System.Collections.Immutable;
-    using System.CommandLine;
-    using System.CommandLine.Invocation;
-    using System.IO;
-    using System.Text.Json;
-    using System.Threading.Tasks;
-
-    using Corvus.Json.Serialization;
-    using Corvus.Tenancy;
-    using Corvus.Tenancy.Exceptions;
-
-    using Marain.TenantManagement.Configuration;
-    using Marain.TenantManagement.EnrollmentConfiguration;
-    using Marain.TenantManagement.Exceptions;
+    private readonly ITenantStore tenantStore;
+    private readonly IJsonSerializerOptionsProvider serializerOptionsProvider;
 
     /// <summary>
-    /// Enrolls client tenants to use services.
+    /// Creates a new instance of the <see cref="EnrollCommand"/> class.
     /// </summary>
-    public class EnrollCommand : Command
+    /// <param name="tenantStore">The tenant store.</param>
+    /// <param name="serializerOptionsProvider">
+    /// The <see cref="IJsonSerializerOptionsProvider"/> to use when reading manifest files.
+    /// </param>
+    public EnrollCommand(ITenantStore tenantStore, IJsonSerializerOptionsProvider serializerOptionsProvider)
     {
-        private readonly ITenantStore tenantStore;
-        private readonly IJsonSerializerOptionsProvider serializerOptionsProvider;
+        this.tenantStore = tenantStore;
+        this.serializerOptionsProvider = serializerOptionsProvider;
+    }
 
-        /// <summary>
-        /// Creates a new instance of the <see cref="EnrollCommand"/> class.
-        /// </summary>
-        /// <param name="tenantStore">The tenant store.</param>
-        /// <param name="serializerOptionsProvider">
-        /// The <see cref="IJsonSerializerOptionsProvider"/> to use when reading manifest files.
-        /// </param>
-        public EnrollCommand(ITenantStore tenantStore, IJsonSerializerOptionsProvider serializerOptionsProvider)
-            : base("enroll", "Enrolls the specified client for the service.")
+    /// <inheritdoc />
+    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
+    {
+        try
         {
-            this.tenantStore = tenantStore;
-            this.serializerOptionsProvider = serializerOptionsProvider;
+            AnsiConsole.MarkupLine($"[bold blue]Enrolling client tenant '{settings.ClientTenantId}' in service '{settings.ServiceTenantId}'...[/]");
 
-            var clientTenantId = new Argument<string>("clientTenantId")
-            {
-                Description = "The Id of the client tenant.",
-                Arity = ArgumentArity.ExactlyOne,
-            };
-
-            this.AddArgument(clientTenantId);
-
-            var serviceName = new Argument<string>("serviceTenantId")
-            {
-                Description = "The Id of the service tenant.",
-                Arity = ArgumentArity.ExactlyOne,
-            };
-
-            this.AddArgument(serviceName);
-
-            var configFile = new Option<FileInfo>("--config")
-            {
-                Description = "JSON configuration file to use when enrolling.",
-            };
-
-            this.AddOption(configFile);
-
-            this.Handler = CommandHandler.Create((string clientTenantId, string serviceTenantId, FileInfo? config) => this.HandleCommand(clientTenantId, serviceTenantId, config));
-        }
-
-        private async Task<int> HandleCommand(string enrollingTenantId, string serviceTenantId, FileInfo? config)
-        {
             EnrollmentConfigurationEntry enrollmentConfig;
 
-            if (config != null)
+            if (settings.ConfigFile != null)
             {
-                string configJson = await File.ReadAllTextAsync(config.FullName);
+                AnsiConsole.MarkupLine($"[dim]Using configuration from '{settings.ConfigFile.Name}'[/]");
+                string configJson = await File.ReadAllTextAsync(settings.ConfigFile.FullName);
                 enrollmentConfig = JsonSerializer.Deserialize<EnrollmentConfigurationEntry>(configJson, this.serializerOptionsProvider.Instance)!;
             }
             else
@@ -81,27 +63,82 @@ namespace Marain.TenantManagement.Cli.Commands
                 enrollmentConfig = new EnrollmentConfigurationEntry(ImmutableDictionary<string, ConfigurationItem>.Empty, null);
             }
 
-            try
-            {
-                await this.tenantStore.EnrollInServiceAsync(enrollingTenantId, serviceTenantId, enrollmentConfig).ConfigureAwait(false);
+            await this.tenantStore.EnrollInServiceAsync(settings.ClientTenantId, settings.ServiceTenantId, enrollmentConfig).ConfigureAwait(false);
 
-                return 0;
-            }
-            catch (TenantNotFoundException ex)
-            {
-                Console.WriteLine($"Unable to complete the enrollment: {ex.Message}");
-                return -1;
-            }
-            catch (InvalidEnrollmentConfigurationException ex)
-            {
-                Console.WriteLine("One or more errors were detected with the configuration data supplied:");
-                foreach (string error in ex.Errors)
-                {
-                    Console.WriteLine($" - {error}");
-                }
+            AnsiConsole.MarkupLine("[bold green]✓[/] Client tenant successfully enrolled in service!");
+            return 0;
+        }
+        catch (TenantNotFoundException ex)
+        {
+            AnsiConsole.MarkupLine($"[bold red]✗[/] Unable to complete the enrollment: {ex.Message}");
+            return -1;
+        }
+        catch (InvalidEnrollmentConfigurationException ex)
+        {
+            AnsiConsole.MarkupLine("[bold red]✗[/] One or more errors were detected with the configuration data supplied:");
 
-                return -1;
+            Panel panel = new(string.Join("\n", ex.Errors.Select(error => $"• {error}")))
+            {
+                Header = new PanelHeader("[red]Configuration Errors[/]"),
+                Border = BoxBorder.Rounded,
+                Padding = new Padding(1, 0, 1, 0),
+            };
+            AnsiConsole.Write(panel);
+
+            return -1;
+        }
+        catch (System.Exception ex)
+        {
+            AnsiConsole.MarkupLine($"[bold red]✗[/] Failed to enroll client tenant: {ex.Message}");
+            return -1;
+        }
+    }
+
+    /// <summary>
+    /// Settings for the enroll command.
+    /// </summary>
+    public sealed class Settings : CommandSettings
+    {
+        /// <summary>
+        /// Gets or sets the Id of the client tenant.
+        /// </summary>
+        [CommandArgument(0, "<clientTenantId>")]
+        [Description("The Id of the client tenant.")]
+        public string ClientTenantId { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the Id of the service tenant.
+        /// </summary>
+        [CommandArgument(1, "<serviceTenantId>")]
+        [Description("The Id of the service tenant.")]
+        public string ServiceTenantId { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the JSON configuration file to use when enrolling.
+        /// </summary>
+        [CommandOption("--config")]
+        [Description("JSON configuration file to use when enrolling.")]
+        public FileInfo? ConfigFile { get; set; }
+
+        /// <inheritdoc />
+        public override ValidationResult Validate()
+        {
+            if (string.IsNullOrWhiteSpace(this.ClientTenantId))
+            {
+                return ValidationResult.Error("Client tenant ID is required.");
             }
+
+            if (string.IsNullOrWhiteSpace(this.ServiceTenantId))
+            {
+                return ValidationResult.Error("Service tenant ID is required.");
+            }
+
+            if (this.ConfigFile is { Exists: false })
+            {
+                return ValidationResult.Error($"Configuration file '{this.ConfigFile.FullName}' does not exist.");
+            }
+
+            return ValidationResult.Success();
         }
     }
 }

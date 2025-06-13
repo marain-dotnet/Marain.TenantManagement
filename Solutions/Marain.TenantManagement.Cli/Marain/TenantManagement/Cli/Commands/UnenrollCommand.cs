@@ -2,67 +2,92 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-namespace Marain.TenantManagement.Cli.Commands
-{
-    using System;
-    using System.CommandLine;
-    using System.CommandLine.Invocation;
-    using System.Threading.Tasks;
+namespace Marain.TenantManagement.Cli.Commands;
 
-    using Corvus.Tenancy;
-    using Corvus.Tenancy.Exceptions;
+using System.ComponentModel;
+using System.Threading.Tasks;
+
+using Corvus.Tenancy;
+using Corvus.Tenancy.Exceptions;
+
+using Spectre.Console;
+using Spectre.Console.Cli;
+
+/// <summary>
+/// Unenrolls client tenants from services.
+/// </summary>
+public class UnenrollCommand : AsyncCommand<UnenrollCommand.Settings>
+{
+    private readonly ITenantStore tenantStore;
 
     /// <summary>
-    /// Enrolls client tenants to use services.
+    /// Creates a new instance of the <see cref="UnenrollCommand"/> class.
     /// </summary>
-    public class UnenrollCommand : Command
+    /// <param name="tenantStore">The tenant store.</param>
+    public UnenrollCommand(ITenantStore tenantStore)
     {
-        private readonly ITenantStore tenantStore;
+        this.tenantStore = tenantStore;
+    }
+
+    /// <inheritdoc />
+    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
+    {
+        try
+        {
+            AnsiConsole.MarkupLine($"[bold blue]Unenrolling client tenant '{settings.ClientTenantId}' from service '{settings.ServiceTenantId}'...[/]");
+
+            await this.tenantStore.UnenrollFromServiceAsync(
+                settings.ClientTenantId,
+                settings.ServiceTenantId).ConfigureAwait(false);
+
+            AnsiConsole.MarkupLine("[bold green]✓[/] Client tenant successfully unenrolled from service!");
+            return 0;
+        }
+        catch (TenantNotFoundException ex)
+        {
+            AnsiConsole.MarkupLine($"[bold red]✗[/] Unable to complete the unenrollment: {ex.Message}");
+            return -1;
+        }
+        catch (System.Exception ex)
+        {
+            AnsiConsole.MarkupLine($"[bold red]✗[/] Failed to unenroll client tenant: {ex.Message}");
+            return -1;
+        }
+    }
+
+    /// <summary>
+    /// Settings for the unenroll command.
+    /// </summary>
+    public sealed class Settings : CommandSettings
+    {
+        /// <summary>
+        /// Gets or sets the Id of the client tenant.
+        /// </summary>
+        [CommandArgument(0, "<clientTenantId>")]
+        [Description("The Id of the client tenant.")]
+        public string ClientTenantId { get; set; } = string.Empty;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="EnrollCommand"/> class.
+        /// Gets or sets the Id of the service tenant.
         /// </summary>
-        /// <param name="tenantStore">The tenant store.</param>
-        public UnenrollCommand(ITenantStore tenantStore)
-            : base("unenroll", "Unenrolls the specified client from the service.")
+        [CommandArgument(1, "<serviceTenantId>")]
+        [Description("The Id of the service tenant.")]
+        public string ServiceTenantId { get; set; } = string.Empty;
+
+        /// <inheritdoc />
+        public override ValidationResult Validate()
         {
-            this.tenantStore = tenantStore;
-
-            var clientTenantId = new Argument<string>("clientTenantId")
+            if (string.IsNullOrWhiteSpace(this.ClientTenantId))
             {
-                Description = "The Id of the client tenant.",
-                Arity = ArgumentArity.ExactlyOne,
-            };
-
-            this.AddArgument(clientTenantId);
-
-            var serviceName = new Argument<string>("serviceTenantId")
-            {
-                Description = "The Id of the service tenant.",
-                Arity = ArgumentArity.ExactlyOne,
-            };
-
-            this.AddArgument(serviceName);
-
-            this.Handler = CommandHandler.Create(
-                (string clientTenantId, string serviceTenantId) => this.HandleCommand(clientTenantId, serviceTenantId));
-        }
-
-        private async Task<int> HandleCommand(string enrollingTenantId, string serviceTenantId)
-        {
-            try
-            {
-                await this.tenantStore.UnenrollFromServiceAsync(
-                    enrollingTenantId,
-                    serviceTenantId).ConfigureAwait(false);
-
-                return 0;
+                return ValidationResult.Error("Client tenant ID is required.");
             }
-            catch (TenantNotFoundException ex)
+
+            if (string.IsNullOrWhiteSpace(this.ServiceTenantId))
             {
-                Console.WriteLine($"Unable to complete the enrollment: {ex.Message}");
-                return -1;
+                return ValidationResult.Error("Service tenant ID is required.");
             }
+
+            return ValidationResult.Success();
         }
     }
 }
