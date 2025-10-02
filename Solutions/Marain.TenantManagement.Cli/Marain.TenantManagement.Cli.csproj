@@ -48,7 +48,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Marain.Tenancy.ClientTenantProvider" Version="3.0.6" />
+    <PackageReference Include="Marain.Tenancy.ClientTenantProvider" Version="4.0.0-alpha-1" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="[8.0.*,)" />
     <PackageReference Include="Spectre.Console" Version="0.50.0" />
     <PackageReference Include="Spectre.Console.Cli" Version="0.50.0" />

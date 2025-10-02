@@ -4,8 +4,9 @@
 
 namespace Microsoft.Extensions.DependencyInjection;
 
+using System;
 using Corvus.Identity.ClientAuthentication.Azure;
-
+using Marain.Tenancy;
 using Marain.Tenancy.Client;
 
 using Microsoft.Extensions.Configuration;
@@ -21,8 +22,9 @@ public static class CliServiceCollectionExtensions
     /// </summary>
     /// <param name="services">The service collection to add to.</param>
     /// <param name="config">The configuration instance.</param>
+    /// <param name="enableTenantCaching">A flag indicating whether or not tenants retrieved from the tenancy API should be cached.</param>
     /// <returns>The service collection, for chaining.</returns>
-    public static IServiceCollection AddMarainServices(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection AddMarainServices(this IServiceCollection services, IConfiguration config, bool enableTenantCaching = true)
     {
         services.AddLogging(config => config.AddConsole());
 
@@ -35,9 +37,15 @@ public static class CliServiceCollectionExtensions
         LegacyAzureServiceTokenProviderOptions serviceTokenProviderOptions = config.Get<LegacyAzureServiceTokenProviderOptions>() ?? new LegacyAzureServiceTokenProviderOptions();
 
         services.AddServiceIdentityAzureTokenCredentialSourceFromLegacyConnectionString(serviceTokenProviderOptions);
-        services.AddMicrosoftRestAdapterForServiceIdentityAccessTokenSource();
 
-        TenancyClientOptions tenancyClientOptions = config.GetSection("TenancyClient").Get<TenancyClientOptions>() ?? new TenancyClientOptions();
+        TenancyApiClientConfiguration? tenancyClientOptions = config.GetSection("TenancyClient").Get<TenancyApiClientConfiguration>();
+        if (tenancyClientOptions is null)
+        {
+            throw new InvalidOperationException("Missing TenancyClient configuration");
+        }
+
+        services.AddTenancyClient(_ => tenancyClientOptions, true);
+
         services.AddSingleton(tenancyClientOptions);
         services.AddTenantProviderServiceClient();
 
