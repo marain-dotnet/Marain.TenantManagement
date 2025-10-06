@@ -5,7 +5,7 @@
 namespace Marain.TenantManagement.Cli;
 
 using System.Threading.Tasks;
-
+using Marain.TenantManagement.Cli.Commands;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -54,6 +54,14 @@ public static class Program
 
         services.AddSingleton<IConfiguration>(config);
         services.AddMarainServices(config);
+
+        services.AddTransient<CreateClientTenantCommand>();
+        services.AddTransient<CreateServiceTenantCommand>();
+        services.AddTransient<EnrollCommand>();
+        services.AddTransient<InitialiseCommand>();
+        services.AddTransient<ListRequiredConfigurationForServiceCommand>();
+        services.AddTransient<ShowHierarchyCommand>();
+        services.AddTransient<UnenrollCommand>();
 
         return services.BuildServiceProvider();
     }

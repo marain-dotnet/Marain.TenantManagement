@@ -7,7 +7,6 @@ namespace Microsoft.Extensions.DependencyInjection;
 using System;
 using Corvus.Identity.ClientAuthentication.Azure;
 using Marain.Tenancy;
-using Marain.Tenancy.Client;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;

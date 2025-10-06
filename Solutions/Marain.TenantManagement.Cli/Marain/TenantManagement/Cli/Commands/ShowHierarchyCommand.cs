@@ -4,6 +4,7 @@
 
 namespace Marain.TenantManagement.Cli.Commands;
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -62,14 +63,21 @@ public class ShowHierarchyCommand : AsyncCommand<ShowHierarchyCommand.Settings>
 
     private async Task AddChildrenTo(TenantWithChildren parent)
     {
-        await foreach (string childId in this.tenantStore.EnumerateAllChildrenAsync(parent.Tenant.Id))
+        try
         {
-            ITenant childTenant = await this.tenantStore.GetTenantAsync(childId).ConfigureAwait(false);
+            await foreach (string childId in this.tenantStore.EnumerateAllChildrenAsync(parent.Tenant.Id))
+            {
+                ITenant childTenant = await this.tenantStore.GetTenantAsync(childId).ConfigureAwait(false);
 
-            var childEntry = new TenantWithChildren(childTenant, parent.Depth + 1);
-            await this.AddChildrenTo(childEntry).ConfigureAwait(false);
+                var childEntry = new TenantWithChildren(childTenant, parent.Depth + 1);
+                await this.AddChildrenTo(childEntry).ConfigureAwait(false);
 
-            parent.Children.Add(childEntry);
+                parent.Children.Add(childEntry);
+            }
+        }
+        catch (Exception e)
+        {
+            AnsiConsole.WriteException(e);
         }
     }
 
@@ -108,7 +116,7 @@ public class ShowHierarchyCommand : AsyncCommand<ShowHierarchyCommand.Settings>
             TreeNode childTreeNode = parent.AddNode(this.FormatTenantNode(child.Tenant));
 
             // Add enrollments as sub-nodes
-            List<string> enrollments = child.Tenant.GetEnrollments().ToList();
+            var enrollments = child.Tenant.GetEnrollments().ToList();
 
             if (enrollments.Any())
             {
