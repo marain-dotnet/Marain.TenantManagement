@@ -6,7 +6,6 @@ namespace Marain.Services.Tenancy
 {
     using System.Threading.Tasks;
     using Corvus.Tenancy;
-    using Menes.Exceptions;
 
     /// <summary>
     /// Provides methods required by Marain services to validate and work with tenants.
@@ -18,8 +17,6 @@ namespace Marain.Services.Tenancy
         /// </summary>
         /// <param name="tenantId">The tenant Id supplied with the request.</param>
         /// <returns>The tenant.</returns>
-        /// <exception cref="OpenApiNotFoundException">The tenant Id is invalid.</exception>
-        /// <exception cref="OpenApiForbiddenException">The specified tenant is not enrolled for the service.</exception>
         Task<ITenant> GetRequestingTenantAsync(string tenantId);
 
         /// <summary>
