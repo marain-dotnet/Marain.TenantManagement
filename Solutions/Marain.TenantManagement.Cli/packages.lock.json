@@ -14,14 +14,14 @@
       },
       "Marain.Tenancy.ClientTenantProvider": {
         "type": "Direct",
-        "requested": "[4.0.0-alpha-1, )",
-        "resolved": "4.0.0-alpha-1",
-        "contentHash": "/syU8cxxXJwHqm20t6VFu8l4HDFHHQj7DWgbGAdTw0SFpSSKqNhY4A/jP/aphjw97LT0fJSjGnYvPbSH9sg1Ow==",
+        "requested": "[4.0.0-alpha-2, )",
+        "resolved": "4.0.0-alpha-2",
+        "contentHash": "kolJ3Qr+Y1YxwlkZjGrqGaRrp3v+yzO9pk/M0iybHNhX062I4KF2axX1R7ukSApfvPzG97vrdEWAXvhy9MlQMg==",
         "dependencies": {
           "Corvus.Extensions.Newtonsoft.Json": "3.0.2",
           "Corvus.Tenancy.Abstractions": "4.0.1",
-          "Marain.Tenancy.Client": "4.0.0-alpha-1",
-          "Marain.Tenancy.Shared": "4.0.0-alpha-1",
+          "Marain.Tenancy.Client": "4.0.0-alpha-2",
+          "Marain.Tenancy.Shared": "4.0.0-alpha-2",
           "Microsoft.AspNetCore.WebUtilities": "8.0.14",
           "Microsoft.Extensions.Logging.Abstractions": "8.0.3",
           "OpenTelemetry": "1.8.1"
@@ -352,14 +352,14 @@
       },
       "Marain.Tenancy.Client": {
         "type": "Transitive",
-        "resolved": "4.0.0-alpha-1",
-        "contentHash": "QHQtOp7kNBt6PqkIDLxTstYwjxYEpCdKYf5pHNVhwu4bjur7IwjdZ1TWwIYwLxI/veJgxA6xe42Ew2J7kNuSYw==",
+        "resolved": "4.0.0-alpha-2",
+        "contentHash": "wbcXyCgQYQ1rYrPShOmqdTWvX5TLFquM5YjVVe2kIpmRUWyWnmk6wQIPf9+zcZ2f7Ak4Mcw12RrVI9WgKedPlA==",
         "dependencies": {
           "CacheCow.Client": "2.13.1",
           "Corvus.Identity.Azure": "4.0.2",
           "Corvus.Json.PropertyBag": "2.0.0",
           "Corvus.Json.Serialization": "2.0.0",
-          "Marain.Tenancy.Shared": "4.0.0-alpha-1",
+          "Marain.Tenancy.Shared": "4.0.0-alpha-2",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.2",
           "Microsoft.Extensions.Http": "8.0.1",
           "Microsoft.Extensions.Http.Resilience": "9.8.0",
@@ -369,8 +369,8 @@
       },
       "Marain.Tenancy.Shared": {
         "type": "Transitive",
-        "resolved": "4.0.0-alpha-1",
-        "contentHash": "EdEdQBKaCHpCCInRzVj4FXxU1LnjpXkTAXRmYlY/xi5zYq4FyIqfsOPNyCnB27sdKGSwT14m6Wg+z7obY8JvTQ==",
+        "resolved": "4.0.0-alpha-2",
+        "contentHash": "2tQ5WhC9Ml+mmn4u/LAuqDV1sug0dfSBzyApcRUOgTswJAS50Cebfujq0PqyxUT+/47AE69R8vw9cEMmI8OulA==",
         "dependencies": {
           "Azure.Monitor.OpenTelemetry.Exporter": "1.2.0",
           "Microsoft.Extensions.Configuration.Abstractions": "8.0.0",
