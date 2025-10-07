@@ -14,7 +14,18 @@ using Marain.TenantManagement.Configuration;
 /// <summary>
 /// Service manifest configuration entry for CosmosDb.
 /// </summary>
-public class ServiceManifestLegacyV2CosmosDbConfigurationEntry : ServiceManifestRequiredLegacyConfigurationEntry<ServiceManifestLegacyV2CosmosDbContainerDefinition>
+/// <param name="Key">
+/// The configuration entry key. This is used to match configuration supplied as part of
+/// enrollment with the configuration entry it relates to.
+/// </param>
+/// <param name="Description">
+/// The description of the configuration entry.
+/// </param>
+
+public record ServiceManifestLegacyV2CosmosDbConfigurationEntry(
+        string Key,
+        string Description)
+    : ServiceManifestRequiredLegacyConfigurationEntry<ServiceManifestLegacyV2CosmosDbContainerDefinition>(Key, Description)
 {
     /// <summary>
     /// The content type of the configuration entry.

@@ -4,14 +4,12 @@
 
 namespace Marain.TenantManagement.Specs.Bindings
 {
-    using Corvus.Testing.SpecFlow;
+    using Corvus.Testing.ReqnRoll;
+
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using Newtonsoft.Json.Serialization;
 
-    using TechTalk.SpecFlow;
+    using Reqnroll;
 
     [Binding]
     public static class TenantProviderContainerBindings
@@ -26,12 +24,6 @@ namespace Marain.TenantManagement.Specs.Bindings
                     config.SetMinimumLevel(LogLevel.Debug);
                     config.AddConsole();
                 });
-
-                collection.AddJsonNetSerializerSettingsProvider();
-                collection.AddJsonNetPropertyBag();
-                collection.AddJsonNetCultureInfoConverter();
-                collection.AddJsonNetDateTimeOffsetToIso8601AndUnixTimeConverter();
-                collection.AddSingleton<JsonConverter>(new StringEnumConverter(new CamelCaseNamingStrategy()));
 
                 collection.AddMarainTenantManagement();
                 collection.AddMarainTenantManagementForBlobStorage();

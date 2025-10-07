@@ -5,7 +5,8 @@
 namespace Marain.TenantManagement.Testing
 {
     using System.Threading.Tasks;
-    using TechTalk.SpecFlow;
+
+    using Reqnroll;
 
     /// <summary>
     /// SpecFlow bindings for cleaning up transient tenants.

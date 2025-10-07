@@ -2,58 +2,67 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-namespace Marain.TenantManagement.Cli
+namespace Marain.TenantManagement.Cli;
+
+using System.Threading.Tasks;
+using Marain.TenantManagement.Cli.Commands;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+using Spectre.Console.Cli;
+
+/// <summary>
+/// The main class for the console app.
+/// </summary>
+public static class Program
 {
-    using System.CommandLine;
-    using System.CommandLine.Builder;
-    using System.CommandLine.Parsing;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-
     /// <summary>
-    /// The main class for the console app.
+    /// The entry point for the program.
     /// </summary>
-    public static class Program
+    /// <param name="args">The arguments.</param>
+    /// <returns>When complete, an integer representing success (0) or failure (non-0).</returns>
+    public static async Task<int> Main(string[] args)
     {
-        /// <summary>
-        /// The entry point for the program.
-        /// </summary>
-        /// <param name="args">The arguments.</param>
-        /// <returns>When complete, an integer representing success (0) or failure (non-0).</returns>
-        public static async Task<int> Main(string[] args)
+        ServiceProvider serviceProvider = BuildServiceProvider();
+        TypeRegistrar registrar = new(serviceProvider);
+
+        CommandApp app = new(registrar);
+
+        // Configure the application
+        app.Configure(config =>
         {
-            ServiceProvider serviceProvider = BuildServiceProvider();
-            Parser parser = BuildParser(serviceProvider);
+            // Register commands
+            config.AddCliCommands();
 
-            return await parser.InvokeAsync(args).ConfigureAwait(false);
-        }
+            // Configure application settings
+            config.SetApplicationName("marain");
+            config.SetApplicationVersion("1.0.0");
+            config.ValidateExamples();
+            config.PropagateExceptions();
+        });
 
-        private static Parser BuildParser(ServiceProvider serviceProvider)
-        {
-            var commandLineBuilder = new CommandLineBuilder();
+        return await app.RunAsync(args);
+    }
 
-            foreach (Command command in serviceProvider.GetServices<Command>())
-            {
-                commandLineBuilder.AddCommand(command);
-            }
+    private static ServiceProvider BuildServiceProvider()
+    {
+        ServiceCollection services = new();
+        IConfigurationRoot config = new ConfigurationBuilder()
+            .AddEnvironmentVariables()
+            .AddJsonFile("appsettings.json", optional: true)
+            .Build();
 
-            return commandLineBuilder.UseDefaults().Build();
-        }
+        services.AddSingleton<IConfiguration>(config);
+        services.AddMarainServices(config);
 
-        private static ServiceProvider BuildServiceProvider()
-        {
-            var services = new ServiceCollection();
-            IConfigurationRoot config = new ConfigurationBuilder()
-                .AddEnvironmentVariables()
-                .AddJsonFile("appsettings.json", optional: true)
-                .Build();
+        services.AddTransient<CreateClientTenantCommand>();
+        services.AddTransient<CreateServiceTenantCommand>();
+        services.AddTransient<EnrollCommand>();
+        services.AddTransient<InitialiseCommand>();
+        services.AddTransient<ListRequiredConfigurationForServiceCommand>();
+        services.AddTransient<ShowHierarchyCommand>();
+        services.AddTransient<UnenrollCommand>();
 
-            services.AddSingleton<IConfiguration>(config);
-            services.AddCliCommands();
-            services.AddMarainServices(config);
-
-            return services.BuildServiceProvider();
-        }
+        return services.BuildServiceProvider();
     }
 }

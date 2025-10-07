@@ -48,7 +48,7 @@ namespace Microsoft.Extensions.DependencyInjection
             string configurationSectionName = "MarainServiceConfiguration")
         {
             serviceCollection.AddSingleton(
-                sp => sp.GetRequiredService<IConfiguration>().GetSection(configurationSectionName).Get<MarainServiceConfiguration>());
+                sp => sp.GetRequiredService<IConfiguration>().GetSection(configurationSectionName).Get<MarainServiceConfiguration>()!);
 
             return serviceCollection;
         }

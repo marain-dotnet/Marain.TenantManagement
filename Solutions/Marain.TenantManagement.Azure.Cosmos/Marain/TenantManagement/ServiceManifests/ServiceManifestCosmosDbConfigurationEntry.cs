@@ -12,9 +12,19 @@ namespace Marain.TenantManagement.ServiceManifests
     /// <summary>
     /// Service manifest configuration entry for CosmosDb.
     /// </summary>
-    public class ServiceManifestCosmosDbConfigurationEntry :
+    /// <param name="Key">
+    /// The configuration entry key. This is used to match configuration supplied as part of
+    /// enrollment with the configuration entry it relates to.
+    /// </param>
+    /// <param name="Description">
+    /// The description of the configuration entry.
+    /// </param>
+    public record ServiceManifestCosmosDbConfigurationEntry(
+        string Key,
+        string Description) :
         ServiceManifestRequiredConfigurationEntryWithV2LegacySupport<
-            CosmosContainerConfiguration, CosmosContainerConfigurationItem, LegacyV2CosmosContainerConfiguration, LegacyV2CosmosConfigurationItem>
+            CosmosContainerConfiguration, CosmosContainerConfigurationItem, LegacyV2CosmosContainerConfiguration, LegacyV2CosmosConfigurationItem>(
+            Key, Description)
     {
         /// <summary>
         /// The content type of the configuration entry.

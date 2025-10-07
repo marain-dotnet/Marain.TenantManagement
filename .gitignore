@@ -346,3 +346,4 @@ appsettings.json
 _codeCoverage/
 _packages/
 *.sbom.*
+.zf/extensions/

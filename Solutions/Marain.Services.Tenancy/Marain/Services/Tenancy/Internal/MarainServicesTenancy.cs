@@ -7,9 +7,7 @@ namespace Marain.Services.Tenancy.Internal
     using System;
     using System.Threading.Tasks;
     using Corvus.Tenancy;
-    using Corvus.Tenancy.Exceptions;
     using Marain.TenantManagement;
-    using Menes.Exceptions;
 
     /// <summary>
     /// Provides methods required by Marain services to validate and work with tenants.
@@ -37,23 +35,12 @@ namespace Marain.Services.Tenancy.Internal
         {
             ITenant tenant = await this.GetTenantAsync(tenantId).ConfigureAwait(false);
 
-            // Validate it's of the expected type. This will throw an ArgumentException if the tenant is not of the expected
-            // type. This is not particularly useful, so we will catch this and instead throw an exception that will result
-            // in a Not Found response.
-            try
-            {
-                tenant.EnsureTenantIsOfType(MarainTenantType.Client, MarainTenantType.Delegated);
-            }
-            catch (ArgumentException)
-            {
-                throw new OpenApiNotFoundException($"The specified tenant Id, '{tenantId}', is of the wrong type for this request");
-            }
+            tenant.EnsureTenantIsOfType(MarainTenantType.Client, MarainTenantType.Delegated);
 
             // Ensure the tenant is enrolled for the service.
             if (!tenant.IsEnrolledForService(this.serviceConfiguration.ServiceTenantId))
             {
-                throw OpenApiForbiddenException.WithProblemDetails(
-                    "Tenant not enrolled for service",
+                throw new ArgumentException(
                     $"The tenant with Id '{tenantId}' is not enrolled in the service '{this.serviceConfiguration.ServiceDisplayName}' with Service Tenant Id '{this.serviceConfiguration.ServiceTenantId}'");
             }
 
@@ -69,15 +56,7 @@ namespace Marain.Services.Tenancy.Internal
 
         private async Task<ITenant> GetTenantAsync(string tenantId)
         {
-            // Get the incoming tenant from its Id. This will throw a TenantNotFoundException if the tenant doesn't exist.
-            try
-            {
-                return await this.tenantProvider.GetTenantAsync(tenantId).ConfigureAwait(false);
-            }
-            catch (TenantNotFoundException)
-            {
-                throw new OpenApiNotFoundException($"No tenant matching the tenant Id '{tenantId}' can be found.");
-            }
+            return await this.tenantProvider.GetTenantAsync(tenantId).ConfigureAwait(false);
         }
     }
 }
