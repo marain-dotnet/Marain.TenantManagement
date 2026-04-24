@@ -4,11 +4,11 @@
     "net6.0": {
       "ConsoleTables": {
         "type": "Direct",
-        "requested": "[2.4.2, )",
-        "resolved": "2.4.2",
-        "contentHash": "0SRFOWYCgFQ0RfAMof2DsGEJHI2YKquCA4X26kKyuG+MG+/2R3NRgRVEqXDMU7eVP69MGDzb1eg4i3/APlIfQg==",
+        "requested": "[2.7.0, )",
+        "resolved": "2.7.0",
+        "contentHash": "6l6Si/7lMaXYHiIERdqdEMIiTjvCF29fObjAmTahsTpjSaMBUv1TMm7qmrOHL32Le3ipFqhph5sm8WOJjZG9Og==",
         "dependencies": {
-          "System.Reflection.TypeExtensions": "4.3.0"
+          "Wcwidth": "1.0.0"
         }
       },
       "Corvus.Identity.MicrosoftRest": {
@@ -70,21 +70,6 @@
           "Microsoft.Extensions.Logging.EventLog": "6.0.0",
           "Microsoft.Extensions.Logging.EventSource": "6.0.0",
           "Microsoft.Extensions.Options": "6.0.0"
-        }
-      },
-      "Roslynator.Analyzers": {
-        "type": "Direct",
-        "requested": "[4.3.0, )",
-        "resolved": "4.3.0",
-        "contentHash": "NZNaV9DAYGHKZ753WfhtBj8eoP40LLJsA6JQXdzhF87iTZAdbKCgp32mI3cnQF4TMXz7bk+CgzF/kDG+m+9bCg=="
-      },
-      "StyleCop.Analyzers": {
-        "type": "Direct",
-        "requested": "[1.2.0-beta.435, )",
-        "resolved": "1.2.0-beta.435",
-        "contentHash": "TADk7vdGXtfTnYCV7GyleaaRTQjfoSfZXprQrVMm7cSJtJbFc1QIbWPyLvrgrfGdfHbGmUPvaN4ODKNxg2jgPQ==",
-        "dependencies": {
-          "StyleCop.Analyzers.Unstable": "1.2.0.435"
         }
       },
       "System.CommandLine": {
@@ -925,11 +910,6 @@
         "type": "Transitive",
         "resolved": "4.3.0",
         "contentHash": "VB5cn/7OzUfzdnC8tqAIMQciVLiq2epm2NrAm1E9OjNRyG4lVhfR61SMcLizejzQP8R8Uf/0l5qOIbUEi+RdEg=="
-      },
-      "StyleCop.Analyzers.Unstable": {
-        "type": "Transitive",
-        "resolved": "1.2.0.435",
-        "contentHash": "ouwPWZxbOV3SmCZxIRqHvljkSzkCyi1tDoMzQtDb/bRP8ctASV/iRJr+A2Gdj0QLaLmWnqTWDrH82/iP+X80Lg=="
       },
       "System.AppContext": {
         "type": "Transitive",
@@ -1784,6 +1764,11 @@
           "System.Threading": "4.3.0",
           "System.Xml.ReaderWriter": "4.3.0"
         }
+      },
+      "Wcwidth": {
+        "type": "Transitive",
+        "resolved": "1.0.0",
+        "contentHash": "aekut5BeF4c1Jr2qab3aXcttcgPEfPb2ok2L8911EIzn3RnDBYnUWgx/1OVlqrSXCdwAkBpNgYWXb6b5t4cBng=="
       },
       "marain.tenantmanagement.abstractions": {
         "type": "Project",
